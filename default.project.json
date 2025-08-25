@@ -1,0 +1,64 @@
+{
+  "name": "boat",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedFirst": {
+        "$path": "src/ReplicatedFirst"
+    },
+
+    "ReplicatedStorage": {
+        "$className": "ReplicatedStorage",
+        "ConfigFolder": {
+            "$path": "src/ReplicatedStorage/ConfigFolder"
+        },
+        "Packages": {
+            "$path": "src/ReplicatedStorage/Packages"
+        },
+        "ToolFolder": {
+            "$path": "src/ReplicatedStorage/ToolFolder"
+        }
+    },
+
+    "ServerScriptService": {
+        "$path": "src/ServerScriptService"
+    },
+
+    "StarterPlayer": {
+      "StarterCharacterScripts": {
+        "$path": "src/StarterPlayer/StarterCharacterScripts"
+      },
+      "StarterPlayerScripts": {
+        "$path": "src/StarterPlayer/StarterPlayerScripts"
+      }
+    },
+
+    "StarterPack": {
+        "$path": "src/StarterPack"
+    },
+
+    "Workspace": {
+      "$properties": {
+        "FilteringEnabled": true
+      }
+    },
+    "Lighting": {
+      "$properties": {
+        "Ambient": [
+          0,
+          0,
+          0
+        ],
+        "Brightness": 2,
+        "GlobalShadows": true,
+        "Outlines": false,
+        "Technology": "Voxel"
+      }
+    },
+    "SoundService": {
+      "$properties": {
+        "RespectFilteringEnabled": true
+      }
+    }
+  }
+}
