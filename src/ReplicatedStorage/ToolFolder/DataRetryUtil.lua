@@ -10,7 +10,7 @@ local DataRetryUtil = {}
 -- 默认配置
 local DEFAULT_CONFIG = {
     maxRetries = 5,          -- 最大重试次数
-    retryDelay = 2,          -- 重试间隔（秒）
+    retryDelay = 1,          -- 重试间隔（秒）
     timeout = 30,            -- 超时时间（秒）
     validateData = true,     -- 是否验证数据
     logErrors = true,        -- 是否记录错误日志

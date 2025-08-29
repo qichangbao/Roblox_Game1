@@ -16,14 +16,18 @@ local TeleportController = Knit.CreateController {
 -- 控制器初始化
 -- @return void
 function TeleportController:KnitInit()
-	-- 获取TeleportService服务
-	local TeleportService = Knit.GetService("TeleportService")
+    local KnitInitClient = require(script.Parent.Parent:WaitForChild("KnitInitClient"))
+    -- 监听KnitInit执行完成事件
+    KnitInitClient.AddListener(function()
+        -- 获取TeleportService服务
+        local TeleportService = Knit.GetService("TeleportService")
     
-    -- 监听服务器的选择人数请求
-    TeleportService.RequestPlayerCount:Connect(function(partName)
-        local SelectPlayerCountUI = PlayerGui:WaitForChild("SelectPlayerCountUI")
-        SelectPlayerCountUI:SetAttribute("TeleportPartName", partName)
-        SelectPlayerCountUI.Enabled = true
+        -- 监听服务器的选择人数请求
+        TeleportService.RequestPlayerCount:Connect(function(partName)
+            local SelectPlayerCountUI = PlayerGui:WaitForChild("SelectPlayerCountUI")
+            SelectPlayerCountUI:SetAttribute("TeleportPartName", partName)
+            SelectPlayerCountUI.Enabled = true
+        end)
     end)
 end
 

@@ -7,6 +7,7 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
+local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 
 local TeleportServiceModule = Knit.CreateService {
 	Name = "TeleportService",
@@ -20,9 +21,6 @@ local TeleportServiceModule = Knit.CreateService {
 local triggerZoneStates = {}
 local playerTriggered = {}
 
-local InitLandName = "出生岛"
--- 触发传送的Part名称
-local TRIGGER_PART_NAMES = {"EUCHVORAL1", "EUCHVORAL2", "EUCHVORAL3"}
 -- 在Part上方多少单位触发传送
 local TRIGGER_HEIGHT_OFFSET = 5
 local COUNTDOWN_DURATION = 15 -- 倒计时持续时间（秒）
@@ -73,7 +71,7 @@ end
 -- 初始化触发区域状态
 -- @return void
 local function initializeTriggerZoneStates()
-	for _, partName in ipairs(TRIGGER_PART_NAMES) do
+	for _, partName in ipairs(GameConfig.TeleportPartNames) do
         triggerZoneStates[partName] = {}
 		resetTriggerZoneState(partName)
 	end
@@ -89,9 +87,13 @@ local function isPlayerInTriggerZone(player)
 
 	local playerPosition = player.Character.HumanoidRootPart.Position
 
-	local land = workspace:FindFirstChild(InitLandName)
+	local land = workspace:FindFirstChild(GameConfig.LandName)
+	if not land then
+		logMessage("ERROR", string.format("未找到LandName: %s", GameConfig.LandName))
+		return false, nil
+	end
 	-- 检查每个触发Part
-	for _, partName in ipairs(TRIGGER_PART_NAMES) do
+	for _, partName in ipairs(GameConfig.TeleportPartNames) do
 		local triggerPart = land:FindFirstChild(partName)
 		if triggerPart and triggerPart:IsA("BasePart") then
 			local partPosition = triggerPart.Position
@@ -110,16 +112,6 @@ local function isPlayerInTriggerZone(player)
 	end
 
 	return false, nil
-end
-
--- 检查触发区域是否有玩家
--- @param partName string 触发区域名称
--- @return boolean 是否有玩家在区域内
-local function hasPlayersInZone(partName, player)
-	local zoneState = triggerZoneStates[partName]
-	if not zoneState then return false end
-	
-	return zoneState.playersInZone[player.UserId] == true
 end
 
 -- 获取触发区域内的实际玩家数量
@@ -141,7 +133,7 @@ end
 -- @param playerCount number 当前玩家数量
 -- @param maxCount number 最大允许玩家数量
 local function updateBillboardGuiPlayerCount(partName, playerCount, maxCount)
-    local land = workspace:FindFirstChild(InitLandName)
+    local land = workspace:FindFirstChild(GameConfig.LandName)
     local triggerPart = land:FindFirstChild(partName)
     if triggerPart and triggerPart:IsA("BasePart") then
         local billboad = triggerPart:FindFirstChild("BillboardGui")
@@ -155,7 +147,7 @@ local function updateBillboardGuiPlayerCount(partName, playerCount, maxCount)
 end
 
 local function updateBillboardGuiCountdown(partName, countdown)
-    local land = workspace:FindFirstChild(InitLandName)
+    local land = workspace:FindFirstChild(GameConfig.LandName)
     local triggerPart = land:FindFirstChild(partName)
     if triggerPart and triggerPart:IsA("BasePart") then
         local billboad = triggerPart:FindFirstChild("BillboardGui")
@@ -326,9 +318,9 @@ end
 
 -- 初始化BillboardGui
 local function initializeBillboad()
-	local land = workspace:WaitForChild(InitLandName)
+	local land = workspace:WaitForChild(GameConfig.LandName)
 	-- 检查每个触发Part
-	for _, partName in ipairs(TRIGGER_PART_NAMES) do
+	for _, partName in ipairs(GameConfig.TeleportPartNames) do
 		local triggerPart = land:WaitForChild(partName)
 		if triggerPart and triggerPart:IsA("BasePart") then
             local billboad = triggerPart:WaitForChild("BillboardGui")
@@ -418,7 +410,7 @@ function TeleportServiceModule:KnitStart()
                             local player = Players:GetPlayerByUserId(userId)
 		                    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
                                 local currentPos = player.Character:GetPivot().Position
-                                local targetZ = workspace:FindFirstChild(InitLandName):FindFirstChild(partName).Position.Z - 10
+                                local targetZ = workspace:FindFirstChild(GameConfig.LandName):FindFirstChild(partName).Position.Z - 10
                                 local newPos = Vector3.new(currentPos.X, currentPos.Y, targetZ)
                                 player.Character:PivotTo(CFrame.new(newPos))
                             end
@@ -449,7 +441,7 @@ function TeleportServiceModule:KnitStart()
 				end
 			else
 				-- 区域内没有玩家，隐藏Billboard GUI
-				local land = workspace:FindFirstChild(InitLandName)
+				local land = workspace:FindFirstChild(GameConfig.LandName)
 				local triggerPart = land:FindFirstChild(partName)
 				if triggerPart and triggerPart:IsA("BasePart") then
 					local billboard = triggerPart:FindFirstChild("BillboardGui")

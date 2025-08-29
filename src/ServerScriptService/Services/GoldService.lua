@@ -1,0 +1,47 @@
+-- GoldService 服务
+-- 使用Knit框架管理服务器数据
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
+
+local GoldService = Knit.CreateService {
+	Name = "GoldService",
+	Client = {
+        ChangeGold = Knit.CreateSignal(),
+	},
+
+    Gold = {},
+}
+
+function GoldService:KnitInit()
+end
+
+-- 服务启动时的初始化
+-- @return void
+function GoldService:KnitStart()
+end
+
+function GoldService:playerAdd(player, gold)
+    self.Gold[player.UserId] = gold
+end
+
+function GoldService:playerRemoved(player)
+    self.Gold[player.UserId] = nil
+end
+
+function GoldService:GetGoldData(player)
+    return self.Gold[player.UserId]
+end
+
+function GoldService:SetGold(player, gold)
+    self.Gold[player.UserId] = gold
+    self.Client.ChangeGold:Fire(player, self.Gold[player.UserId])
+end
+
+function GoldService:ChangeGold(player, gold)
+    self.Gold[player.UserId] = self.Gold[player.UserId] + gold
+    self.Client.ChangeGold:Fire(player, self.Gold[player.UserId])
+end
+
+return GoldService
