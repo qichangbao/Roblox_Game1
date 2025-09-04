@@ -1,8 +1,8 @@
 --[[
 -- 自动生成的Lua配置文件
--- 生成时间: 2025-08-29 13:32:37
+-- 生成时间: 2025-09-03 18:24:56
 -- 源文件: examples\in\ItemConfig.xls
--- 数据维度: 82行 x 15列
+-- 数据维度: 79行 x 15列
 --]]
 
 -- Knit框架兼容的配置模块
@@ -45,23 +45,6 @@ ItemConfig.Data = {
         TimeUsed = 0,
     },
     [3] = {
-        Index = 3,
-        Item = "夜视仪",
-        DisplayName = "Night Vision Goggles",
-        Icon = "rbxassetid://127269078724135",
-        Model = "夜视仪",
-        Description = "Specialized goggles that allow clear vision in total darkness.",
-        Type = 1,
-        RobloxPrice = 200,
-        Price = 2000,
-        SellPrice = 1000,
-        Gift = 1,
-        PickTime = 0,
-        CD = 0,
-        Duration = 30,
-        TimeUsed = 0,
-    },
-    [4] = {
         Index = 4,
         Item = "荧光棒-红色",
         DisplayName = "Glow Stick - Red",
@@ -78,7 +61,7 @@ ItemConfig.Data = {
         Duration = 30,
         TimeUsed = 1,
     },
-    [5] = {
+    [4] = {
         Index = 5,
         Item = "铲子",
         DisplayName = "Shovel",
@@ -95,41 +78,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [6] = {
-        Index = 6,
-        Item = "猎枪",
-        DisplayName = "Shotgun",
-        Icon = "rbxassetid://116823127545129",
-        Model = "猎枪",
-        Description = "A powerful short-range firearm that deals heavy damage up close.",
-        Type = 2,
-        RobloxPrice = 250,
-        Price = 2500,
-        SellPrice = 1250,
-        Gift = 1,
-        PickTime = 0,
-        CD = 1.8,
-        Duration = 0,
-        TimeUsed = 0,
-    },
-    [7] = {
-        Index = 7,
-        Item = "猎枪子弹",
-        DisplayName = "Shotgun Ammo",
-        Icon = "rbxassetid://137239943942907",
-        Model = "猎枪子弹",
-        Description = "Ammunition compatible with shotguns, delivering devastating impact.",
-        Type = 2,
-        RobloxPrice = 100,
-        Price = 100,
-        SellPrice = 50,
-        Gift = 1,
-        PickTime = 0,
-        CD = 0,
-        Duration = 0,
-        TimeUsed = 2,
-    },
-    [8] = {
+    [5] = {
         Index = 8,
         Item = "急救包",
         DisplayName = "First Aid Kit",
@@ -146,7 +95,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 3,
     },
-    [9] = {
+    [6] = {
         Index = 9,
         Item = "额外的背包",
         DisplayName = "Extra Backpack",
@@ -163,7 +112,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [10] = {
+    [7] = {
         Index = 10,
         Item = "传送装置",
         DisplayName = "Teleport Device",
@@ -180,7 +129,7 @@ ItemConfig.Data = {
         Duration = 60,
         TimeUsed = 3,
     },
-    [11] = {
+    [8] = {
         Index = 1001,
         Item = "破碎陶片",
         DisplayName = "Broken Pottery Shard",
@@ -197,7 +146,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [12] = {
+    [9] = {
         Index = 1002,
         Item = "生锈铁钉",
         DisplayName = "Rusty Nail",
@@ -214,7 +163,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [13] = {
+    [10] = {
         Index = 1003,
         Item = "海玻璃碎片",
         DisplayName = "Sea Glass Fragment",
@@ -231,7 +180,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [14] = {
+    [11] = {
         Index = 1004,
         Item = "石化木片",
         DisplayName = "Petrified Wood Chip",
@@ -248,7 +197,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [15] = {
+    [12] = {
         Index = 1005,
         Item = "旧布条",
         DisplayName = "Old Cloth Strip",
@@ -265,7 +214,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [16] = {
+    [13] = {
         Index = 1006,
         Item = "破旧绳索",
         DisplayName = "Worn Rope",
@@ -282,7 +231,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [17] = {
+    [14] = {
         Index = 1007,
         Item = "骨头碎片",
         DisplayName = "Bone Fragment",
@@ -299,7 +248,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [18] = {
+    [15] = {
         Index = 1008,
         Item = "旧报纸残页",
         DisplayName = "Old Newspaper Scrap",
@@ -316,7 +265,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [19] = {
+    [16] = {
         Index = 1009,
         Item = "发霉书页",
         DisplayName = "Moldy Book Page",
@@ -333,7 +282,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [20] = {
+    [17] = {
         Index = 1010,
         Item = "普通贝壳",
         DisplayName = "Common Seashell",
@@ -350,7 +299,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [21] = {
+    [18] = {
         Index = 1011,
         Item = "石英碎块",
         DisplayName = "Quartz Fragment",
@@ -367,7 +316,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [22] = {
+    [19] = {
         Index = 1012,
         Item = "旧铁扣",
         DisplayName = "Old Iron Buckle",
@@ -384,7 +333,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [23] = {
+    [20] = {
         Index = 1013,
         Item = "黏土碎块",
         DisplayName = "Clay Chunk",
@@ -401,7 +350,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [24] = {
+    [21] = {
         Index = 1014,
         Item = "普通矿石",
         DisplayName = "Common Ore",
@@ -418,7 +367,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [25] = {
+    [22] = {
         Index = 1015,
         Item = "铜币",
         DisplayName = "Copper Coin",
@@ -435,7 +384,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [26] = {
+    [23] = {
         Index = 1016,
         Item = "木雕小偶",
         DisplayName = "Wooden Figurine",
@@ -452,7 +401,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [27] = {
+    [24] = {
         Index = 1017,
         Item = "石头吊坠",
         DisplayName = "Stone Pendant",
@@ -469,7 +418,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [28] = {
+    [25] = {
         Index = 1018,
         Item = "小瓶碎玻璃",
         DisplayName = "Broken Glass Bottle",
@@ -486,7 +435,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [29] = {
+    [26] = {
         Index = 1019,
         Item = "破损陶罐",
         DisplayName = "Damaged Clay Pot",
@@ -503,7 +452,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [30] = {
+    [27] = {
         Index = 1020,
         Item = "银币",
         DisplayName = "Silver Coin",
@@ -520,7 +469,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [31] = {
+    [28] = {
         Index = 1021,
         Item = "完整贝壳",
         DisplayName = "Intact Seashell",
@@ -537,7 +486,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [32] = {
+    [29] = {
         Index = 1022,
         Item = "彩绘陶片",
         DisplayName = "Painted Pottery Shard",
@@ -554,7 +503,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [33] = {
+    [30] = {
         Index = 1023,
         Item = "古代铜片",
         DisplayName = "Ancient Copper Piece",
@@ -571,7 +520,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [34] = {
+    [31] = {
         Index = 1024,
         Item = "雕花骨饰",
         DisplayName = "Carved Bone Ornament",
@@ -588,7 +537,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [35] = {
+    [32] = {
         Index = 1025,
         Item = "奇异石纹",
         DisplayName = "Strange Stone Pattern",
@@ -605,7 +554,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [36] = {
+    [33] = {
         Index = 1026,
         Item = "发光蘑菇",
         DisplayName = "Glowing Mushroom",
@@ -622,7 +571,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [37] = {
+    [34] = {
         Index = 1027,
         Item = "神秘水晶碎片",
         DisplayName = "Mysterious Crystal Shard",
@@ -639,7 +588,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [38] = {
+    [35] = {
         Index = 1028,
         Item = "旧怀表",
         DisplayName = "Old Pocket Watch",
@@ -656,7 +605,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [39] = {
+    [36] = {
         Index = 1029,
         Item = "古地图残页",
         DisplayName = "Ancient Map Fragment",
@@ -673,7 +622,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [40] = {
+    [37] = {
         Index = 1030,
         Item = "雕刻木板",
         DisplayName = "Carved Wooden Board",
@@ -690,7 +639,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [41] = {
+    [38] = {
         Index = 1031,
         Item = "彩色羽毛",
         DisplayName = "Colorful Feather",
@@ -707,7 +656,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [42] = {
+    [39] = {
         Index = 1032,
         Item = "珍珠",
         DisplayName = "Pearl",
@@ -724,7 +673,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [43] = {
+    [40] = {
         Index = 1033,
         Item = "银制戒指",
         DisplayName = "Silver Ring",
@@ -741,7 +690,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [44] = {
+    [41] = {
         Index = 1034,
         Item = "古代陶器",
         DisplayName = "Ancient Pottery",
@@ -758,7 +707,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [45] = {
+    [42] = {
         Index = 1035,
         Item = "兽角",
         DisplayName = "Beast Horn",
@@ -775,7 +724,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [46] = {
+    [43] = {
         Index = 1036,
         Item = "稀有化石",
         DisplayName = "Rare Fossil",
@@ -792,7 +741,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [47] = {
+    [44] = {
         Index = 1037,
         Item = "古代石刻",
         DisplayName = "Ancient Stone Carving",
@@ -809,7 +758,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [48] = {
+    [45] = {
         Index = 1038,
         Item = "金币",
         DisplayName = "Gold Coin",
@@ -826,7 +775,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [49] = {
+    [46] = {
         Index = 1039,
         Item = "发光水晶",
         DisplayName = "Glowing Crystal",
@@ -843,7 +792,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [50] = {
+    [47] = {
         Index = 1040,
         Item = "宝石碎片",
         DisplayName = "Gem Fragment",
@@ -860,7 +809,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [51] = {
+    [48] = {
         Index = 1041,
         Item = "古代金属片",
         DisplayName = "Ancient Metal Fragment",
@@ -877,7 +826,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [52] = {
+    [49] = {
         Index = 1042,
         Item = "古人面具",
         DisplayName = "Ancient Mask",
@@ -894,7 +843,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [53] = {
+    [50] = {
         Index = 1043,
         Item = "翡翠碎块",
         DisplayName = "Jade Fragment",
@@ -911,7 +860,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [54] = {
+    [51] = {
         Index = 1044,
         Item = "奇异骨骼",
         DisplayName = "Strange Skeleton",
@@ -928,7 +877,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [55] = {
+    [52] = {
         Index = 1045,
         Item = "兽皮卷轴",
         DisplayName = "Animal Hide Scroll",
@@ -945,7 +894,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [56] = {
+    [53] = {
         Index = 1046,
         Item = "罕见珍珠",
         DisplayName = "Rare Pearl",
@@ -962,7 +911,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [57] = {
+    [54] = {
         Index = 1047,
         Item = "银制杯盏",
         DisplayName = "Silver Goblet",
@@ -979,7 +928,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [58] = {
+    [55] = {
         Index = 1048,
         Item = "古代青铜剑残片",
         DisplayName = "Ancient Bronze Sword Shard",
@@ -996,7 +945,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [59] = {
+    [56] = {
         Index = 1049,
         Item = "玛瑙石",
         DisplayName = "Agate Stone",
@@ -1013,7 +962,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [60] = {
+    [57] = {
         Index = 1050,
         Item = "黄金吊坠",
         DisplayName = "Golden Pendant",
@@ -1030,7 +979,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [61] = {
+    [58] = {
         Index = 1051,
         Item = "水晶球碎裂物",
         DisplayName = "Shattered Crystal Ball",
@@ -1047,7 +996,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [62] = {
+    [59] = {
         Index = 1052,
         Item = "神秘石板",
         DisplayName = "Mysterious Stone Tablet",
@@ -1064,7 +1013,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [63] = {
+    [60] = {
         Index = 1053,
         Item = "黄金杯",
         DisplayName = "Golden Chalice",
@@ -1081,7 +1030,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [64] = {
+    [61] = {
         Index = 1054,
         Item = "红宝石",
         DisplayName = "Ruby",
@@ -1098,7 +1047,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [65] = {
+    [62] = {
         Index = 1055,
         Item = "蓝宝石",
         DisplayName = "Sapphire",
@@ -1115,7 +1064,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [66] = {
+    [63] = {
         Index = 1056,
         Item = "古代王冠残片",
         DisplayName = "Ancient Crown Fragment",
@@ -1132,7 +1081,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [67] = {
+    [64] = {
         Index = 1057,
         Item = "巨型珍珠",
         DisplayName = "Giant Pearl",
@@ -1149,7 +1098,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [68] = {
+    [65] = {
         Index = 1058,
         Item = "神秘法典",
         DisplayName = "Mysterious Codex",
@@ -1166,7 +1115,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [69] = {
+    [66] = {
         Index = 1059,
         Item = "龙骨",
         DisplayName = "Dragon Bone",
@@ -1183,7 +1132,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [70] = {
+    [67] = {
         Index = 1060,
         Item = "魔化水晶",
         DisplayName = "Enchanted Crystal",
@@ -1200,7 +1149,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [71] = {
+    [68] = {
         Index = 1061,
         Item = "古代神像碎片",
         DisplayName = "Ancient Idol Shard",
@@ -1217,7 +1166,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [72] = {
+    [69] = {
         Index = 1062,
         Item = "黄金宝箱残骸",
         DisplayName = "Golden Chest Remains",
@@ -1234,7 +1183,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [73] = {
+    [70] = {
         Index = 1063,
         Item = "黑曜石核心",
         DisplayName = "Obsidian Core",
@@ -1251,7 +1200,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [74] = {
+    [71] = {
         Index = 1064,
         Item = "纯金权杖",
         DisplayName = "Pure Gold Scepter",
@@ -1268,7 +1217,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [75] = {
+    [72] = {
         Index = 1065,
         Item = "祖母绿巨石",
         DisplayName = "Emerald Boulder",
@@ -1285,7 +1234,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [76] = {
+    [73] = {
         Index = 1066,
         Item = "凤凰羽",
         DisplayName = "Phoenix Feather",
@@ -1302,7 +1251,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [77] = {
+    [74] = {
         Index = 1067,
         Item = "神秘符文石",
         DisplayName = "Rune Stone",
@@ -1319,7 +1268,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [78] = {
+    [75] = {
         Index = 1068,
         Item = "古代神王戒",
         DisplayName = "Ancient King’s Ring",
@@ -1336,7 +1285,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [79] = {
+    [76] = {
         Index = 1069,
         Item = "龙之心石",
         DisplayName = "Dragon Heartstone",
@@ -1353,7 +1302,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [80] = {
+    [77] = {
         Index = 1070,
         Item = "天青宝珠",
         DisplayName = "Azure Orb",
@@ -1370,7 +1319,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [81] = {
+    [78] = {
         Index = 1071,
         Item = "时间之沙瓶",
         DisplayName = "Hourglass of Time",
@@ -1387,7 +1336,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [82] = {
+    [79] = {
         Index = 1072,
         Item = "遗失的帝王皇冠",
         DisplayName = "Lost Imperial Crown",

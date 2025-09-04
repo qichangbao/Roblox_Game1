@@ -6,6 +6,7 @@ local DataRetryUtil = require(ReplicatedStorage:WaitForChild('ToolFolder'):WaitF
 local ClientData = {}
 ClientData.Gold = 0
 ClientData.Inventory = {}
+ClientData.ToolData = {}
 
 local function init()
     local KnitInitClient = require(script.Parent:WaitForChild("KnitInitClient"))
@@ -22,13 +23,16 @@ local function init()
                 retryDelay = 2,
                 operationName = "登录数据获取",
                 dataValidator = function(data)
-                    return data and type(data) == "table" and data.Gold ~= nil and data.Inventory ~= nil
+                    return data and type(data) == "table" and data.Gold ~= nil and data.Inventory ~= nil and data.ToolData ~= nil
                 end,
                 onSuccess = function(data)
                     -- 安全地设置数据
                     ClientData.Gold = data.Gold or 0
-                    ClientData.Inventory = data.Inventory or {}
+					ClientData.Inventory = data.Inventory or {}
+					ClientData.ToolData = data.ToolData or {}
+					Knit.GetController("UIController").ChangeGoldUI:Fire(data.Gold)
                     Knit.GetController("InventoryController"):Event_UpdateBackpack(data.Inventory)
+					Knit.GetController("UIController").UpdateToolUI:Fire(data.ToolData)
                 end,
                 onFailure = function(errorMsg)
                     warn("登录数据获取失败:", errorMsg)
@@ -37,8 +41,14 @@ local function init()
         )
 
         Knit.GetService("GoldService").ChangeGold:Connect(function(gold)
-            ClientData.Gold = gold
-        end)
+			ClientData.Gold = gold
+			Knit.GetController("UIController").ChangeGoldUI:Fire(gold)
+		end)
+
+		Knit.GetService("InventoryService").UpdateBackpack:Connect(function(inventory)
+			ClientData.Inventory = inventory or {}
+			Knit.GetController("InventoryController"):Event_UpdateBackpack(inventory or {})
+		end)
     end)
 end
 

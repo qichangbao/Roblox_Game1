@@ -19,5 +19,6 @@ GameConfig.InitItemNums = 30        -- 初始物品数量
 GameConfig.LandName = "出生岛"
 GameConfig.TeleportPartNames = {"EUCHVORAL1", "EUCHVORAL2", "EUCHVORAL3"}-- 触发传送的Part名称
 GameConfig.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+GameConfig.SLOT_NUM = 3
 
 return GameConfig

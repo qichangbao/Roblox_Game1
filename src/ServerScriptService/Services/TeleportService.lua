@@ -64,7 +64,6 @@ local function resetTriggerZoneState(partName)
 		zoneState.isCountingDown = false
         zoneState.createCountdownTime = 0
 		zoneState.isCreateCountingDown = false
-		logMessage("INFO", string.format("重置触发区域状态: %s", partName))
 	end
 end
 
@@ -219,23 +218,19 @@ end
 -- @param player Player 触发的玩家
 -- @return string|nil 预留服务器访问码，失败时返回nil
 local function createReserveServer()
-	logMessage("INFO", "开始创建预留服务器副本")
-
 	-- 创建预留服务器
 	local success, result = pcall(function()
-		logMessage("INFO", "正在调用ReserveServer API...")
 		-- 创建预留服务器访问码（使用目标场景ID）
 		local accessCode = TeleportService:ReserveServer(TARGET_PLACE_ID)
 		return accessCode
 	end)
 
 	if success and result then
-		logMessage("INFO", "预留服务器副本创建完成")
 		return result
-	else
-		logMessage("ERROR", string.format("预留服务器创建失败: %s", tostring(result)))
-		return nil
 	end
+
+	logMessage("ERROR", string.format("预留服务器创建失败: %s", tostring(result)))
+	return nil
 end
 
 -- 传送玩家到预留服务器副本
@@ -243,39 +238,49 @@ end
 -- @return void
 local function teleportToReserveServer(players)
     if isInStudio() then
-        logMessage("INFO", "在Studio环境中，不执行预留服务器传送")
         return
     end
     
 	-- 创建预留服务器
 	local accessCode = createReserveServer()
 	if not accessCode then
-		logMessage("ERROR", "无法创建预留服务器，使用备用场景")
+		logMessage("ERROR", "无法创建预留服务器")
 		return
 	end
 
 	-- 准备传送数据
-	local teleportData = {
-		timestamp = os.time(),
-		source = "dinosaur_island_trigger",
-		serverType = "reserve_server",
-		accessCode = accessCode
-	}
+	local teleportOptions = Instance.new("TeleportOptions")
+	
+	-- 收集所有玩家的工具数据
+	local playersToolData = {}
+	local InventoryService = Knit.GetService("InventoryService")
+	
+	for _, player in ipairs(players) do
+		local toolData = InventoryService:GetToolData(player)
+		if toolData then
+			playersToolData[player.UserId] = toolData
+		end
+	end
+	
+	-- 将工具数据添加到传送选项中
+	if next(playersToolData) then
+		teleportOptions:SetTeleportData({
+			PlayersToolData = playersToolData
+		})
+		logMessage("INFO", string.format("已为 %d 个玩家准备工具数据传送", #players))
+	end
 
 	-- 执行传送到预留服务器
 	local teleportSuccess, teleportError = pcall(function()
-		logMessage("INFO", string.format("开始传送到目标场景: %d", TARGET_PLACE_ID))
-		TeleportService:TeleportToPrivateServer(
+		TeleportService:TeleportAsync(
 			TARGET_PLACE_ID,
-			accessCode,
 			players,
-			nil, -- spawnName
-			teleportData
+			teleportOptions
 		)
 	end)
 
 	if not teleportSuccess then
-		logMessage("ERROR", string.format("传送到预留服务器失败: %s，使用备用方案", tostring(teleportError)))
+		logMessage("ERROR", string.format("传送到预留服务器失败: %s", tostring(teleportError)))
 	end
 end
 
@@ -306,8 +311,6 @@ local function teleportAllPlayersInZone(partName)
 			end
 		end
 	end
-	
-	logMessage("INFO", string.format("准备传送 %d 名玩家从触发区域 %s", #playersToTeleport, partName))
 	
 	-- 传送所有收集到的玩家
     teleportToReserveServer(playersToTeleport)

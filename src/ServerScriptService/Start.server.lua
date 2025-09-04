@@ -1,11 +1,12 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 local Lighting = game:GetService("Lighting")
 
 math.randomseed(os.time())
 
 -- 初始化Knit框架
 local Knit = require(ReplicatedStorage.Packages:WaitForChild("Knit"):WaitForChild("Knit"))
-Knit.AddServices(game.ServerScriptService.Services)
+Knit.AddServices(ServerScriptService:WaitForChild("Services"))
 
 -- 服务器启动状态标志
 local isServerStarted = false
@@ -71,4 +72,7 @@ serverStartCheckEvent.OnServerEvent:Connect(function(player)
 	serverStartCheckEvent:FireClient(player, isServerStarted)
 end)
 
-require(script.Parent:WaitForChild("NpcInit"))
+
+task.spawn(function()
+	require(script.Parent:WaitForChild("NpcInit"))
+end)

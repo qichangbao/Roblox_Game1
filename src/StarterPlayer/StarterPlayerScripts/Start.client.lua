@@ -28,6 +28,7 @@
 --     end)
 -- end
 print("客户端启动")
+
 math.randomseed(os.time())
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 -- 初始化Knit框架
@@ -87,3 +88,6 @@ Knit.Start():andThen(function()
     -- 开始检查服务器启动状态
     checkServerStartStatus()
 end):catch(warn)
+
+game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
+game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.PlayerList, true)

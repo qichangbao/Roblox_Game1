@@ -4,6 +4,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local ItemConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("ItemConfig"))
+local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 
 local StoreService = Knit.CreateService {
 	Name = "StoreService",
@@ -20,25 +21,53 @@ end
 function StoreService:KnitStart()
 end
 
-function StoreService.Client:GoldBuyItem(player, itemId, itemNum)
-    local itemInfo = ItemConfig.GetByIndex(itemId)
+function StoreService.Client:GoldBuyItem(player, itemId)
+    local itemInfo = ItemConfig:GetByIndex(itemId)
     if not itemInfo then
         return "Item not found"
     end
 
     local gold = Knit.GetService("GoldService"):GetGoldData(player)
-    if gold < itemInfo.Price * itemNum then
+    if gold < itemInfo.Price then
         return "Not enough coins"
     end
-    Knit.GetService("GoldService"):ChangeGold(player, -itemInfo.Price * itemNum)
-    Knit.GetService("InventoryService"):AddItem(player, itemId, itemNum)
+    Knit.GetService("GoldService"):ChangeGold(player, -itemInfo.Price)
+    Knit.GetService("InventoryService"):AddItem(player, itemId)
     return "Success"
 end
 
-function StoreService.Client:GifeItem(player, itemId, assetID, itemNum)
+function StoreService.Client:RobBuyItem(player, itemId, assetID, targetUserId)
+    return Knit.GetService("PurchaseService"):BuyItem(player, itemId, assetID, targetUserId)
 end
 
-function StoreService.Client:RobBuyItem(player, itemId, assetID, itemNum)
+function StoreService.Client:Sell(player, itemId)
+    local itemInfo = ItemConfig:GetByIndex(itemId)
+    if not itemInfo then
+        return
+    end
+
+    Knit.GetService("GoldService"):ChangeGold(player, itemInfo.SellPrice)
+    Knit.GetService("InventoryService"):RemoveItem(player, itemId)
+    return itemId
+end
+
+function StoreService.Client:SellAll(player)
+    local sellItems = {}
+    local gold = 0
+    local inventory = Knit.GetService("InventoryService"):GetInventoryData(player)
+    for _, itemData in ipairs(inventory) do
+        local itemInfo = ItemConfig:GetByIndex(itemData.ItemId)
+        -- 收集类物品可以一键全部出售
+        -- if itemInfo and itemInfo.Type == GameConfig.ItemType.Collect then
+        if itemInfo then
+            gold += itemInfo.SellPrice
+            table.insert(sellItems, itemData.ItemId)
+        end
+    end
+
+    Knit.GetService("GoldService"):ChangeGold(player, gold)
+    Knit.GetService("InventoryService"):RemoveItems(player, sellItems)
+    return sellItems
 end
 
 return StoreService

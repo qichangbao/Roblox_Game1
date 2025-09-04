@@ -1,4 +1,3 @@
-local Players = game:GetService('Players')
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local Signal = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Signal"))
@@ -10,7 +9,17 @@ local UIController = Knit.CreateController {
     ShowStoreUI = Signal.new(),
     ShowSellUI = Signal.new(),
     ShowTip = Signal.new(),
-    ShowAdminUI = Signal.new(),
+	ShowAdminUI = Signal.new(),
+	ShowBackpackUI = Signal.new(),
+	ChangeGoldUI = Signal.new(),
+	ShowTeleportUI = Signal.new(),
+    ShowFeedbackUI = Signal.new(),
+    ShowPlayerListUI = Signal.new(),
+    ShowDragUI = Signal.new(),
+    MoveDragUI = Signal.new(),
+    HideDragUI = Signal.new(),
+	UpdateToolUI = Signal.new(),
+	AddToolUI = Signal.new(),
 }
 
 function UIController:KnitInit()

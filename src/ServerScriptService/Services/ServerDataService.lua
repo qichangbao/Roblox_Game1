@@ -24,8 +24,9 @@ function ServerDataService:KnitStart()
 
         local gold = DBService:Get(player.UserId, "Gold")
         local inventory = DBService:Get(player.UserId, "PlayerInventory")
+        local toolData = DBService:Get(player.UserId, "PlayerToolData")
         Knit.GetService("GoldService"):playerAdd(player, gold)
-        Knit.GetService("InventoryService"):playerAdd(player, inventory)
+        Knit.GetService("InventoryService"):playerAdd(player, inventory, toolData)
     end
 
     local function playerRemoved(player)
@@ -53,9 +54,12 @@ end
 function ServerDataService:GetInitData(player)
     local gold = Knit.GetService("GoldService"):GetGoldData(player)
     local inventory = Knit.GetService("InventoryService"):GetInventoryData(player)
+    local toolData = Knit.GetService("InventoryService"):GetToolData(player)
+
     return {
         Gold = gold,
         Inventory = inventory,
+        ToolData = toolData,
     }
 end
 

@@ -10,8 +10,4 @@ local npc2 = ServerStorage:WaitForChild("Npc2"):Clone()
 npc2.Parent = game:GetService("Workspace")
 require(npc2:FindFirstChild("ModuleScript"))
 
-local npc3 = ServerStorage:WaitForChild("Npc3"):Clone()
-npc3.Parent = game:GetService("Workspace")
-require(npc3:FindFirstChild("ModuleScript"))
-
 return NpcInit

@@ -4,9 +4,9 @@ local ProfileService = require(ReplicatedStorage:WaitForChild("Packages"):WaitFo
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 
 local _dataTemplate = {
-	Gold = 5000,	-- 金币
-	PlayerInventory = {
-	},			-- 背包
+	Gold = 0,	-- 金币
+	PlayerInventory = {},	-- 背包数据
+	PlayerToolData = {},	-- 工具栏数据
 }
 
 local ProfileStore = ProfileService.GetProfileStore(
@@ -24,6 +24,7 @@ local DBService = Knit.CreateService({
 local AdminUserIds = {
 	4803414780,
 	7689724124,
+	8691350792,
 }
 
 -- 获取是否管理员

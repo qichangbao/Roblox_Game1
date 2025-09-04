@@ -10,7 +10,6 @@ local Signal = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("
 
 local TeleportController = Knit.CreateController {
     Name = "TeleportController",
-    Countdown = Signal.new(),
 }
 
 -- 控制器初始化
@@ -22,11 +21,9 @@ function TeleportController:KnitInit()
         -- 获取TeleportService服务
         local TeleportService = Knit.GetService("TeleportService")
     
-        -- 监听服务器的选择人数请求
+        -- 监听服务器的显示传送界面请求
         TeleportService.RequestPlayerCount:Connect(function(partName)
-            local SelectPlayerCountUI = PlayerGui:WaitForChild("SelectPlayerCountUI")
-            SelectPlayerCountUI:SetAttribute("TeleportPartName", partName)
-            SelectPlayerCountUI.Enabled = true
+			Knit.GetController("UIController").ShowTeleportUI:Fire(partName)
         end)
     end)
 end
