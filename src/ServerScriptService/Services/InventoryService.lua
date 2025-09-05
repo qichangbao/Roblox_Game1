@@ -11,12 +11,11 @@ local InventoryService = Knit.CreateService {
 	Name = "InventoryService",
 	Client = {
 		UpdateBackpack = Knit.CreateSignal(),
-		SetupKeyBinds = Knit.CreateSignal(),
 	},
 
-    Inventory = {},     -- 背包数据
-    ToolData = {},      -- 工具栏数据
-    PlayerTools = {},   -- 玩家当前装备的工具
+	Inventory = {},     -- 背包数据
+	ToolData = {},      -- 工具栏数据
+	ToolCooldowns = {}, -- 工具冷却时间记录
 }
 
 function InventoryService:KnitInit()
@@ -28,72 +27,66 @@ function InventoryService:KnitStart()
 end
 
 function InventoryService:playerAdd(player, inventory, toolData)
-    self.Inventory[player.UserId] = {}
-    for _, v in pairs(inventory) do
-        table.insert(self.Inventory[player.UserId], v)
-    end
-    self.ToolData[player.UserId] = {}
-    for i = 1, GameConfig.SLOT_NUM do
-        self.ToolData[player.UserId][i] = toolData[i] or 0
-    end
-    
-    -- 如果有工具数据，创建工具并设置按键绑定
-    if toolData and next(toolData) then
-        self:CreatePlayerTools(player)
-    end
+	self.Inventory[player.UserId] = {}
+	for _, v in pairs(inventory) do
+		table.insert(self.Inventory[player.UserId], v)
+	end
+	self.ToolData[player.UserId] = {}
+	for i = 1, GameConfig.SLOT_NUM do
+		self.ToolData[player.UserId][i] = toolData[i] or 0
+	end
 end
 
 function InventoryService:playerRemoved(player)
-    self.Inventory[player.UserId] = nil
-    self.ToolData[player.UserId] = nil
-    self.PlayerTools[player.UserId] = nil
+	self.Inventory[player.UserId] = nil
+	self.ToolData[player.UserId] = nil
 end
 
 function InventoryService:GetInventoryData(player)
-    return self.Inventory[player.UserId]
+	return self.Inventory[player.UserId]
 end
 
 function InventoryService:AddItem(player, itemId)
-    table.insert(self.Inventory[player.UserId], {
-        ItemId = itemId,
-    })
-    self.Client.UpdateBackpack:Fire(player, self.Inventory[player.UserId])
-    local DBService = Knit.GetService("DBService")
-    DBService:Set(player.UserId, "PlayerInventory", self.Inventory[player.UserId])
+	table.insert(self.Inventory[player.UserId], {
+		ItemId = itemId,
+	})
+	self.Client.UpdateBackpack:Fire(player, self.Inventory[player.UserId])
+	local DBService = Knit.GetService("DBService")
+	DBService:Set(player.UserId, "PlayerInventory", self.Inventory[player.UserId])
 end
 
 function InventoryService.Client:AddItem(player, itemId)
-    return self.Server:AddItem(player, itemId)
+	return self.Server:AddItem(player, itemId)
 end
 
 function InventoryService:RemoveItem(player, itemId)
-    for i, v in ipairs(self.Inventory[player.UserId]) do
-        if v.ItemId == itemId then
-            table.remove(self.Inventory[player.UserId], i)
-            break
-        end
-    end
+	for i, v in ipairs(self.Inventory[player.UserId]) do
+		if v.ItemId == itemId then
+			table.remove(self.Inventory[player.UserId], i)
+			break
+		end
+	end
 	self.Client.UpdateBackpack:Fire(player, self.Inventory[player.UserId])
-    local DBService = Knit.GetService("DBService")
-    DBService:Set(player.UserId, "PlayerInventory", self.Inventory[player.UserId])
+	local DBService = Knit.GetService("DBService")
+	DBService:Set(player.UserId, "PlayerInventory", self.Inventory[player.UserId])
 end
 
 function InventoryService.Client:RemoveItem(player, itemId)
-    return self.Server:RemoveItem(player, itemId)
+	return self.Server:RemoveItem(player, itemId)
 end
 
 function InventoryService:RemoveItems(player, itemIds)
-    for _, itemId in ipairs(itemIds) do
-        for i, v in ipairs(self.Inventory[player.UserId]) do
-            if v.ItemId == itemId then
-                table.remove(self.Inventory[player.UserId], i)
-                break
-            end
-        end
-    end
+	for _, itemId in ipairs(itemIds) do
+		for i, v in ipairs(self.Inventory[player.UserId]) do
+			if v.ItemId == itemId then
+				table.remove(self.Inventory[player.UserId], i)
+				break
+			end
+		end
+	end
 	self.Client.UpdateBackpack:Fire(player, self.Inventory[player.UserId])
-    local DBService = Knit.GetService("DBService")
-    DBService:Set(player.UserId, "PlayerInventory", self.Inventory[player.UserId])
+	local DBService = Knit.GetService("DBService")
+	DBService:Set(player.UserId, "PlayerInventory", self.Inventory[player.UserId])
 end
 
 -- 更新玩家工具栏数据并创建工具
@@ -101,288 +94,193 @@ end
 -- @param data table 工具栏数据，格式为 {["1"] = itemId, ["2"] = itemId, ["3"] = itemId}
 -- @return void
 function InventoryService:UpdateToolData(player, data)
-    self.ToolData[player.UserId] = {}
-    for i = 1, GameConfig.SLOT_NUM do
-        self.ToolData[player.UserId][tonumber(i)] = data[i] or 0
-    end
-    local DBService = Knit.GetService("DBService")
-    DBService:Set(player.UserId, "PlayerToolData", self.ToolData[player.UserId])
-    
-    -- 检查当前装备的工具是否在新的data中
-    local character = player.Character
-    if character then
-        local currentTool = character:FindFirstChildOfClass("Tool")
-        if currentTool then
-            local currentItemId = currentTool:GetAttribute("ItemId")
-            local toolInData = false
-            
-            -- 检查当前工具是否在新的data中
-            for _, itemId in pairs(data) do
-                if itemId == currentItemId then
-                    toolInData = true
-                    break
-                end
-            end
-            
-            -- 如果当前工具不在新的data中，则取下工具
-            if not toolInData then
-                local humanoid = character:FindFirstChild("Humanoid")
-                if humanoid then
-                    humanoid:UnequipTools()
-                end
-            end
-        end
-    end
-    
-    -- 创建工具并设置按键监听
-    self:CreatePlayerTools(player)
+	self.ToolData[player.UserId] = {}
+	for i = 1, GameConfig.SLOT_NUM do
+		self.ToolData[player.UserId][tonumber(i)] = data[i] or 0
+	end
+	local DBService = Knit.GetService("DBService")
+	DBService:Set(player.UserId, "PlayerToolData", self.ToolData[player.UserId])
+
+	-- 检查当前装备的工具是否在新的data中
+	local character = player.Character
+	if character then
+		local currentTool = character:FindFirstChildOfClass("Tool")
+		if currentTool then
+			local currentItemId = currentTool:GetAttribute("ItemId")
+			local toolInData = false
+
+			-- 检查当前工具是否在新的data中
+			for _, itemId in pairs(data) do
+				if itemId == currentItemId then
+					toolInData = true
+					break
+				end
+			end
+
+			-- 如果当前工具不在新的data中，则取下工具
+			if not toolInData then
+				local humanoid = character:FindFirstChild("Humanoid")
+				if humanoid then
+					humanoid:UnequipTools()
+				end
+			end
+		end
+	end
 end
 
 function InventoryService:GetToolData(player)
-    return self.ToolData[player.UserId]
+	return self.ToolData[player.UserId]
 end
 
 function InventoryService.Client:UpdateToolData(player, data)
-    self.Server:UpdateToolData(player, data)
+	self.Server:UpdateToolData(player, data)
 end
 
 -- 从DataStoreService初始化玩家库存数据
 function InventoryService:InitPlayerInventory(player, inventoryStore)
-    local userId = player.UserId
-    self.Inventory[userId] = {}
+	local userId = player.UserId
+	self.Inventory[userId] = {}
 
-    if inventoryStore then
-        for _, v in pairs(inventoryStore) do
-            table.insert(self.Inventory[userId], v)
-        end
-    end
+	if inventoryStore then
+		for _, v in pairs(inventoryStore) do
+			table.insert(self.Inventory[userId], v)
+		end
+	end
 	self.Client.UpdateBackpack:Fire(player, self.Inventory[userId])
 end
 
 function InventoryService:GetInventoryFromDBService(userId, value)
-    local player = game.Players:GetPlayerByUserId(userId)
-    if not player then
-        return
-    end
-    self:InitPlayerInventory(player, value)
-end
-
--- 为玩家创建工具实例
--- @param player Player 玩家对象
--- @return void
-function InventoryService:CreatePlayerTools(player)
-    local userId = player.UserId
-    local toolData = self.ToolData[userId]
-    
-    if not toolData then
-        return
-    end
-    
-    -- 初始化玩家工具存储
-    if not self.PlayerTools[userId] then
-        self.PlayerTools[userId] = {}
-    end
-    
-    -- 第一步：收集所有需要的工具ID和对应的槽位
-    local neededTools = {}
-    for slot, itemId in pairs(toolData) do
-        if itemId and itemId ~= "" then
-            neededTools[itemId] = neededTools[itemId] or {}
-            table.insert(neededTools[itemId], slot)
-        end
-    end
-    
-    -- 第二步：收集现有工具，按物品ID分组
-    local existingTools = {}
-    local slotToTool = {}
-    for slot, tool in pairs(self.PlayerTools[userId]) do
-        if tool then
-            local itemId = tool:GetAttribute("ItemId")
-            if itemId then
-                existingTools[itemId] = existingTools[itemId] or {}
-                table.insert(existingTools[itemId], tool)
-                slotToTool[slot] = tool
-            end
-        end
-    end
-    
-    -- 第三步：清空当前工具表，准备重新分配
-    local newPlayerTools = {}
-    
-    -- 第四步：重用现有工具，优先分配到原来的槽位
-    for itemId, slots in pairs(neededTools) do
-        local availableTools = existingTools[itemId] or {}
-        
-        for _, slot in ipairs(slots) do
-            -- 检查当前槽位是否已有正确的工具
-            local currentTool = slotToTool[slot]
-            if currentTool and currentTool:GetAttribute("ItemId") == itemId then
-                -- 当前槽位已有正确的工具，直接保留
-                newPlayerTools[slot] = currentTool
-                -- 从可用工具列表中移除
-                for i, tool in ipairs(availableTools) do
-                    if tool == currentTool then
-                        table.remove(availableTools, i)
-                        break
-                    end
-                end
-            elseif #availableTools > 0 then
-                -- 使用可用的工具
-                local tool = table.remove(availableTools, 1)
-                newPlayerTools[slot] = tool
-            else
-                -- 需要创建新工具
-                local tool = self:CreateToolFromItemId(itemId)
-                if tool then
-                    tool:SetAttribute("ItemId", itemId)
-                    newPlayerTools[slot] = tool
-                end
-            end
-        end
-        
-        -- 销毁多余的工具
-        for _, tool in ipairs(availableTools) do
-            if tool and tool.Parent then
-                tool:Destroy()
-            end
-        end
-    end
-    
-    -- 第五步：销毁不再需要的工具
-    for slot, tool in pairs(self.PlayerTools[userId]) do
-        if not newPlayerTools[slot] and tool then
-            tool:Destroy()
-        end
-    end
-    
-    -- 更新玩家工具表
-    self.PlayerTools[userId] = newPlayerTools
+	local player = game.Players:GetPlayerByUserId(userId)
+	if not player then
+		return
+	end
+	self:InitPlayerInventory(player, value)
 end
 
 -- 根据物品ID创建工具实例
 -- @param itemId number 物品ID
 -- @return Tool|nil 创建的工具实例
 function InventoryService:CreateToolFromItemId(itemId)
-    if itemId == 0 then
-        return
-    end
-    local itemInfo = ItemConfig:GetByIndex(tonumber(itemId))
-    if not itemInfo then
-        warn("找不到物品ID: " .. tostring(itemId))
-        return
-    end
-    
-    local template = game.ServerStorage:FindFirstChild(itemInfo.Model)
-    if not template then
-        warn("Tool template not found:", itemInfo.Model)
-        return
-    end
-    
-    -- 创建新的Tool实例
-    local tool = Instance.new("Tool")
-    
-    -- 设置工具基本属性
-    tool.Name = itemInfo.Item
-    tool.ToolTip = itemInfo.Description or ""
-    tool.CanBeDropped = true
-    tool.RequiresHandle = true
-    tool:SetAttribute("CD", itemInfo.CD)
-    tool:SetAttribute("Duration", itemInfo.Duration)
-    tool:SetAttribute("ItemId", itemId)
-    
-    -- 设置工具图标（如果ItemConfig中有Icon）
-    if itemInfo.Icon and itemInfo.Icon ~= "" then
-        tool.TextureId = itemInfo.Icon
-    end
+	if itemId == 0 then
+		return
+	end
+	local itemInfo = ItemConfig:GetByIndex(tonumber(itemId))
+	if not itemInfo then
+		warn("找不到物品ID: " .. tostring(itemId))
+		return
+	end
 
-    local handle = nil
-    
-    -- 根据模板类型处理（Model 或 Part）
-    if template:IsA("Model") then
-        -- 处理 Model 类型的模板
-        local templateModel = template:Clone()
-        
-        -- 确保模型有 PrimaryPart，这是作为 Handle 的关键
-        handle = templateModel.PrimaryPart
-        if not handle then
-            warn("Warning: Tool template '" .. itemInfo.Item .. "' does not have a PrimaryPart set.")
-            -- 备用方案：选择第一个找到的 BasePart
-            handle = templateModel:FindFirstChildOfClass("BasePart")
-            if not handle then
-                warn("Error: Tool template '" .. itemInfo.Item .. "' contains no parts to use as a handle.")
-                return
-            end
-        end
+	local template = game.ServerStorage:FindFirstChild(itemInfo.Model)
+	if not template then
+		warn("Tool template not found:", itemInfo.Model)
+		return
+	end
 
-        -- 遍历模型中的所有部件
-        for _, part in ipairs(templateModel:GetDescendants()) do
-            if part:IsA("BasePart") then
-                -- 解除所有部件的锚定
-                part.Anchored = false
-                -- 将除 PrimaryPart 之外的所有部件焊接到 PrimaryPart
-                if part ~= handle then
-                    local weld = Instance.new("WeldConstraint")
-                    weld.Part0 = handle
-                    weld.Part1 = part
-                    weld.Parent = handle
-                end
-            end
-        end
-        
-        -- 将 Handle 命名为 "Handle"，这是 Tool 识别握柄的要求
-        handle.Name = "Handle"
-        handle.Parent = tool
+	-- 创建新的Tool实例
+	local tool = Instance.new("Tool")
 
-        -- 将模型中除了Handle之外的其他子项也移动到Tool下
-        for _, child in ipairs(templateModel:GetChildren()) do
-            if child ~= handle then
-                child.Parent = tool
-            end
-        end
+	-- 设置工具基本属性
+	tool.Name = itemInfo.Item
+	tool.ToolTip = itemInfo.Description or ""
+	tool.CanBeDropped = true
+	tool.RequiresHandle = true
+	tool:SetAttribute("CD", itemInfo.CD)
+	tool:SetAttribute("Duration", itemInfo.Duration)
+	tool:SetAttribute("ItemId", itemId)
 
-        -- 销毁空的模板模型
-        templateModel:Destroy()
-    elseif template:IsA("BasePart") then
-        -- 处理 Part 类型的模板
-        handle = template:Clone()
-        handle.Name = "Handle"
-        handle.Anchored = false
-        handle.Parent = tool
-        
-        -- 遍历Part下的所有子Part并焊接到Handle
-        for _, part in ipairs(handle:GetDescendants()) do
-            if part:IsA("BasePart") and part ~= handle then
-                -- 解除子Part的锚定
-                part.Anchored = false
-                -- 将子Part焊接到Handle
-                local weld = Instance.new("WeldConstraint")
-                weld.Part0 = handle
-                weld.Part1 = part
-                weld.Parent = handle
-            end
-        end
+	-- 设置工具图标（如果ItemConfig中有Icon）
+	if itemInfo.Icon and itemInfo.Icon ~= "" then
+		tool.TextureId = itemInfo.Icon
+	end
 
-        -- 将模型中除了Handle之外的其他子项也移动到Tool下
-        for _, child in ipairs(handle:GetChildren()) do
-            if child ~= handle then
-                child.Parent = tool
-            end
-        end
-    else
-        warn("Error: Tool template '" .. itemInfo.Item .. "' is neither a Model nor a BasePart.")
-        return
-    end
+	local handle = nil
 
-    -- 直接设置Tool的Grip属性来控制握持方向
-    tool.Grip = CFrame.Angles(0, 0, math.rad(90))  -- 只旋转，不偏移位置
-    
-    -- 工具状态管理（使用工具属性存储状态，避免装备/卸下时状态丢失）
-    tool:SetAttribute("LastActivated", 0)
-    
-    -- 连接工具装备事件，重置状态
-    tool.Equipped:Connect(function()
-        -- 工具装备时重置处理状态，防止状态残留
-        tool:SetAttribute("LastActivated", 0)
+	-- 根据模板类型处理（Model 或 Part）
+	if template:IsA("Model") then
+		-- 处理 Model 类型的模板
+		local templateModel = template:Clone()
+
+		-- 确保模型有 PrimaryPart，这是作为 Handle 的关键
+		handle = templateModel.PrimaryPart
+		if not handle then
+			warn("Warning: Tool template '" .. itemInfo.Item .. "' does not have a PrimaryPart set.")
+			-- 备用方案：选择第一个找到的 BasePart
+			handle = templateModel:FindFirstChildOfClass("BasePart")
+			if not handle then
+				warn("Error: Tool template '" .. itemInfo.Item .. "' contains no parts to use as a handle.")
+				return
+			end
+		end
+
+		-- 遍历模型中的所有部件
+		for _, part in ipairs(templateModel:GetDescendants()) do
+			if part:IsA("BasePart") then
+				-- 解除所有部件的锚定
+				part.Anchored = false
+				-- 将除 PrimaryPart 之外的所有部件焊接到 PrimaryPart
+				if part ~= handle then
+					local weld = Instance.new("WeldConstraint")
+					weld.Part0 = handle
+					weld.Part1 = part
+					weld.Parent = handle
+				end
+			end
+		end
+
+		-- 将 Handle 命名为 "Handle"，这是 Tool 识别握柄的要求
+		handle.Name = "Handle"
+		handle.Parent = tool
+
+		-- 将模型中除了Handle之外的其他子项也移动到Tool下
+		for _, child in ipairs(templateModel:GetChildren()) do
+			if child ~= handle then
+				child.Parent = tool
+			end
+		end
+
+		-- 销毁空的模板模型
+		templateModel:Destroy()
+	elseif template:IsA("BasePart") then
+		-- 处理 Part 类型的模板
+		handle = template:Clone()
+		handle.Name = "Handle"
+		handle.Anchored = false
+		handle.Parent = tool
+
+		-- 遍历Part下的所有子Part并焊接到Handle
+		for _, part in ipairs(handle:GetDescendants()) do
+			if part:IsA("BasePart") and part ~= handle then
+				-- 解除子Part的锚定
+				part.Anchored = false
+				-- 将子Part焊接到Handle
+				local weld = Instance.new("WeldConstraint")
+				weld.Part0 = handle
+				weld.Part1 = part
+				weld.Parent = handle
+			end
+		end
+
+		-- 将模型中除了Handle之外的其他子项也移动到Tool下
+		for _, child in ipairs(handle:GetChildren()) do
+			if child ~= handle then
+				child.Parent = tool
+			end
+		end
+	else
+		warn("Error: Tool template '" .. itemInfo.Item .. "' is neither a Model nor a BasePart.")
+		return
+	end
+
+	-- 直接设置Tool的Grip属性来控制握持方向
+	tool.Grip = CFrame.Angles(0, 0, math.rad(90))  -- 只旋转，不偏移位置
+
+	-- 工具状态管理（使用工具属性存储状态，避免装备/卸下时状态丢失）
+	tool:SetAttribute("LastActivated", 0)
+
+	-- 连接工具装备事件，重置状态
+	tool.Equipped:Connect(function()
+		-- 工具装备时重置处理状态，防止状态残留
+		tool:SetAttribute("LastActivated", 0)
 
 		local script = tool:FindFirstChild("ModuleScript")
 		if script then
@@ -391,12 +289,12 @@ function InventoryService:CreateToolFromItemId(itemId)
 				module:Equipped()
 			end
 		end
-    end)
-    
-    -- 连接工具卸下事件，清理状态
-    tool.Unequipped:Connect(function()
-        -- 工具卸下时强制重置处理状态
-        tool:SetAttribute("LastActivated", 0)
+	end)
+
+	-- 连接工具卸下事件，清理状态
+	tool.Unequipped:Connect(function()
+		-- 工具卸下时强制重置处理状态
+		tool:SetAttribute("LastActivated", 0)
 
 		local script = tool:FindFirstChild("ModuleScript")
 		if script then
@@ -405,53 +303,53 @@ function InventoryService:CreateToolFromItemId(itemId)
 				module:Unequipped()
 			end
 		end
-    end)
-    
-    -- 连接工具激活事件（服务器端处理）
-    tool.Activated:Connect(function()
-        local player = game.Players:GetPlayerFromCharacter(tool.Parent)
-        if not player then return end
-        
-        local character = player.Character
-        if not character then return end
-        
-        local humanoid = character:FindFirstChild("Humanoid")
-        if not humanoid then return end
-        
-        -- 检查冷却时间
-        local currentTime = tick()
-        local lastActivated = tool:GetAttribute("LastActivated") or 0
-        local cooldownTime = tool:GetAttribute("CD") or 0.5
-        
-        if currentTime - lastActivated < cooldownTime then
-            return -- 在冷却时间内，忽略激活
-        end
-        
-        tool:SetAttribute("LastActivated", currentTime)
+	end)
 
-        local script = tool:FindFirstChild("ModuleScript")
-        if script then
-            local module = require(script)
-            if module then
-                module:Activate(player)
-            end
+	-- 连接工具激活事件（服务器端处理）
+	tool.Activated:Connect(function()
+		local player = game.Players:GetPlayerFromCharacter(tool.Parent)
+		if not player then return end
 
-            if itemInfo.Type == GameConfig.ItemType.Weapon then    -- 进攻类
-                -- 通知客户端播放动画
-                self.Client.PlayToolAnimation:Fire(player)
-            end
-        else
-        end
-    end)
-    
-    return tool
+		local character = player.Character
+		if not character then return end
+
+		local humanoid = character:FindFirstChild("Humanoid")
+		if not humanoid then return end
+
+		-- 检查冷却时间
+		local currentTime = tick()
+		local lastActivated = tool:GetAttribute("LastActivated") or 0
+		local cooldownTime = tool:GetAttribute("CD") or 0.5
+
+		if currentTime - lastActivated < cooldownTime then
+			return -- 在冷却时间内，忽略激活
+		end
+
+		tool:SetAttribute("LastActivated", currentTime)
+
+		local script = tool:FindFirstChild("ModuleScript")
+		if script then
+			local module = require(script)
+			if module then
+				module:Activate(player)
+			end
+
+			if itemInfo.Type == GameConfig.ItemType.Weapon then    -- 进攻类
+				-- 通知客户端播放动画
+				self.Client.PlayToolAnimation:Fire(player)
+			end
+		else
+		end
+	end)
+
+	return tool
 end
 
 -- 设置玩家按键绑定
 -- @param player Player 玩家对象
 -- @return void
 function InventoryService.Client:PressKeyBind(player, keyCode)
-    self.Server:EquipToolByKey(player, keyCode)
+	return self.Server:EquipToolByKey(player, keyCode)
 end
 
 -- 根据按键装备对应工具
@@ -464,24 +362,31 @@ end
 function InventoryService:EquipToolByKey(player, slot)
     local character = player.Character
     if not character then
-        return
+        return 0
     end
 
     local userId = player.UserId
     local slotNumber = tonumber(slot)
-    local targetTool = self.PlayerTools[userId] and self.PlayerTools[userId][slotNumber]
+    
+    -- 从ToolData中获取该槽位的物品ID
+    local toolData = self.ToolData[userId]
+    if not toolData then
+        return 0
+    end
+    
+    local itemId = toolData[slotNumber]
+    if not itemId or itemId == 0 then
+        return 0
+    end
     
     -- 获取当前装备的工具
     local currentTool = character:FindFirstChildOfClass("Tool")
     
     -- 检查当前工具是否是要装备的槽位对应的工具
     local isEquippingSameTool = false
-    if currentTool and targetTool then
-        -- 通过比较工具名称和ItemId属性来判断是否是同一个工具
+    if currentTool then
         local currentItemId = currentTool:GetAttribute("ItemId")
-        local targetItemId = targetTool:GetAttribute("ItemId")
-        
-        if currentTool.Name == targetTool.Name and currentItemId == targetItemId then
+        if currentItemId == itemId then
             isEquippingSameTool = true
         end
     end
@@ -491,7 +396,7 @@ function InventoryService:EquipToolByKey(player, slot)
         if currentTool then
             currentTool:Destroy()
         end
-        return
+        return 1
     end
     
     -- 否则，卸下当前工具并装备新工具
@@ -499,16 +404,89 @@ function InventoryService:EquipToolByKey(player, slot)
         currentTool:Destroy()
     end
     
-    -- 装备新工具（直接装备到角色，不经过Backpack）
-    if targetTool then
-        local tool = targetTool:Clone()
-        tool.Parent = character
+    -- 按需创建新工具
+    local newTool = self:CreateToolFromItemId(itemId)
+    if newTool then
+        newTool.Parent = character
         
         -- 确保工具被正确装备
         if character:FindFirstChild("Humanoid") then
-            character.Humanoid:EquipTool(tool)
+            character.Humanoid:EquipTool(newTool)
         end
+        
+        return 2
     end
+    
+    return 0
+end
+
+function InventoryService:UseTool(player)
+	local character = player.Character
+	if not character then
+		return
+	end
+
+	-- 获取玩家身上当前装备的工具
+	local equippedTool = character:FindFirstChildOfClass("Tool")
+	if not equippedTool then
+		return
+	end
+
+	-- 获取工具的ItemId
+	local itemId = equippedTool:GetAttribute("ItemId")
+	if not itemId then
+		return
+	end
+
+	-- 获取工具配置信息
+	local itemInfo = ItemConfig:GetByIndex(itemId)
+	if not itemInfo then
+		return
+	end
+
+	-- 检查工具是否在冷却中
+	local cooldownKey = player.UserId .. "_" .. itemId
+	local currentTime = tick()
+
+	if self.ToolCooldowns and self.ToolCooldowns[cooldownKey] then
+		local cooldownEndTime = self.ToolCooldowns[cooldownKey]
+		if currentTime < cooldownEndTime then
+			-- 工具还在冷却中，不能使用
+			return
+		end
+	end
+
+	-- 执行工具使用逻辑（这里可以根据不同工具类型实现不同的效果）
+	print("Player", player.Name, "used tool", itemInfo.item)
+
+	-- 设置工具冷却时间
+	if itemInfo.CD and itemInfo.CD > 0 then
+		if not self.ToolCooldowns then
+			self.ToolCooldowns = {}
+		end
+		self.ToolCooldowns[cooldownKey] = currentTime + itemInfo.CD
+
+		local script = equippedTool:FindFirstChild("ModuleScript")
+		if script then
+			local module = require(script)
+			if module and module.Activate then
+				module:Activate(player)
+				if itemInfo.Type == GameConfig.ItemType.Weapon then    -- 进攻类
+					local PlayerAnimationHnadler = require(ReplicatedStorage:WaitForChild("Animation"):WaitForChild("PlayerAnimationHnadler"))
+					PlayerAnimationHnadler.playSwingAnimation(character)
+				end
+			end
+		end
+	end
+end
+
+-- 使用工具在指定位置
+-- @param player Player 玩家对象
+-- @param slot number 工具槽位
+-- @param position Vector3 使用位置
+-- @return void
+function InventoryService.Client:UseTool(player)
+	return self.Server:UseTool(player)
 end
 
 return InventoryService

@@ -265,7 +265,8 @@ local function teleportToReserveServer(players)
 	-- 将工具数据添加到传送选项中
 	if next(playersToolData) then
 		teleportOptions:SetTeleportData({
-			PlayersToolData = playersToolData
+			PlayersToolData = playersToolData,
+			TaskGold = 10000,
 		})
 		logMessage("INFO", string.format("已为 %d 个玩家准备工具数据传送", #players))
 	end
