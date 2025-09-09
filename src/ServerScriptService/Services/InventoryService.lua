@@ -34,15 +34,16 @@ function InventoryService:playerAdd(player, inventory, toolData)
 		v.Attribute = itemAttribute
 		table.insert(self.Inventory[player.UserId], v)
 	end
+	print(self.Inventory[player.UserId])
+
 	self.ToolData[player.UserId] = {}
 	for i = 1, GameConfig.SLOT_NUM do
-        local itemAttribute = GameConfig.GetItemAttribute()
-		local data = {
-            ItemId = toolData[i] or 0,
-            Attribute = itemAttribute,
-		}
-		table.insert(self.ToolData[player.UserId], data)
+		table.insert(self.ToolData[player.UserId], {
+            ItemId = toolData[i].ItemId or 0,
+            Attribute = GameConfig.GetItemAttribute(),
+		})
 	end
+	print(self.ToolData[player.UserId])
 end
 
 function InventoryService:playerRemoved(player)
@@ -66,6 +67,7 @@ function InventoryService:InventoryToDB(player)
 	end
 	local DBService = Knit.GetService("DBService")
 	DBService:Set(player.UserId, "PlayerInventory", inventory)
+	print(inventory)
 end
 
 -- 工具栏数据转换为数据库格式
@@ -80,6 +82,7 @@ function InventoryService:ToolDataToDB(player)
 	end
 	local DBService = Knit.GetService("DBService")
 	DBService:Set(player.UserId, "PlayerToolData", toolData)
+	print(toolData)
 end
 
 function InventoryService:AddItem(player, itemData)
@@ -130,11 +133,11 @@ end
 function InventoryService:UpdateToolData(player, data)
 	self.ToolData[player.UserId] = {}
 	for i = 1, GameConfig.SLOT_NUM do
-        local itemAttribute = GameConfig.GetItemAttribute()
-		self.ToolData[player.UserId][tonumber(i)] = {
-            ItemId = data[i] or 0,
-            Attribute = itemAttribute,
-        }
+		if data[i] then
+			table.insert(self.ToolData[player.UserId], {ItemId = data[i].ItemId, Attribute = data[i].Attribute})
+		else
+			table.insert(self.ToolData[player.UserId], {ItemId = 0, Attribute = GameConfig.GetItemAttribute()})
+		end
 	end
 	self:ToolDataToDB(player)
 

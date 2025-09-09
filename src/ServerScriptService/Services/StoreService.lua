@@ -40,15 +40,18 @@ function StoreService.Client:RobBuyItem(player, itemId, assetID, targetUserId)
     return Knit.GetService("PurchaseService"):BuyItem(player, itemId, assetID, targetUserId)
 end
 
-function StoreService.Client:Sell(player, itemId)
-    local itemInfo = ItemConfig:GetByIndex(itemId)
+function StoreService.Client:Sell(player, itemData)
+    if not itemData then
+        return
+    end
+    local itemInfo = ItemConfig:GetByIndex(itemData.ItemId)
     if not itemInfo then
         return
     end
 
     Knit.GetService("GoldService"):ChangeGold(player, itemInfo.SellPrice)
-    Knit.GetService("InventoryService"):RemoveItem(player, itemId)
-    return itemId
+    Knit.GetService("InventoryService"):RemoveItem(player, itemData)
+    return itemData
 end
 
 function StoreService.Client:SellAll(player)

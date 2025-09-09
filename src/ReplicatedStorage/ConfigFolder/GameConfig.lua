@@ -36,6 +36,9 @@ GameConfig.GetItemAttribute = function(item)
 end
 
 GameConfig.SetItemAttribute = function(item, attribute)
+    if not attribute then
+        attribute = GameConfig.GetItemAttribute()
+    end
     item:SetAttribute("CD", attribute.CD)
     item:SetAttribute("CreateTime", attribute.CreateTime)
 end

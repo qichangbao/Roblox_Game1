@@ -323,6 +323,9 @@ end
 -- 初始化BillboardGui
 local function initializeBillboad()
 	local land = workspace:WaitForChild(GameConfig.LandName)
+	if not land then
+		return
+	end
 	-- 检查每个触发Part
 	for _, partName in ipairs(GameConfig.TeleportPartNames) do
 		local triggerPart = land:WaitForChild(partName)
@@ -446,6 +449,9 @@ function TeleportServiceModule:KnitStart()
 			else
 				-- 区域内没有玩家，隐藏Billboard GUI
 				local land = workspace:FindFirstChild(GameConfig.LandName)
+				if not land then
+					return
+				end
 				local triggerPart = land:FindFirstChild(partName)
 				if triggerPart and triggerPart:IsA("BasePart") then
 					local billboard = triggerPart:FindFirstChild("BillboardGui")
