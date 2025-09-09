@@ -32,7 +32,7 @@ function StoreService.Client:GoldBuyItem(player, itemId)
         return "Not enough coins"
     end
     Knit.GetService("GoldService"):ChangeGold(player, -itemInfo.Price)
-    Knit.GetService("InventoryService"):AddItem(player, itemId)
+    Knit.GetService("InventoryService"):AddItem(player, {ItemId = itemId})
     return "Success"
 end
 
@@ -61,7 +61,7 @@ function StoreService.Client:SellAll(player)
         -- if itemInfo and itemInfo.Type == GameConfig.ItemType.Collect then
         if itemInfo then
             gold += itemInfo.SellPrice
-            table.insert(sellItems, itemData.ItemId)
+            table.insert(sellItems, itemData)
         end
     end
 

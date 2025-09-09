@@ -19,7 +19,7 @@ local function init()
                 return Knit.GetService("ServerDataService").GetInitData()
             end,
             {
-                maxRetries = 5,
+                maxRetries = 15,
                 retryDelay = 2,
                 operationName = "登录数据获取",
                 dataValidator = function(data)
@@ -50,6 +50,10 @@ local function init()
 		Knit.GetService("InventoryService").UpdateBackpack:Connect(function(inventory)
 			ClientData.Inventory = inventory or {}
 			Knit.GetController("InventoryController"):Event_UpdateBackpack(inventory or {})
+		end)
+
+		Knit.GetService("InventoryService").ShowCD:Connect(function(slot, CD)
+			Knit.GetController("UIController").ShowToolCD:Fire(slot, CD)
 		end)
     end)
 end

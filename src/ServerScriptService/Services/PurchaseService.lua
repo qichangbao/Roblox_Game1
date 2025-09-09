@@ -38,11 +38,11 @@ local function processReceipt(receiptInfo)
     if targetPlayerUserId then
         local targetPlayer = Players:GetPlayerByUserId(targetPlayerUserId)
         if targetPlayer then
-            Knit.GetService('InventoryService'):AddItem(targetPlayer, shopInfo.Index)
+            Knit.GetService('InventoryService'):AddItem(targetPlayer, {ItemId = shopInfo.Index})
         end
         targetPlayerUserId = nil
     else
-        Knit.GetService('InventoryService'):AddItem(player, shopInfo.Index)
+        Knit.GetService('InventoryService'):AddItem(player, {ItemId = shopInfo.Index})
     end
     return Enum.ProductPurchaseDecision.PurchaseGranted
 end

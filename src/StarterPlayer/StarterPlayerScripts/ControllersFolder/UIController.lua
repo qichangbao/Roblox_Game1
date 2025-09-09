@@ -20,6 +20,7 @@ local UIController = Knit.CreateController {
     HideDragUI = Signal.new(),
 	UpdateToolUI = Signal.new(),
 	AddToolUI = Signal.new(),
+    ShowToolCD = Signal.new(),
 }
 
 function UIController:KnitInit()

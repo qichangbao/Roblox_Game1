@@ -21,4 +21,23 @@ GameConfig.TeleportPartNames = {"EUCHVORAL1", "EUCHVORAL2", "EUCHVORAL3"}-- 触�
 GameConfig.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json")
 GameConfig.SLOT_NUM = 3
 
+-- 物品的扩展属性，用于服务器客户端同步
+GameConfig.GetItemAttribute = function(item)
+    if not item then
+        return {
+            CD = 0,
+            CreateTime = tick(),
+        }
+    end
+    return {
+        CD = item:GetAttribute("CD"),
+        CreateTime = item:GetAttribute("CreateTime"),
+    }
+end
+
+GameConfig.SetItemAttribute = function(item, attribute)
+    item:SetAttribute("CD", attribute.CD)
+    item:SetAttribute("CreateTime", attribute.CreateTime)
+end
+
 return GameConfig
