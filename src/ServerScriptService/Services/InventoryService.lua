@@ -67,7 +67,6 @@ function InventoryService:InventoryToDB(player)
 	end
 	local DBService = Knit.GetService("DBService")
 	DBService:Set(player.UserId, "PlayerInventory", inventory)
-	print(inventory)
 end
 
 -- 工具栏数据转换为数据库格式
@@ -82,7 +81,6 @@ function InventoryService:ToolDataToDB(player)
 	end
 	local DBService = Knit.GetService("DBService")
 	DBService:Set(player.UserId, "PlayerToolData", toolData)
-	print(toolData)
 end
 
 function InventoryService:AddItem(player, itemData)
@@ -200,13 +198,13 @@ end
 -- 根据物品ID创建工具实例
 -- @param itemId number 物品ID
 -- @return Tool|nil 创建的工具实例
-function InventoryService:CreateToolFromItemId(itemId, slot)
-	if itemId == 0 then
+function InventoryService:CreateToolFromItemId(itemData, slot)
+	if itemData.ItemId == 0 then
 		return
 	end
-	local itemInfo = ItemConfig:GetByIndex(tonumber(itemId))
+	local itemInfo = ItemConfig:GetByIndex(tonumber(itemData.ItemId))
 	if not itemInfo then
-		warn("找不到物品ID: " .. tostring(itemId))
+		warn("找不到物品ID: " .. tostring(itemData.ItemId))
 		return
 	end
 
@@ -226,7 +224,8 @@ function InventoryService:CreateToolFromItemId(itemId, slot)
 	tool.RequiresHandle = true
 	tool:SetAttribute("CD", itemInfo.CD)
 	tool:SetAttribute("Duration", itemInfo.Duration)
-	tool:SetAttribute("ItemId", itemId)
+	tool:SetAttribute("ItemId", itemData.ItemId)
+	GameConfig.SetItemAttribute(tool, itemData.Attribute)
 
 	-- 设置工具图标（如果ItemConfig中有Icon）
 	if itemInfo.Icon and itemInfo.Icon ~= "" then
@@ -358,17 +357,20 @@ function InventoryService:CreateToolFromItemId(itemId, slot)
 
 		-- 检查冷却时间
 		local currentTime = tick()
-		local lastActivated = tool:GetAttribute("LastActivated") or 0
-		local cooldownTime = tool:GetAttribute("CD") or 0
+        local attribute = GameConfig.GetItemAttribute(tool)
 
-		if currentTime - lastActivated < cooldownTime then
-			return -- 在冷却时间内，忽略激活
-		end
+        -- 在冷却时间内，忽略激活
+        if currentTime < attribute.UseElapsedTime then
+            return
+        end
 
+        local cooldownTime = tool:GetAttribute("CD") or 0
+        local useElapsedTime = currentTime + cooldownTime
 		if cooldownTime > 0 then
-			self.Client.ShowCD:Fire(player, slot, currentTime + cooldownTime)
+			self.Client.ShowCD:Fire(player, slot, useElapsedTime)
 		end
-		tool:SetAttribute("LastActivated", currentTime)
+        self.ToolData[player.UserId][slot].Attribute.UseElapsedTime = useElapsedTime
+        GameConfig.UpdateItemAttribute(tool, "UseElapsedTime", useElapsedTime)
 
 		local script = tool:FindFirstChild("ModuleScript")
 		if script then
@@ -417,8 +419,8 @@ function InventoryService:EquipToolByKey(player, slot)
         return 0
     end
     
-    local itemId = toolData[slotNumber]
-    if not itemId or itemId == 0 then
+    local itemData = toolData[slotNumber]
+    if not itemData or itemData.ItemId == 0 then
         return 0
     end
     
@@ -429,7 +431,7 @@ function InventoryService:EquipToolByKey(player, slot)
     local isEquippingSameTool = false
     if currentTool then
         local currentItemId = currentTool:GetAttribute("ItemId")
-        if currentItemId == itemId then
+        if currentItemId == itemData.ItemId then
             isEquippingSameTool = true
         end
     end
@@ -448,7 +450,7 @@ function InventoryService:EquipToolByKey(player, slot)
     end
     
     -- 按需创建新工具
-    local newTool = self:CreateToolFromItemId(itemId, slotNumber)
+    local newTool = self:CreateToolFromItemId(itemData, slotNumber)
     if newTool then
         newTool.Parent = character
         
@@ -487,28 +489,20 @@ function InventoryService:UseTool(player)
 		return
 	end
 
-	-- 检查工具是否在冷却中
-	local cooldownKey = player.UserId .. "_" .. itemId
-	local currentTime = tick()
-
-	if self.ToolCooldowns and self.ToolCooldowns[cooldownKey] then
-		local cooldownEndTime = self.ToolCooldowns[cooldownKey]
-		if currentTime < cooldownEndTime then
-			-- 工具还在冷却中，不能使用
-			return
-		end
-	end
+    local attribute = GameConfig.GetItemAttribute(equippedTool)
+    
+    -- 检查工具是否在冷却中
+    local currentTime = tick()
+    if currentTime < attribute.UseElapsedTime then
+        -- 工具还在冷却中，不能使用
+        return
+    end
 
 	-- 执行工具使用逻辑（这里可以根据不同工具类型实现不同的效果）
 	print("Player", player.Name, "used tool", itemInfo.Item)
 
 	-- 设置工具冷却时间
 	if itemInfo.CD and itemInfo.CD > 0 then
-		if not self.ToolCooldowns then
-			self.ToolCooldowns = {}
-		end
-		self.ToolCooldowns[cooldownKey] = currentTime + itemInfo.CD
-
 		local script = equippedTool:FindFirstChild("ModuleScript")
 		if script then
 			local module = require(script)

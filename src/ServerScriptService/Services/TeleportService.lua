@@ -52,10 +52,10 @@ local function logMessage(level, message, player)
 end
 
 -- 重置触发区域状态
--- @param partName string 触发区域名称
+-- @param modelName string 触发区域名称
 -- @return void
-local function resetTriggerZoneState(partName)
-	local zoneState = triggerZoneStates[partName]
+local function resetTriggerZoneState(modelName)
+	local zoneState = triggerZoneStates[modelName]
 	if zoneState then
 		zoneState.hasPlayerCountSelected = false
 		zoneState.playersInZone = {}
@@ -70,10 +70,24 @@ end
 -- 初始化触发区域状态
 -- @return void
 local function initializeTriggerZoneStates()
-	for _, partName in ipairs(GameConfig.TeleportPartNames) do
-        triggerZoneStates[partName] = {}
-		resetTriggerZoneState(partName)
+	for _, modelName in ipairs(GameConfig.TeleportPartNames) do
+        triggerZoneStates[modelName] = {}
+		resetTriggerZoneState(modelName)
 	end
+end
+
+local function getTriggerPart(modelName)
+    local land = workspace:FindFirstChild(GameConfig.LandName)
+    local triggerModel = land:FindFirstChild(modelName)
+    if not triggerModel then
+        return
+    end
+
+	local triggerPart = triggerModel:FindFirstChild("TriggerPart")
+    if not triggerPart then
+        return
+    end
+    return triggerPart
 end
 
 -- 检查玩家是否在任何触发Part的上方
@@ -92,9 +106,9 @@ local function isPlayerInTriggerZone(player)
 		return false, nil
 	end
 	-- 检查每个触发Part
-	for _, partName in ipairs(GameConfig.TeleportPartNames) do
-		local triggerPart = land:FindFirstChild(partName)
-		if triggerPart and triggerPart:IsA("BasePart") then
+	for _, modelName in ipairs(GameConfig.TeleportPartNames) do
+		local triggerPart = getTriggerPart(modelName)
+		if triggerPart then
 			local partPosition = triggerPart.Position
 			local partSize = triggerPart.Size
 
@@ -105,7 +119,7 @@ local function isPlayerInTriggerZone(player)
 				playerPosition.Y <= partPosition.Y + partSize.Y / 2 + TRIGGER_HEIGHT_OFFSET
 
 			if xInRange and zInRange and yAbovePart then
-				return true, triggerPart
+				return true, modelName
 			end
 		end
 	end
@@ -116,8 +130,8 @@ end
 -- 获取触发区域内的实际玩家数量
 -- @param partName string 触发区域名称
 -- @return number 区域内的玩家数量
-local function getPlayersCountInZone(partName)
-	local zoneState = triggerZoneStates[partName]
+local function getPlayersCountInZone(modelName)
+	local zoneState = triggerZoneStates[modelName]
 	if not zoneState then return 0 end
 	
 	local count = 0
@@ -128,35 +142,28 @@ local function getPlayersCountInZone(partName)
 end
 
 -- 更新BillboardGui显示
--- @param partName string 触发区域名称
+-- @param modelName string 触发区域名称
 -- @param playerCount number 当前玩家数量
 -- @param maxCount number 最大允许玩家数量
-local function updateBillboardGuiPlayerCount(partName, playerCount, maxCount)
-    local land = workspace:FindFirstChild(GameConfig.LandName)
-    local triggerPart = land:FindFirstChild(partName)
-    if triggerPart and triggerPart:IsA("BasePart") then
-        local billboad = triggerPart:FindFirstChild("BillboardGui")
-        if billboad then
-            billboad.Enabled = true
-            local frame = billboad:FindFirstChild("PlayerCountFrame")
+local function updateBillboardGuiPlayerCount(modelName, playerCount, maxCount)
+    local triggerPart = getTriggerPart(modelName)
+    if triggerPart then
+        local billboard = triggerPart:FindFirstChild("BillboardGui")
+        if billboard then
+            local frame = billboard:FindFirstChild("PlayerCountFrame")
             local textLabel = frame:FindFirstChild("TextLabel")
             textLabel.Text = string.format("%d/%d", playerCount, maxCount)
         end
     end
 end
 
-local function updateBillboardGuiCountdown(partName, countdown)
-    local land = workspace:FindFirstChild(GameConfig.LandName)
-    local triggerPart = land:FindFirstChild(partName)
-    if triggerPart and triggerPart:IsA("BasePart") then
-        local billboad = triggerPart:FindFirstChild("BillboardGui")
-        if billboad then
-            if type(countdown) == "number" and countdown <= 0 then
-                billboad.Enabled = false
-                return
-            end
-            billboad.Enabled = true
-            local frame = billboad:FindFirstChild("TimeFrame")
+local function updateBillboardGuiCountdown(modelName, countdown)
+    local triggerPart = getTriggerPart(modelName)
+    if triggerPart then
+        local billboard = triggerPart:FindFirstChild("BillboardGui")
+        if billboard then
+            local frame = billboard:FindFirstChild("TimeFrame")
+			frame.Visible = true
             local textLabel = frame:FindFirstChild("TextLabel")
             textLabel.Text = countdown
         end
@@ -173,12 +180,12 @@ local function checkPlayerPosition(player)
 
 	local userId = player.UserId
 	-- 检查玩家是否在触发区域内
-	local isInTrigger, triggerPart = isPlayerInTriggerZone(player)
+	local isInTrigger, modelName = isPlayerInTriggerZone(player)
 	if isInTrigger then
         if playerTriggered[userId] then
             return
         end
-        local partName = triggerPart.Name
+        local partName = modelName
         local zoneState = triggerZoneStates[partName]
         if not zoneState then
             return
@@ -286,12 +293,12 @@ local function teleportToReserveServer(players)
 end
 
 -- 传送触发区域内的所有玩家
--- @param partName string 触发区域名称
+-- @param modelName string 触发区域名称
 -- @return void
-local function teleportAllPlayersInZone(partName)
-	local zoneState = triggerZoneStates[partName]
+local function teleportAllPlayersInZone(modelName)
+	local zoneState = triggerZoneStates[modelName]
 	if not zoneState then
-		logMessage("ERROR", string.format("未找到触发区域状态: %s", partName))
+		logMessage("ERROR", string.format("未找到触发区域状态: %s", modelName))
 		return
 	end
 	
@@ -302,8 +309,8 @@ local function teleportAllPlayersInZone(partName)
 	for userId, _ in pairs(zoneState.playersInZone) do
 		local player = Players:GetPlayerByUserId(userId)
 		if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-			local isInTrigger, triggerPart = isPlayerInTriggerZone(player)
-			if isInTrigger and triggerPart.Name == partName then
+			local isInTrigger, triggerModel = isPlayerInTriggerZone(player)
+			if isInTrigger and triggerModel.Name == modelName then
                 playerCount += 1
                 if playerCount > zoneState.requiredPlayerCount then
                     break
@@ -317,7 +324,7 @@ local function teleportAllPlayersInZone(partName)
     teleportToReserveServer(playersToTeleport)
 	
 	-- 重置触发区域状态
-	resetTriggerZoneState(partName)
+	resetTriggerZoneState(modelName)
 end
 
 -- 初始化BillboardGui
@@ -328,14 +335,15 @@ local function initializeBillboad()
 	end
 	-- 检查每个触发Part
 	for _, partName in ipairs(GameConfig.TeleportPartNames) do
-		local triggerPart = land:WaitForChild(partName)
-		if triggerPart and triggerPart:IsA("BasePart") then
-            local billboad = triggerPart:WaitForChild("BillboardGui")
-            billboad.Enabled = false
-            billboad.DistanceStep = 0
-            billboad.DistanceUpperLimit = 100
-            billboad.DistanceLowerLimit = 10
-        end
+		local triggerModel = land:WaitForChild(partName)
+		local triggerPart = triggerModel:WaitForChild("TriggerPart")
+		local billboard = triggerPart:WaitForChild("BillboardGui")
+		billboard.Enabled = true
+		billboard.DistanceStep = 0
+		billboard.DistanceUpperLimit = 100
+		billboard.DistanceLowerLimit = 10
+		local frame = billboard:FindFirstChild("TimeFrame")
+		frame.Visible = false
     end
 end
 
@@ -397,14 +405,14 @@ function TeleportServiceModule:KnitStart()
 		end
 		
 		-- 检查所有触发区域的状态并更新Billboard GUI
-		for partName, zoneState in pairs(triggerZoneStates) do
-			local actualPlayerCount = getPlayersCountInZone(partName)
+		for modelName, zoneState in pairs(triggerZoneStates) do
+			local actualPlayerCount = getPlayersCountInZone(modelName)
 			
 			-- 如果区域内有玩家
 			if actualPlayerCount > 0 then
 				if not zoneState.hasPlayerCountSelected then
 					-- 玩家进入但还未选择人数，显示"创建中"
-					updateBillboardGuiCountdown(partName, "Creating")
+					updateBillboardGuiCountdown(modelName, "Creating")
                     if not zoneState.isCreateCountingDown then
                         zoneState.isCreateCountingDown = true
                         zoneState.createCountdownTime = CREATE_COUNTDOWN_DURATION
@@ -417,15 +425,18 @@ function TeleportServiceModule:KnitStart()
                             local player = Players:GetPlayerByUserId(userId)
 		                    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
                                 local currentPos = player.Character:GetPivot().Position
-                                local targetZ = workspace:FindFirstChild(GameConfig.LandName):FindFirstChild(partName).Position.Z - 10
-                                local newPos = Vector3.new(currentPos.X, currentPos.Y, targetZ)
-                                player.Character:PivotTo(CFrame.new(newPos))
+								local triggerPart = getTriggerPart(modelName)
+								if triggerPart then
+									local targetZ = triggerPart.Position.Z - 10
+									local newPos = Vector3.new(currentPos.X, currentPos.Y, targetZ)
+									player.Character:PivotTo(CFrame.new(newPos))
+								end
                             end
                         end
                     end
 				else
 					-- 已选择人数，显示人数信息
-					updateBillboardGuiPlayerCount(partName, actualPlayerCount, zoneState.requiredPlayerCount)
+					updateBillboardGuiPlayerCount(modelName, actualPlayerCount, zoneState.requiredPlayerCount)
                     if not zoneState.isCountingDown then
                         zoneState.isCountingDown = true
                         zoneState.countdownTime = COUNTDOWN_DURATION
@@ -440,23 +451,20 @@ function TeleportServiceModule:KnitStart()
                     local remainingTime = math.max(0, zoneState.countdownTime)
                     -- 检查倒计时是否结束
                     if remainingTime <= 0 then
-					    updateBillboardGuiCountdown(partName, "Transmitting")
-                        teleportAllPlayersInZone(partName)
+					    updateBillboardGuiCountdown(modelName, "Transmitting")
+                        teleportAllPlayersInZone(modelName)
                     else
-                        updateBillboardGuiCountdown(partName, math.ceil(remainingTime))
+                        updateBillboardGuiCountdown(modelName, math.ceil(remainingTime))
                     end
 				end
 			else
 				-- 区域内没有玩家，隐藏Billboard GUI
-				local land = workspace:FindFirstChild(GameConfig.LandName)
-				if not land then
-					return
-				end
-				local triggerPart = land:FindFirstChild(partName)
-				if triggerPart and triggerPart:IsA("BasePart") then
+				local triggerPart = getTriggerPart(modelName)
+				if triggerPart then
 					local billboard = triggerPart:FindFirstChild("BillboardGui")
 					if billboard then
-						billboard.Enabled = false
+						local frame = billboard:FindFirstChild("TimeFrame")
+						frame.Visible = false
 					end
 				end
 			end

@@ -17,21 +17,21 @@ GameConfig.NpcUIType = {
 GameConfig.BackpackSlotCount = 6    -- 背包槽位数量
 GameConfig.InitItemNums = 30        -- 初始物品数量
 GameConfig.LandName = "出生岛"
-GameConfig.TeleportPartNames = {"EUCHVORAL1", "EUCHVORAL2", "EUCHVORAL3"}-- 触发传送的Part名称
+GameConfig.TeleportPartNames = {"go1", "go2", "go3"}-- 触发传送的Part名称
 GameConfig.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json")
 GameConfig.SLOT_NUM = 3
 
--- 物品的扩展属性，用于服务器客户端同步
+-- 物品的扩展属性，用于服务器客户端同步一些动态数据
 GameConfig.GetItemAttribute = function(item)
     if not item then
         return {
-            CD = 0,
-            CreateTime = tick(),
+            CreateTime = tick(),        -- 创建时间
+            UseElapsedTime = 0,         -- 能使用的截止时间
         }
     end
     return {
-        CD = item:GetAttribute("CD"),
         CreateTime = item:GetAttribute("CreateTime"),
+        UseElapsedTime = item:GetAttribute("UseElapsedTime"),
     }
 end
 
@@ -39,8 +39,15 @@ GameConfig.SetItemAttribute = function(item, attribute)
     if not attribute then
         attribute = GameConfig.GetItemAttribute()
     end
-    item:SetAttribute("CD", attribute.CD)
     item:SetAttribute("CreateTime", attribute.CreateTime)
+    item:SetAttribute("UseElapsedTime", attribute.UseElapsedTime)
+end
+
+GameConfig.UpdateItemAttribute = function(item, key, value)
+    local attribute = GameConfig.GetItemAttribute(item)
+    attribute[key] = value
+    GameConfig.SetItemAttribute(item, attribute)
+    return attribute
 end
 
 return GameConfig
