@@ -33,6 +33,8 @@ local function init()
 					Knit.GetController("UIController").ChangeGoldUI:Fire(data.Gold)
                     Knit.GetController("InventoryController"):Event_UpdateBackpack(data.Inventory)
 					Knit.GetController("UIController").UpdateToolUI:Fire(data.ToolData)
+                    
+                    require(script.Parent:WaitForChild("LoadingUI")).Hide()
                 end,
                 onFailure = function(errorMsg)
                     warn("登录数据获取失败:", errorMsg)

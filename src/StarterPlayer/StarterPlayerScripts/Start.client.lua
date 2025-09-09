@@ -72,9 +72,9 @@ isServerStartOverEvent.OnClientEvent:Connect(function(isStarted)
             warn("KnitInitClient执行失败")
         end
         
-        -- 等待0.5秒后隐藏加载界面
-        task.wait(0.5)
-        loadingUI.Hide()
+        -- -- 等待0.5秒后隐藏加载界面
+        -- task.wait(0.5)
+        -- loadingUI.Hide()
     else
         print("服务器尚未启动完成，继续等待...")
         loadingUI.UpdateText("Server startup in progress...")

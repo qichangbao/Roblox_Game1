@@ -21,9 +21,10 @@ local loadingLabel = nil
 local function createLoadingScreen()
     -- 创建ScreenGui
     loadingScreenGui = Instance.new("ScreenGui")
-    loadingScreenGui.Name = "LoadingScreen"
+    loadingScreenGui.Name = "LoadingUI"
     loadingScreenGui.ResetOnSpawn = false
     loadingScreenGui.IgnoreGuiInset = true
+    loadingScreenGui.DisplayOrder = 9999999
     loadingScreenGui.Parent = playerGui
     
     -- 创建背景Frame

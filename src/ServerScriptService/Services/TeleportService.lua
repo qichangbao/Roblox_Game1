@@ -400,7 +400,7 @@ function TeleportServiceModule:KnitStart()
 			if actualPlayerCount > 0 then
 				if not zoneState.hasPlayerCountSelected then
 					-- 玩家进入但还未选择人数，显示"创建中"
-					updateBillboardGuiCountdown(partName, "创建中")
+					updateBillboardGuiCountdown(partName, "Creating")
                     if not zoneState.isCreateCountingDown then
                         zoneState.isCreateCountingDown = true
                         zoneState.createCountdownTime = CREATE_COUNTDOWN_DURATION
@@ -436,7 +436,7 @@ function TeleportServiceModule:KnitStart()
                     local remainingTime = math.max(0, zoneState.countdownTime)
                     -- 检查倒计时是否结束
                     if remainingTime <= 0 then
-					    updateBillboardGuiCountdown(partName, "传送中")
+					    updateBillboardGuiCountdown(partName, "Transmitting")
                         teleportAllPlayersInZone(partName)
                     else
                         updateBillboardGuiCountdown(partName, math.ceil(remainingTime))
