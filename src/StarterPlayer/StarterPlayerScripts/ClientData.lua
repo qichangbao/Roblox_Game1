@@ -47,13 +47,14 @@ local function init()
 			Knit.GetController("UIController").ChangeGoldUI:Fire(gold)
 		end)
 
-		Knit.GetService("InventoryService").UpdateBackpack:Connect(function(inventory)
+		Knit.GetService("InventoryService").SendBackpack:Connect(function(inventory)
 			ClientData.Inventory = inventory or {}
 			Knit.GetController("InventoryController"):Event_UpdateBackpack(inventory or {})
 		end)
 
-		Knit.GetService("InventoryService").ShowCD:Connect(function(slot, CD)
-			Knit.GetController("UIController").ShowToolCD:Fire(slot, CD)
+		Knit.GetService("InventoryService").SendToolData:Connect(function(toolData)
+			ClientData.ToolData = toolData or {}
+			Knit.GetController("InventoryController"):Event_UpdateToolData(toolData or {})
 		end)
     end)
 end
