@@ -338,10 +338,6 @@ local function initializeBillboad()
 		local triggerModel = land:WaitForChild(partName)
 		local triggerPart = triggerModel:WaitForChild("TriggerPart")
 		local billboard = triggerPart:WaitForChild("BillboardGui")
-		billboard.Enabled = true
-		billboard.DistanceStep = 0
-		billboard.DistanceUpperLimit = 100
-		billboard.DistanceLowerLimit = 10
 		local frame = billboard:FindFirstChild("TimeFrame")
 		frame.Visible = false
     end

@@ -1,6 +1,6 @@
 --[[
 -- 自动生成的Lua配置文件
--- 生成时间: 2025-09-09 16:01:05
+-- 生成时间: 2025-09-16 22:56:43
 -- 源文件: examples\in\Shop1Config.xls
 -- 数据维度: 7行 x 2列
 --]]
@@ -12,31 +12,31 @@ local Shop1Config = {}
 Shop1Config.Data = {
     [1] = {
         Index = 1,
-        AssetID = 3386566874,
+        AssetId = 3386566874,
     },
     [2] = {
         Index = 2,
-        AssetID = 3386568397,
+        AssetId = 3386568397,
     },
     [3] = {
         Index = 4,
-        AssetID = 3386569417,
+        AssetId = 3386569417,
     },
     [4] = {
         Index = 5,
-        AssetID = 3386569943,
+        AssetId = 3386569943,
     },
     [5] = {
         Index = 8,
-        AssetID = 3386571239,
+        AssetId = 3386571239,
     },
     [6] = {
         Index = 9,
-        AssetID = 3386571871,
+        AssetId = 3386571871,
     },
     [7] = {
         Index = 10,
-        AssetID = 3386572591,
+        AssetId = 3386572591,
     },
 }
 
@@ -50,9 +50,9 @@ function Shop1Config:GetByIndex(index)
     return nil
 end
 
-function Shop1Config:GetByAssetID(value)
+function Shop1Config:GetByAssetId(value)
     for i, item in pairs(self.Data) do
-        if item.AssetID == value then
+        if item.AssetId == value then
             return item
         end
     end
