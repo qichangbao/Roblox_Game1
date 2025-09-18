@@ -58,6 +58,7 @@ print("服务器JobID：", game.JobId)
 print("服务器GameID：", game.GameId)
 print("服务器PlaceID：", game.PlaceId)
 print("服务器名称：", game.Name)
+print("服务器PrivateServerId：", game.PrivateServerId)
 
 -- 服务器启动状态检查事件
 local serverStartCheckEvent = Instance.new("RemoteEvent")

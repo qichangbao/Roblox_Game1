@@ -1,14 +1,6 @@
---[[
--- 自动生成的Lua配置文件
--- 生成时间: 2025-09-16 22:56:42
--- 源文件: examples\in\PosConfig.xls
--- 数据维度: 68行 x 5列
---]]
 
--- Knit框架兼容的配置模块
 local PosConfig = {}
 
--- 坐标配置数据
 PosConfig.Coordinates = {
     [1] = {
         Index = 1,

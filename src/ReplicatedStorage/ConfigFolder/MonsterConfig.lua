@@ -1,14 +1,6 @@
---[[
--- 自动生成的Lua配置文件
--- 生成时间: 2025-09-16 22:56:41
--- 源文件: examples\in\MonsterConfig.xls
--- 数据维度: 3行 x 19列
---]]
 
--- Knit框架兼容的配置模块
 local MonsterConfig = {}
 
--- 配置数据
 MonsterConfig.Data = {
     [1] = {
         MonsterId = 30001,

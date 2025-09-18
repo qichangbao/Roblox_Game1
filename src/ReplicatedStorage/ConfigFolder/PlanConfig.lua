@@ -1,314 +1,186 @@
---[[
--- 自动生成的Lua配置文件
--- 生成时间: 2025-09-16 22:56:42
--- 源文件: examples\in\PlanConfig.xls
--- 数据维度: 50行 x 4列
---]]
 
--- Knit框架兼容的配置模块
 local PlanConfig = {}
 
--- 配置数据
 PlanConfig.Data = {
     [1] = {
         PlanId = 5001,
         CanisterId = 0,
-        ItemId = 1001,
-        Probability = 2500,
+        ItemId = {
+            1001,
+            1002,
+            1005,
+            1013,
+            1032
+        },
+        Probability = {
+            2500,
+            3000,
+            2000,
+            1500,
+            1000
+        },
     },
     [2] = {
-        PlanId = 5001,
+        PlanId = 5002,
         CanisterId = 0,
-        ItemId = 1002,
-        Probability = 3000,
+        ItemId = {
+            1009,
+            1010,
+            1016,
+            1023,
+            1024
+        },
+        Probability = {
+            2000,
+            1500,
+            1500,
+            1000,
+            1000
+        },
     },
     [3] = {
-        PlanId = 5001,
+        PlanId = 5003,
         CanisterId = 0,
-        ItemId = 1005,
-        Probability = 2000,
+        ItemId = {
+            1003,
+            1004,
+            1007,
+            1025,
+            1027
+        },
+        Probability = {
+            2000,
+            1500,
+            1500,
+            500,
+            1000
+        },
     },
     [4] = {
-        PlanId = 5001,
+        PlanId = 5004,
         CanisterId = 0,
-        ItemId = 1013,
-        Probability = 1500,
+        ItemId = {
+            1012,
+            1015,
+            1017,
+            1021,
+            1028
+        },
+        Probability = {
+            1200,
+            1000,
+            1500,
+            1000,
+            800
+        },
     },
     [5] = {
-        PlanId = 5001,
-        CanisterId = 0,
-        ItemId = 1032,
-        Probability = 1000,
+        PlanId = 5005,
+        CanisterId = 1,
+        ItemId = {
+            1011,
+            1014,
+            1019,
+            1020,
+            1022
+        },
+        Probability = {
+            5000,
+            4500,
+            4500,
+            3500,
+            2500
+        },
     },
     [6] = {
-        PlanId = 5002,
-        CanisterId = 0,
-        ItemId = 1009,
-        Probability = 2000,
+        PlanId = 5006,
+        CanisterId = 2,
+        ItemId = {
+            1024,
+            1029,
+            1030,
+            1031,
+            1008
+        },
+        Probability = {
+            5000,
+            4500,
+            4500,
+            3500,
+            2500
+        },
     },
     [7] = {
-        PlanId = 5002,
-        CanisterId = 0,
-        ItemId = 1010,
-        Probability = 1500,
+        PlanId = 5007,
+        CanisterId = 2,
+        ItemId = {
+            1018,
+            1025,
+            1029,
+            1006,
+            1013
+        },
+        Probability = {
+            5000,
+            4500,
+            4500,
+            3500,
+            2500
+        },
     },
     [8] = {
-        PlanId = 5002,
-        CanisterId = 0,
-        ItemId = 1016,
-        Probability = 1500,
+        PlanId = 5008,
+        CanisterId = 3,
+        ItemId = {
+            1026,
+            1030,
+            1031,
+            1001,
+            1005
+        },
+        Probability = {
+            5000,
+            4500,
+            4500,
+            3500,
+            2500
+        },
     },
     [9] = {
-        PlanId = 5002,
+        PlanId = 5009,
         CanisterId = 0,
-        ItemId = 1023,
-        Probability = 1000,
+        ItemId = {
+            1011,
+            1018,
+            1030,
+            1031,
+            1024
+        },
+        Probability = {
+            2000,
+            1500,
+            800,
+            800,
+            1000
+        },
     },
     [10] = {
-        PlanId = 5002,
-        CanisterId = 0,
-        ItemId = 1024,
-        Probability = 1000,
-    },
-    [11] = {
-        PlanId = 5003,
-        CanisterId = 0,
-        ItemId = 1003,
-        Probability = 2000,
-    },
-    [12] = {
-        PlanId = 5003,
-        CanisterId = 0,
-        ItemId = 1004,
-        Probability = 1500,
-    },
-    [13] = {
-        PlanId = 5003,
-        CanisterId = 0,
-        ItemId = 1007,
-        Probability = 1500,
-    },
-    [14] = {
-        PlanId = 5003,
-        CanisterId = 0,
-        ItemId = 1025,
-        Probability = 500,
-    },
-    [15] = {
-        PlanId = 5003,
-        CanisterId = 0,
-        ItemId = 1027,
-        Probability = 1000,
-    },
-    [16] = {
-        PlanId = 5004,
-        CanisterId = 0,
-        ItemId = 1012,
-        Probability = 1200,
-    },
-    [17] = {
-        PlanId = 5004,
-        CanisterId = 0,
-        ItemId = 1015,
-        Probability = 1000,
-    },
-    [18] = {
-        PlanId = 5004,
-        CanisterId = 0,
-        ItemId = 1017,
-        Probability = 1500,
-    },
-    [19] = {
-        PlanId = 5004,
-        CanisterId = 0,
-        ItemId = 1021,
-        Probability = 1000,
-    },
-    [20] = {
-        PlanId = 5004,
-        CanisterId = 0,
-        ItemId = 1028,
-        Probability = 800,
-    },
-    [21] = {
-        PlanId = 5005,
-        CanisterId = 0,
-        ItemId = 1011,
-        Probability = 1000,
-    },
-    [22] = {
-        PlanId = 5005,
-        CanisterId = 0,
-        ItemId = 1014,
-        Probability = 1200,
-    },
-    [23] = {
-        PlanId = 5005,
-        CanisterId = 0,
-        ItemId = 1019,
-        Probability = 1000,
-    },
-    [24] = {
-        PlanId = 5005,
-        CanisterId = 0,
-        ItemId = 1020,
-        Probability = 800,
-    },
-    [25] = {
-        PlanId = 5005,
-        CanisterId = 0,
-        ItemId = 1022,
-        Probability = 500,
-    },
-    [26] = {
-        PlanId = 5006,
-        CanisterId = 0,
-        ItemId = 1024,
-        Probability = 1500,
-    },
-    [27] = {
-        PlanId = 5006,
-        CanisterId = 0,
-        ItemId = 1029,
-        Probability = 800,
-    },
-    [28] = {
-        PlanId = 5006,
-        CanisterId = 0,
-        ItemId = 1030,
-        Probability = 500,
-    },
-    [29] = {
-        PlanId = 5006,
-        CanisterId = 0,
-        ItemId = 1031,
-        Probability = 500,
-    },
-    [30] = {
-        PlanId = 5006,
-        CanisterId = 0,
-        ItemId = 1008,
-        Probability = 1000,
-    },
-    [31] = {
-        PlanId = 5007,
-        CanisterId = 0,
-        ItemId = 1018,
-        Probability = 1500,
-    },
-    [32] = {
-        PlanId = 5007,
-        CanisterId = 0,
-        ItemId = 1025,
-        Probability = 1200,
-    },
-    [33] = {
-        PlanId = 5007,
-        CanisterId = 0,
-        ItemId = 1029,
-        Probability = 1000,
-    },
-    [34] = {
-        PlanId = 5007,
-        CanisterId = 0,
-        ItemId = 1006,
-        Probability = 800,
-    },
-    [35] = {
-        PlanId = 5007,
-        CanisterId = 0,
-        ItemId = 1013,
-        Probability = 500,
-    },
-    [36] = {
-        PlanId = 5008,
-        CanisterId = 0,
-        ItemId = 1026,
-        Probability = 1000,
-    },
-    [37] = {
-        PlanId = 5008,
-        CanisterId = 0,
-        ItemId = 1030,
-        Probability = 800,
-    },
-    [38] = {
-        PlanId = 5008,
-        CanisterId = 0,
-        ItemId = 1031,
-        Probability = 800,
-    },
-    [39] = {
-        PlanId = 5008,
-        CanisterId = 0,
-        ItemId = 1001,
-        Probability = 500,
-    },
-    [40] = {
-        PlanId = 5008,
-        CanisterId = 0,
-        ItemId = 1005,
-        Probability = 400,
-    },
-    [41] = {
-        PlanId = 5009,
-        CanisterId = 0,
-        ItemId = 1011,
-        Probability = 2000,
-    },
-    [42] = {
-        PlanId = 5009,
-        CanisterId = 0,
-        ItemId = 1018,
-        Probability = 1500,
-    },
-    [43] = {
-        PlanId = 5009,
-        CanisterId = 0,
-        ItemId = 1030,
-        Probability = 800,
-    },
-    [44] = {
-        PlanId = 5009,
-        CanisterId = 0,
-        ItemId = 1031,
-        Probability = 800,
-    },
-    [45] = {
-        PlanId = 5009,
-        CanisterId = 0,
-        ItemId = 1024,
-        Probability = 1000,
-    },
-    [46] = {
         PlanId = 5010,
         CanisterId = 0,
-        ItemId = 1022,
-        Probability = 1500,
-    },
-    [47] = {
-        PlanId = 5010,
-        CanisterId = 0,
-        ItemId = 1020,
-        Probability = 1200,
-    },
-    [48] = {
-        PlanId = 5010,
-        CanisterId = 0,
-        ItemId = 1028,
-        Probability = 1000,
-    },
-    [49] = {
-        PlanId = 5010,
-        CanisterId = 0,
-        ItemId = 1027,
-        Probability = 800,
-    },
-    [50] = {
-        PlanId = 5010,
-        CanisterId = 0,
-        ItemId = 1032,
-        Probability = 1000,
+        ItemId = {
+            1022,
+            1020,
+            1028,
+            1027,
+            1032
+        },
+        Probability = {
+            1500,
+            1200,
+            1000,
+            800,
+            1000
+        },
     },
 }
 

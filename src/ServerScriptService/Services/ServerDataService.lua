@@ -9,7 +9,10 @@ local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Kn
 local ServerDataService = Knit.CreateService {
 	Name = "ServerDataService",
 	Client = {
+        SendInitData = Knit.CreateSignal(),
 	},
+
+    HasInitData = {},       -- 记录玩家是否初始化数据
 }
 
 function ServerDataService:KnitInit()
@@ -27,6 +30,21 @@ function ServerDataService:KnitStart()
         local toolData = DBService:Get(player.UserId, "PlayerToolData")
         Knit.GetService("GoldService"):playerAdd(player, gold)
         Knit.GetService("InventoryService"):playerAdd(player, inventory, toolData)
+        
+        -- 获取传送数据
+        local joinData = player:GetJoinData()
+        if joinData and joinData.TeleportData then
+            local teleportData = joinData.TeleportData
+            if teleportData and teleportData.EscapeItems then
+                for _, itemId in pairs(teleportData.EscapeItems) do
+                    Knit.GetService("InventoryService"):AddItem(player, {ItemId = itemId}, 1)
+                end
+            end
+        end
+
+        if not self.HasInitData[player.UserId] then
+            self.Client.SendInitData:Fire(player, self:GetInitData(player))
+        end
     end
 
     local function playerRemoved(player)
@@ -52,9 +70,17 @@ function ServerDataService:KnitStart()
 end
 
 function ServerDataService:GetInitData(player)
+    if self.HasInitData[player.UserId] then
+        return
+    end
+
     local gold = Knit.GetService("GoldService"):GetGoldData(player)
     local inventory = Knit.GetService("InventoryService"):GetInventoryData(player)
     local toolData = Knit.GetService("InventoryService"):GetToolData(player)
+
+    if gold and inventory and toolData then
+        self.HasInitData[player.UserId] = true
+    end
 
     return {
         Gold = gold,

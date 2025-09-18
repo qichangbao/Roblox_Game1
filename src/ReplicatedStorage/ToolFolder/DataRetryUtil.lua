@@ -31,7 +31,7 @@ local DEFAULT_CONFIG = {
         - logErrors: boolean - 是否记录错误（默认true）
         - logSuccess: boolean - 是否记录成功（默认true）
         - operationName: string - 操作名称，用于日志
-    @return Promise
+    @return table - 包含stop方法的控制对象 {stop: function}
 ]]
 function DataRetryUtil.RetryDataFetch(serviceCall, config)
     config = config or {}
@@ -50,6 +50,7 @@ function DataRetryUtil.RetryDataFetch(serviceCall, config)
     local retryCount = 0
     local startTime = tick()
     local operationName = finalConfig.operationName or "数据获取"
+    local isStopped = false -- 添加停止标志
     
     -- 默认数据验证函数
     local function defaultValidator(data)
@@ -58,7 +59,25 @@ function DataRetryUtil.RetryDataFetch(serviceCall, config)
     
     local dataValidator = finalConfig.dataValidator or defaultValidator
     
+    -- 创建控制对象
+    local retryController = {
+        stop = function()
+            isStopped = true
+            if finalConfig.logSuccess then
+                print(operationName .. "已手动停止")
+            end
+        end
+    }
+    
     local function attemptFetch()
+        -- 检查是否已手动停止
+        if isStopped then
+            if finalConfig.logSuccess then
+                print(operationName .. "重试已停止")
+            end
+            return
+        end
+        
         -- 检查超时
         if tick() - startTime > finalConfig.timeout then
             local errorMsg = operationName .. "超时，停止重试"
@@ -83,7 +102,10 @@ function DataRetryUtil.RetryDataFetch(serviceCall, config)
                 
                 if retryCount < finalConfig.maxRetries then
                     task.wait(finalConfig.retryDelay)
-                    return attemptFetch()
+                    -- 在重试前检查是否已停止
+                    if not isStopped then
+                        return attemptFetch()
+                    end
                 else
                     local finalErrorMsg = operationName .. "最终失败 - 数据验证不通过"
                     if finalConfig.logErrors then
@@ -111,7 +133,10 @@ function DataRetryUtil.RetryDataFetch(serviceCall, config)
             
             if retryCount < finalConfig.maxRetries then
                 task.wait(finalConfig.retryDelay)
-                return attemptFetch()
+                -- 在重试前检查是否已停止
+                if not isStopped then
+                    return attemptFetch()
+                end
             else
                 local finalErrorMsg = operationName .. "最终失败"
                 if finalConfig.logErrors then
@@ -124,7 +149,13 @@ function DataRetryUtil.RetryDataFetch(serviceCall, config)
         end)
     end
     
-    return attemptFetch()
+    -- 启动重试过程
+    task.spawn(function()
+        attemptFetch()
+    end)
+    
+    -- 返回控制对象
+    return retryController
 end
 
 --[[

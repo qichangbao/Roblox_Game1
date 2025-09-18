@@ -6,7 +6,16 @@ GameConfig.ItemType = {
     Weapon = 2,     -- 进攻类
     Assistance = 3, -- 辅助类
     Collect = 4,    -- 搜集类
-    Max = 5,        -- 最大物品类型
+    Chest = 5,      -- 宝箱类
+    Max = 6,        -- 最大物品类型
+}
+
+GameConfig.ItemTypeFolder = {
+    [GameConfig.ItemType.Explore] = "探索",
+    [GameConfig.ItemType.Weapon] = "进攻",
+    [GameConfig.ItemType.Assistance] = "辅助",
+    [GameConfig.ItemType.Collect] = "搜集",
+    [GameConfig.ItemType.Chest] = "箱子",
 }
 
 GameConfig.NpcUIType = {

@@ -1,14 +1,6 @@
---[[
--- 自动生成的Lua配置文件
--- 生成时间: 2025-09-16 22:56:43
--- 源文件: examples\in\Shop1Config.xls
--- 数据维度: 7行 x 2列
---]]
 
--- Knit框架兼容的配置模块
 local Shop1Config = {}
 
--- 配置数据
 Shop1Config.Data = {
     [1] = {
         Index = 1,
@@ -19,23 +11,23 @@ Shop1Config.Data = {
         AssetId = 3386568397,
     },
     [3] = {
-        Index = 4,
+        Index = 3,
         AssetId = 3386569417,
     },
     [4] = {
-        Index = 5,
+        Index = 4,
         AssetId = 3386569943,
     },
     [5] = {
-        Index = 8,
+        Index = 5,
         AssetId = 3386571239,
     },
     [6] = {
-        Index = 9,
+        Index = 6,
         AssetId = 3386571871,
     },
     [7] = {
-        Index = 10,
+        Index = 7,
         AssetId = 3386572591,
     },
 }

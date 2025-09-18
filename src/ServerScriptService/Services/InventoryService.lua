@@ -2,6 +2,7 @@
 -- 使用Knit框架管理服务器数据
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerStorage = game:GetService("ServerStorage")
 
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local ItemConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("ItemConfig"))
@@ -38,7 +39,7 @@ function InventoryService:playerAdd(player, inventory, toolData)
 	self.ToolData[player.UserId] = {}
 	for i = 1, GameConfig.SLOT_NUM do
 		table.insert(self.ToolData[player.UserId], {
-            ItemId = toolData[i].ItemId or 0,
+            ItemId = (toolData[i] and toolData[i].ItemId) or 0,
             Attribute = GameConfig.GetItemAttribute(),
 		})
 	end
@@ -206,7 +207,19 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
 		return
 	end
 
-	local template = game.ServerStorage:FindFirstChild(itemInfo.Model)
+    local itemFolder = ServerStorage:FindFirstChild("Item")
+    if not itemFolder then
+        warn("Item folder not found")
+        return
+    end
+
+    local folder = itemFolder:FindFirstChild(GameConfig.ItemTypeFolder[itemInfo.Type])
+    if not folder then
+        warn("Item type folder not found: " .. GameConfig.ItemTypeFolder[itemInfo.Type])
+        return
+    end
+
+	local template = folder:FindFirstChild(itemInfo.Model)
 	if not template then
 		warn("Tool template not found:", itemInfo.Model)
 		return
@@ -381,7 +394,7 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
 		if script then
 			local module = require(script)
 			if module then
-				module:Activate(player)
+                module:Activate(player, itemInfo)
 			end
 
 			if itemInfo.Type == GameConfig.ItemType.Weapon then    -- 进攻类

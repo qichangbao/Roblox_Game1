@@ -1,20 +1,18 @@
---[[
--- 自动生成的Lua配置文件
--- 生成时间: 2025-09-16 22:56:43
--- 源文件: examples\in\WeaponConfig.xls
--- 数据维度: 1行 x 5列
---]]
 
--- Knit框架兼容的配置模块
 local WeaponConfig = {}
 
--- 坐标配置数据
 WeaponConfig.Coordinates = {
     [1] = {
         Index = 1,
         Position = Vector3.new(3, 3, 3),
-        ItemId = 10001,
+        ItemId = 1,
         Damage = 20,
+    },
+    [2] = {
+        Index = 2,
+        Position = Vector3.new(3, 3, 3),
+        ItemId = 4,
+        Damage = 10,
     },
 }
 

@@ -8,13 +8,16 @@ ClientData.Gold = 0
 ClientData.Inventory = {}
 ClientData.ToolData = {}
 
+-- 添加重试控制器变量
+local retryController = nil
+
 local function init()
     local KnitInitClient = require(script.Parent:WaitForChild("KnitInitClient"))
     KnitInitClient.AddListener(function()
         print("ClientData AddListener")
 
         -- 使用通用重试工具获取登录数据
-        DataRetryUtil.RetryDataFetch(
+        retryController = DataRetryUtil.RetryDataFetch(
             function()
                 return Knit.GetService("ServerDataService").GetInitData()
             end,
@@ -56,6 +59,23 @@ local function init()
 			ClientData.ToolData = toolData or {}
 			Knit.GetController("InventoryController"):Event_UpdateToolData(toolData or {})
 		end)
+
+        Knit.GetService("ServerDataService").SendInitData:Connect(function(data)
+            -- 停止重试
+            if retryController then
+                retryController.stop()
+                print("通过SendInitData接收到数据，已停止DataRetryUtil重试")
+            end
+            
+            ClientData.Gold = data.Gold or 0
+			ClientData.Inventory = data.Inventory or {}
+			ClientData.ToolData = data.ToolData or {}
+			Knit.GetController("UIController").ChangeGoldUI:Fire(data.Gold)
+            Knit.GetController("InventoryController"):Event_UpdateBackpack(data.Inventory)
+			Knit.GetController("UIController").UpdateToolUI:Fire(data.ToolData)
+                    
+            require(script.Parent:WaitForChild("LoadingUI")).Hide()
+        end)
     end)
 end
 

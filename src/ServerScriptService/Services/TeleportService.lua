@@ -64,6 +64,7 @@ local function resetTriggerZoneState(modelName)
 		zoneState.isCountingDown = false
         zoneState.createCountdownTime = 0
 		zoneState.isCreateCountingDown = false
+		zoneState.isTeleporting = false  -- 添加传送状态标记，防止重复传送
 	end
 end
 
@@ -241,10 +242,18 @@ local function createReserveServer()
 end
 
 -- 传送玩家到预留服务器副本
--- @param player Player 要传送的玩家
+-- @param players table 要传送的玩家列表
 -- @return void
 local function teleportToReserveServer(players)
     if isInStudio() then
+        logMessage("INFO", "在Studio环境中，跳过传送操作")
+        return
+    end
+    
+	print("11111111111111111111111111")
+    -- 验证玩家列表
+    if not players or #players == 0 then
+        logMessage("ERROR", "传送失败：没有有效的玩家")
         return
     end
     
@@ -254,41 +263,49 @@ local function teleportToReserveServer(players)
 		logMessage("ERROR", "无法创建预留服务器")
 		return
 	end
+	
+	logMessage("INFO", string.format("成功创建预留服务器，访问码: %s", accessCode))
 
 	-- 准备传送数据
-	local teleportOptions = Instance.new("TeleportOptions")
+	local teleportData = {}
 	
 	-- 收集所有玩家的工具数据
 	local playersToolData = {}
 	local InventoryService = Knit.GetService("InventoryService")
 	
 	for _, player in ipairs(players) do
-		local toolData = InventoryService:GetToolData(player)
-		if toolData then
-			playersToolData[player.UserId] = toolData
+		if player and player.Parent then -- 确保玩家仍然在游戏中
+			local toolData = InventoryService:GetToolData(player)
+			if toolData then
+				playersToolData[player.UserId] = toolData
+			end
 		end
 	end
 	
-	-- 将工具数据添加到传送选项中
+	-- 设置传送数据
 	if next(playersToolData) then
-		teleportOptions:SetTeleportData({
-			PlayersToolData = playersToolData,
-			TaskGold = 10000,
-		})
+		teleportData.JobId = game.JobId
+		teleportData.PlayersToolData = playersToolData
+		teleportData.EscapeTask = 100
 		logMessage("INFO", string.format("已为 %d 个玩家准备工具数据传送", #players))
 	end
 
-	-- 执行传送到预留服务器
+	-- 执行传送到预留服务器 - 使用新的API替换已弃用的TeleportAsync
 	local teleportSuccess, teleportError = pcall(function()
-		TeleportService:TeleportAsync(
+		-- 使用TeleportToPrivateServer替代TeleportAsync
+		TeleportService:TeleportToPrivateServer(
 			TARGET_PLACE_ID,
+			accessCode,
 			players,
-			teleportOptions
+			nil, -- spawnName (可选)
+			teleportData -- 传送数据
 		)
 	end)
 
 	if not teleportSuccess then
 		logMessage("ERROR", string.format("传送到预留服务器失败: %s", tostring(teleportError)))
+	else
+		logMessage("INFO", string.format("成功传送 %d 个玩家到预留服务器 (访问码: %s)", #players, accessCode))
 	end
 end
 
@@ -302,6 +319,12 @@ local function teleportAllPlayersInZone(modelName)
 		return
 	end
 	
+	-- 防止重复传送检查
+	if zoneState.isTeleporting then
+		logMessage("INFO", string.format("区域 %s 正在传送中，跳过重复传送", modelName))
+		return
+	end
+	
 	local playersToTeleport = {}
     local playerCount = 0
 	
@@ -310,7 +333,7 @@ local function teleportAllPlayersInZone(modelName)
 		local player = Players:GetPlayerByUserId(userId)
 		if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
 			local isInTrigger, triggerModel = isPlayerInTriggerZone(player)
-			if isInTrigger and triggerModel.Name == modelName then
+			if isInTrigger and triggerModel == modelName then
                 playerCount += 1
                 if playerCount > zoneState.requiredPlayerCount then
                     break
@@ -320,11 +343,24 @@ local function teleportAllPlayersInZone(modelName)
 		end
 	end
 	
+	-- 如果没有玩家需要传送，直接返回
+	if #playersToTeleport == 0 then
+		logMessage("INFO", string.format("区域 %s 没有有效玩家需要传送", modelName))
+		resetTriggerZoneState(modelName)
+		return
+	end
+	
+	-- 设置传送状态，防止重复传送
+	zoneState.isTeleporting = true
+	logMessage("INFO", string.format("开始传送区域 %s 的 %d 个玩家", modelName, #playersToTeleport))
+	
 	-- 传送所有收集到的玩家
     teleportToReserveServer(playersToTeleport)
 	
-	-- 重置触发区域状态
+	-- 延迟重置触发区域状态，确保传送完成
+	task.wait(2) -- 等待2秒确保传送请求已发送
 	resetTriggerZoneState(modelName)
+	logMessage("INFO", string.format("区域 %s 传送完成，状态已重置", modelName))
 end
 
 -- 初始化BillboardGui
@@ -403,6 +439,11 @@ function TeleportServiceModule:KnitStart()
 		-- 检查所有触发区域的状态并更新Billboard GUI
 		for modelName, zoneState in pairs(triggerZoneStates) do
 			local actualPlayerCount = getPlayersCountInZone(modelName)
+			
+			-- 如果正在传送中，跳过此区域的处理
+			if zoneState.isTeleporting then
+				continue
+			end
 			
 			-- 如果区域内有玩家
 			if actualPlayerCount > 0 then

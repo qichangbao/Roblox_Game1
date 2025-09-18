@@ -61,8 +61,7 @@ function StoreService.Client:SellAll(player)
     for _, itemData in ipairs(inventory) do
         local itemInfo = ItemConfig:GetByIndex(itemData.ItemId)
         -- 收集类物品可以一键全部出售
-        -- if itemInfo and itemInfo.Type == GameConfig.ItemType.Collect then
-        if itemInfo then
+        if itemInfo and itemInfo.Type == GameConfig.ItemType.Collect then
             gold += itemInfo.SellPrice
             table.insert(sellItems, itemData)
         end
