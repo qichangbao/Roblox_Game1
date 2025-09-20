@@ -30,6 +30,7 @@ function ServerDataService:KnitStart()
         local toolData = DBService:Get(player.UserId, "PlayerToolData")
         Knit.GetService("GoldService"):playerAdd(player, gold)
         Knit.GetService("InventoryService"):playerAdd(player, inventory, toolData)
+        Knit.GetService("RankService"):playerAdd(player)
         
         -- 获取传送数据
         local joinData = player:GetJoinData()
@@ -39,6 +40,15 @@ function ServerDataService:KnitStart()
                 for _, itemId in pairs(teleportData.EscapeItems) do
                     Knit.GetService("InventoryService"):AddItem(player, {ItemId = itemId}, 1)
                 end
+            end
+
+            if teleportData.IsSuccess then
+                Knit.GetService("RankService"):Update(player, {
+                    EscapeActions = teleportData.EscapeActions,
+                    TotalTime = teleportData.TotalTime,
+                    TotalValue = teleportData.TotalValue,
+                    IsSuccess = teleportData.IsSuccess,
+                })
             end
         end
 
@@ -52,6 +62,7 @@ function ServerDataService:KnitStart()
         DBService:PlayerRemoving(player)
         Knit.GetService("InventoryService"):playerRemoved(player)
         Knit.GetService("GoldService"):playerRemoved(player)
+        Knit.GetService("RankService"):playerRemoved(player)
     end
 
     for _, player in pairs(Players:GetPlayers()) do

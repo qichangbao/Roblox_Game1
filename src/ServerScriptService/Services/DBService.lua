@@ -4,9 +4,10 @@ local ProfileService = require(ReplicatedStorage:WaitForChild("Packages"):WaitFo
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 
 local _dataTemplate = {
-	Gold = 0,	-- 金币
-	PlayerInventory = {},	-- 背包数据
-	PlayerToolData = {},	-- 工具栏数据
+	Gold = 0,					-- 金币
+	PlayerInventory = {},		-- 背包数据
+	PlayerToolData = {},		-- 工具栏数据
+	EscapeActions = {},			-- 逃生数据
 }
 
 local ProfileStore = ProfileService.GetProfileStore(
@@ -199,9 +200,14 @@ function DBService:GiveStats(player)
 	local Leaderstats = Instance.new("Folder", player)
 	Leaderstats.Name = "leaderstats"
 
-	local gold = Instance.new("IntValue", Leaderstats)
-	gold.Name = "Gold"
-	gold.Value = self:Get(player.UserId, "Gold")
+	local totalActions = Instance.new("IntValue", Leaderstats)
+	totalActions.Name = "TotalActions"
+	local escapeActions = self:Get(player.UserId, "EscapeActions")
+	if escapeActions and escapeActions.successNum then
+		totalActions.Value = escapeActions.successNum
+	else
+		totalActions.Value = 0
+	end
 end
 
 function DBService:KnitInit()

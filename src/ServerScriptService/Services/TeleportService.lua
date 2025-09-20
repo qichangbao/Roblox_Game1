@@ -250,7 +250,6 @@ local function teleportToReserveServer(players)
         return
     end
     
-	print("11111111111111111111111111")
     -- 验证玩家列表
     if not players or #players == 0 then
         logMessage("ERROR", "传送失败：没有有效的玩家")
@@ -504,6 +503,7 @@ function TeleportServiceModule:KnitStart()
 						frame.Visible = false
 					end
 				end
+				updateBillboardGuiPlayerCount(modelName, 0, 5)
 			end
 		end
 	end)
