@@ -171,12 +171,15 @@ function DBService:Set(userId, key, value)
 	profile:Save()
 	print("数据已保存  ", userId, key, value)
 
-	if key == "Gold" then
+	if key == "EscapeActions" then
 		local player = Players:GetPlayerByUserId(userId)
 		if player then
 			local leaderstats = player:FindFirstChild("leaderstats")
 			if leaderstats then
-				leaderstats:FindFirstChild("Gold").Value = value
+				local totalActions = leaderstats:FindFirstChild("TotalActions")
+				if totalActions then
+					totalActions.Value = value
+				end
 			end
 		end
 	end
@@ -216,19 +219,6 @@ end
 
 function DBService:KnitStart()
 	print("DBService Start")
-    -- for _, player in pairs(Players:GetPlayers()) do
-	-- 	self:PlayerAdded(player)
-    -- end
-	
-	-- -- 监听玩家加入事件
-	-- Players.PlayerAdded:Connect(function(player)
-	-- 	self:PlayerAdded(player)
-	-- end)
-
-	-- -- 监听玩家离开事件
-	-- Players.PlayerRemoving:Connect(function(player)
-	-- 	self:PlayerRemoving(player)
-	-- end)
 end
 
 return DBService
