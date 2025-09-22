@@ -38,6 +38,10 @@ local function IsAdmin(player)
 	return false
 end
 
+function DBService:IsAdmin(player)
+	return IsAdmin(player)
+end
+
 function DBService.Client:AdminRequest(player, action, userId, ...)
     if IsAdmin(player) then
         return self.Server:ProcessAdminRequest(player, action, userId, ...)

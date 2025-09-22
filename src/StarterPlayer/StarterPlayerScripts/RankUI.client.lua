@@ -44,7 +44,11 @@ local function UpdataRankUI(rankData)
 		local actions = clone:FindFirstChild("actions")
 		actions.Text = data.successNum
 		local avg = clone:FindFirstChild("avg")
-		avg.Text = string.format("%.2f", data.totalTime / data.successNum)
+		if data.successNum > 0 then
+			avg.Text = string.format("%.2f", data.totalTime / data.successNum)
+		else
+			avg.Text = "0"
+		end
 		local value = clone:FindFirstChild("value")
 		value.Text = data.totalValue
 	end
@@ -56,7 +60,11 @@ local function UpdatePlayerInfo(playerInfo)
 	MeName.Text = Players.LocalPlayer.Name
 	MeNumber.Text = playerInfo.escapeActionsRank
 	MeActions.Text = playerInfo.escapeActions.successNum
-	MeAvg.Text = string.format("%.2f", playerInfo.escapeActions.totalTime / playerInfo.escapeActions.successNum)
+	if playerInfo.escapeActions.successNum > 0 then
+		MeAvg.Text = string.format("%.2f", playerInfo.escapeActions.totalTime / playerInfo.escapeActions.successNum)
+	else
+		MeAvg.Text = "0"
+	end
 	MeValue.Text = playerInfo.escapeActions.totalValue
 end
 

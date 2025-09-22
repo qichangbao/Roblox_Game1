@@ -283,21 +283,22 @@ local function teleportToReserveServer(players)
 	
 	-- 设置传送数据
 	if next(playersToolData) then
-		teleportData.JobId = game.JobId
 		teleportData.PlayersToolData = playersToolData
-		teleportData.EscapeTask = 100
+		teleportData.EscapeTask = 100			-- 逃生目标金钱
+		teleportData.EscapeTime = 10 * 60		-- 逃生时间
 		logMessage("INFO", string.format("已为 %d 个玩家准备工具数据传送", #players))
 	end
 
+	-- 执行传送到预留服务器 - 使用现代化的TeleportAsync API
+	local teleportOptions = Instance.new("TeleportOptions")
+	teleportOptions.ReservedServerAccessCode = accessCode -- 指定传送到我们创建的预留服务器
+	teleportOptions:SetTeleportData(teleportData)
 	-- 执行传送到预留服务器 - 使用新的API替换已弃用的TeleportAsync
 	local teleportSuccess, teleportError = pcall(function()
-		-- 使用TeleportToPrivateServer替代TeleportAsync
-		TeleportService:TeleportToPrivateServer(
+		TeleportService:TeleportAsync(
 			TARGET_PLACE_ID,
-			accessCode,
 			players,
-			nil, -- spawnName (可选)
-			teleportData -- 传送数据
+			teleportOptions
 		)
 	end)
 

@@ -88,6 +88,7 @@ function ServerDataService:GetInitData(player)
     local gold = Knit.GetService("GoldService"):GetGoldData(player)
     local inventory = Knit.GetService("InventoryService"):GetInventoryData(player)
     local toolData = Knit.GetService("InventoryService"):GetToolData(player)
+    local isAdmin = Knit.GetService("DBService"):IsAdmin(player)
 
     if gold and inventory and toolData then
         self.HasInitData[player.UserId] = true
@@ -97,6 +98,7 @@ function ServerDataService:GetInitData(player)
         Gold = gold,
         Inventory = inventory,
         ToolData = toolData,
+        IsAdmin = isAdmin,
     }
 end
 

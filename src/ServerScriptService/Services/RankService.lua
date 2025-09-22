@@ -156,21 +156,6 @@ function RankService:playerRemoved(player)
     end
 end
 
--- 获取玩家名称
--- @param userId number 玩家ID
--- @return string 玩家名称
-function RankService:GetPlayerName(userId)
-    local success, playerName = pcall(function()
-        return PlayerNameStore:GetAsync(tostring(userId))
-    end)
-    
-    if success and playerName then
-        return playerName
-    else
-        return "未知玩家" .. userId
-    end
-end
-
 -- 批量更新全服排行榜
 --[[
     批量更新全服排行榜数据到OrderedDataStore
@@ -383,6 +368,7 @@ function RankService:Update(player, data)
     escapeActions.totalTime += totalTime
     self.playerEscapeActions[userId].escapeActions = escapeActions
     self.playerEscapeActions[userId].lastUpdateTime = tick()
+    Knit.GetService("DBService"):Set(userId, "escapeActions", escapeActions)
     
     -- 添加到待更新队列，准备同步到全服排行榜
     self.pendingUpdates[userId] = {

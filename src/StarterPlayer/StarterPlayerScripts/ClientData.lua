@@ -7,9 +7,24 @@ local ClientData = {}
 ClientData.Gold = 0
 ClientData.Inventory = {}
 ClientData.ToolData = {}
+ClientData.IsAdmin = false
 
 -- 添加重试控制器变量
 local retryController = nil
+
+local function setInitData(data)
+    -- 安全地设置数据
+    ClientData.Gold = data.Gold or 0
+    ClientData.Inventory = data.Inventory or {}
+    ClientData.ToolData = data.ToolData or {}
+    ClientData.IsAdmin = data.IsAdmin or false
+    Knit.GetController("UIController").ChangeGoldUI:Fire(data.Gold)
+    Knit.GetController("InventoryController"):Event_UpdateBackpack(data.Inventory)
+    Knit.GetController("UIController").UpdateToolUI:Fire(data.ToolData)
+    Knit.GetController("UIController").ShowAdminButton:Fire(data.IsAdmin)
+    
+    require(script.Parent:WaitForChild("LoadingUI")).Hide()
+end
 
 local function init()
     local KnitInitClient = require(script.Parent:WaitForChild("KnitInitClient"))
@@ -29,15 +44,7 @@ local function init()
                     return data and type(data) == "table" and data.Gold ~= nil and data.Inventory ~= nil and data.ToolData ~= nil
                 end,
                 onSuccess = function(data)
-                    -- 安全地设置数据
-                    ClientData.Gold = data.Gold or 0
-					ClientData.Inventory = data.Inventory or {}
-					ClientData.ToolData = data.ToolData or {}
-					Knit.GetController("UIController").ChangeGoldUI:Fire(data.Gold)
-                    Knit.GetController("InventoryController"):Event_UpdateBackpack(data.Inventory)
-					Knit.GetController("UIController").UpdateToolUI:Fire(data.ToolData)
-                    
-                    require(script.Parent:WaitForChild("LoadingUI")).Hide()
+                    setInitData(data)
                 end,
                 onFailure = function(errorMsg)
                     warn("登录数据获取失败:", errorMsg)
@@ -67,14 +74,7 @@ local function init()
                 print("通过SendInitData接收到数据，已停止DataRetryUtil重试")
             end
             
-            ClientData.Gold = data.Gold or 0
-			ClientData.Inventory = data.Inventory or {}
-			ClientData.ToolData = data.ToolData or {}
-			Knit.GetController("UIController").ChangeGoldUI:Fire(data.Gold)
-            Knit.GetController("InventoryController"):Event_UpdateBackpack(data.Inventory)
-			Knit.GetController("UIController").UpdateToolUI:Fire(data.ToolData)
-                    
-            require(script.Parent:WaitForChild("LoadingUI")).Hide()
+            setInitData(data)
         end)
     end)
 end

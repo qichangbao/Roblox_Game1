@@ -10,6 +10,7 @@ local UIController = Knit.CreateController {
     ShowSellUI = Signal.new(),
     ShowTip = Signal.new(),
 	ShowAdminUI = Signal.new(),
+    ShowAdminButton = Signal.new(),
 	ShowBackpackUI = Signal.new(),
 	ChangeGoldUI = Signal.new(),
 	ShowTeleportUI = Signal.new(),
