@@ -8,6 +8,7 @@ local _dataTemplate = {
 	PlayerInventory = {},		-- 背包数据
 	PlayerToolData = {},		-- 工具栏数据
 	EscapeActions = {},			-- 逃生数据
+	LevelData = {},				-- 等级数据
 }
 
 local ProfileStore = ProfileService.GetProfileStore(
