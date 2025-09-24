@@ -27,6 +27,8 @@ GameConfig.BackpackSlotCount = 6    -- 背包槽位数量
 GameConfig.InitItemNums = 30        -- 初始物品数量
 GameConfig.LandName = "出生岛"
 GameConfig.TeleportPartNames = {"go1", "go2", "go3"}-- 触发传送的Part名称
+
+-- 为了向后兼容，保留原有的FontFace属性
 GameConfig.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json")
 GameConfig.SLOT_NUM = 3
 GameConfig.Item_DragTime = 0.3       -- 物品拖拽响应事件

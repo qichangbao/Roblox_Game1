@@ -102,66 +102,6 @@ end
 -- ========================================
 
 --[[
-	验证并清理资源ID
-	@param assetId string 资源ID
-	@return boolean 是否为有效的资源ID
-]]
-local function IsValidAssetId(assetId)
-	if not assetId or assetId == "" then
-		return false
-	end
-	
-	-- 检查是否为数字ID
-	local numericId = tonumber(assetId)
-	if numericId and numericId > 0 then
-		return true
-	end
-	
-	-- 检查是否为rbxassetid格式
-	if string.match(assetId, "^rbxassetid://(%d+)$") then
-		return true
-	end
-	
-	return false
-end
-
---[[
-	验证资源对象的有效性
-	@param asset Instance 要验证的资源对象
-	@return boolean 是否为有效资源
-]]
-local function ValidateAsset(asset)
-	if not asset or not asset.Parent then
-		return false
-	end
-	
-	-- 检查MeshPart的MeshId
-	if asset:IsA("MeshPart") then
-		local meshId = asset.MeshId
-		if meshId and meshId ~= "" and not IsValidAssetId(meshId) then
-			warn(string.format("⚠️ 发现无效的MeshId: %s (在 %s)", meshId, asset:GetFullName()))
-			return false
-		end
-	end
-	
-	-- 检查Part的Shape和Material
-	if asset:IsA("Part") then
-		-- 检查贴图
-		for _, child in pairs(asset:GetChildren()) do
-			if child:IsA("Decal") or child:IsA("Texture") then
-				local textureId = child.Texture
-				if textureId and textureId ~= "" and not IsValidAssetId(textureId) then
-					warn(string.format("⚠️ 发现无效的TextureId: %s (在 %s)", textureId, child:GetFullName()))
-					return false
-				end
-			end
-		end
-	end
-	
-	return true
-end
-
---[[
 	预加载所有资源（模型和Part）
 	@param assets table 要预加载的资源数组
 ]]
@@ -173,17 +113,10 @@ local function PreloadAssets(assets)
 	
 	-- 验证并过滤资源
 	local validAssets = {}
-	local invalidCount = 0
 	
 	for _, asset in pairs(assets) do
-		if ValidateAsset(asset) then
-			table.insert(validAssets, asset)
-		else
-			invalidCount = invalidCount + 1
-		end
+		table.insert(validAssets, asset)
 	end
-	
-	print(string.format("📊 资源统计: 总计 %d 个，有效 %d 个，无效 %d 个", #assets, #validAssets, invalidCount))
 	
 	if #validAssets == 0 then
 		warn("❌ 没有有效的资源可以预加载")
