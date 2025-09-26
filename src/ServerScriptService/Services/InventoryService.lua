@@ -194,6 +194,30 @@ function InventoryService:GetInventoryFromDBService(userId, value)
 	self:InitPlayerInventory(player, value)
 end
 
+-- 从DataStoreService初始化玩家工具栏数据
+function InventoryService:InitPlayerTool(player, toolStore)
+	local userId = player.UserId
+	self.ToolData[userId] = {}
+
+	if toolStore then
+		for i = 1, GameConfig.SLOT_NUM do
+			table.insert(self.ToolData[player.UserId], {
+				ItemId = (toolStore[i] and toolStore[i].ItemId) or 0,
+				Attribute = GameConfig.GetItemAttribute(),
+			})
+		end
+	end
+	self.Client.SendToolData:Fire(player, self.ToolData[userId])
+end
+
+function InventoryService:GetToolFromDBService(userId, value)
+	local player = game.Players:GetPlayerByUserId(userId)
+	if not player then
+		return
+	end
+	self:InitPlayerTool(player, value)
+end
+
 -- 根据物品ID创建工具实例
 -- @param itemId number 物品ID
 -- @return Tool|nil 创建的工具实例

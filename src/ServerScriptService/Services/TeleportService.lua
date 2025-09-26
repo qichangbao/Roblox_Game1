@@ -79,7 +79,9 @@ end
 
 local function getTriggerPart(modelName)
     local land = workspace:FindFirstChild(GameConfig.LandName)
-    local triggerModel = land:FindFirstChild(modelName)
+	local special = land:FindFirstChild("Special")
+	local teleport = special:FindFirstChild("Teleport")
+    local triggerModel = teleport:FindFirstChild(modelName)
     if not triggerModel then
         return
     end
@@ -369,9 +371,11 @@ local function initializeBillboad()
 	if not land then
 		return
 	end
+	local special = land:WaitForChild("Special")
+	local teleport = special:WaitForChild("Teleport")
 	-- 检查每个触发Part
 	for _, partName in ipairs(GameConfig.TeleportPartNames) do
-		local triggerModel = land:WaitForChild(partName)
+		local triggerModel = teleport:WaitForChild(partName)
 		local triggerPart = triggerModel:WaitForChild("TriggerPart")
 		local billboard = triggerPart:WaitForChild("BillboardGui")
 		local frame = billboard:FindFirstChild("TimeFrame")

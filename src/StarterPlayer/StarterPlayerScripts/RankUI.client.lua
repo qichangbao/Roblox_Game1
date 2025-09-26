@@ -8,7 +8,9 @@ while not InitLand do
 	InitLand = workspace:FindFirstChild("出生岛")
 end
 
-local Rank = InitLand:WaitForChild("排行榜")
+local SpecialFolder = InitLand:WaitForChild("Special")
+local RankFolder = SpecialFolder:WaitForChild("Rank")
+local Rank = RankFolder:WaitForChild("排行榜")
 local RankPart = Rank:WaitForChild("RankPart")
 local SrufaceGui = RankPart:WaitForChild("SurfaceGui")
 local ContentFrame = SrufaceGui:WaitForChild("ContentFrame")

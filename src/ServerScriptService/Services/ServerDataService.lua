@@ -28,11 +28,11 @@ function ServerDataService:KnitStart()
         local gold = DBService:Get(player.UserId, "Gold")
         local inventory = DBService:Get(player.UserId, "PlayerInventory")
         local toolData = DBService:Get(player.UserId, "PlayerToolData")
-        local levelData = DBService:Get(player.UserId, "LevelData")
+        local duanWeiData = DBService:Get(player.UserId, "DuanWeiData")
         Knit.GetService("GoldService"):playerAdd(player, gold)
         Knit.GetService("InventoryService"):playerAdd(player, inventory, toolData)
         Knit.GetService("RankService"):playerAdd(player)
-        Knit.GetService("LevelService"):playerAdd(player, levelData)
+        Knit.GetService("LevelService"):playerAdd(player, duanWeiData)
         
         -- 获取传送数据
         local joinData = player:GetJoinData()
