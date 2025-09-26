@@ -65,4 +65,103 @@ GameConfig.UpdateItemAttribute = function(item, key, value)
     return attribute
 end
 
+GameConfig.DuanWeiType = {
+    [1] = {
+        name = "新手",
+        levelNum = 2,           -- 当前段位里有几个级别
+        levelStarNum = 3,       -- 每级别有多少星级
+        icons = {
+            "rbxassetid://104558666500181",
+            "rbxassetid://131806429541712",
+        },
+        allowDeduction = false,
+    },
+    [2] = {
+        name = "幸存者",
+        levelNum = 3,
+        levelStarNum = 3,
+        icons = {
+            "rbxassetid://95055487648786",
+            "rbxassetid://107725460727092",
+            "rbxassetid://111713244903022",
+        },
+        allowDeduction = false,
+    },
+    [3] = {
+        name = "猎手",
+        levelNum = 3,
+        levelStarNum = 3,
+        icons = {
+            "rbxassetid://126318903951630",
+            "rbxassetid://127632100463204",
+            "rbxassetid://90815237857389",
+        },
+        allowDeduction = false,
+    },
+    [4] = {
+        name = "探索者",
+        levelNum = 4,
+        levelStarNum = 4,
+        icons = {
+            "rbxassetid://114482168195907",
+            "rbxassetid://127969857581439",
+            "rbxassetid://139793493452303",
+            "rbxassetid://83209250893244",
+        },
+        allowDeduction = true,
+    },
+    [5] = {
+        name = "袭击者",
+        levelNum = 5,
+        levelStarNum = 5,
+        icons = {
+            "rbxassetid://87909143599189",
+            "rbxassetid://107943684712921",
+            "rbxassetid://79501454052147",
+            "rbxassetid://113973751318191",
+            "rbxassetid://124479690174981",
+        },
+        allowDeduction = true,
+    },
+    [6] = {
+        name = "大师",
+        levelNum = 5,
+        levelStarNum = 5,
+        icons = {
+            "rbxassetid://131344517321091",
+            "rbxassetid://80404558949136",
+            "rbxassetid://80854096048450",
+            "rbxassetid://116214812869164",
+            "rbxassetid://97942786376716",
+        },
+        allowDeduction = true,
+    },
+    [7] = {
+        name = "传奇",
+        levelNum = -1,
+        levelStarNum = -1,
+        icons = "rbxassetid://75343365000157",
+        allowDeduction = true,
+    },
+}
+
+function GameConfig.GetDuanWeiIcon(duanweiData)
+    if not duanweiData then
+        return
+    end
+    local duanwei = tonumber(duanweiData.duanWei)
+    if not duanwei then
+        return
+    end
+    local level = tonumber(duanweiData.level)
+    if not level then
+        return
+    end
+    local duanweiConfig = GameConfig.DuanWeiType[duanwei]
+    if not duanweiConfig then
+        return
+    end
+    return duanweiConfig.icons[level]
+end
+
 return GameConfig

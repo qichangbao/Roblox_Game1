@@ -5,85 +5,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 
-local DuanWeiType = {
-    [1] = {
-        name = "新手",
-        levelNum = 2,           -- 当前段位里有几个级别
-        levelStarNum = 3,       -- 每级别有多少星级
-        icons = {
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-        },
-        allowDeduction = false,
-    },
-    [2] = {
-        name = "幸存者",
-        levelNum = 3,
-        levelStarNum = 3,
-        icons = {
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-        },
-        allowDeduction = false,
-    },
-    [3] = {
-        name = "猎手",
-        levelNum = 3,
-        levelStarNum = 3,
-        icons = {
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-        },
-        allowDeduction = false,
-    },
-    [4] = {
-        name = "探索者",
-        levelNum = 4,
-        levelStarNum = 4,
-        icons = {
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-        },
-        allowDeduction = true,
-    },
-    [5] = {
-        name = "袭击者",
-        levelNum = 5,
-        levelStarNum = 5,
-        icons = {
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-        },
-        allowDeduction = true,
-    },
-    [6] = {
-        name = "大师",
-        levelNum = 5,
-        levelStarNum = 5,
-        icons = {
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-            "rbxassetid://1234567890",
-        },
-        allowDeduction = true,
-    },
-    [7] = {
-        name = "传奇",
-        levelNum = -1,
-        levelStarNum = -1,
-        icons = "rbxassetid://1234567890",
-        allowDeduction = true,
-    },
-}
+local DuanWeiType = GameConfig.DuanWeiType
 
 -- Billboard样式配置
 local BILLBOARD_CONFIG = {
@@ -100,25 +22,6 @@ local LevelService = Knit.CreateService {
 
     DuanWeiData = {},
 }
-
-local function GetDuanWeiIcon(duanweiData)
-    if not duanweiData then
-        return
-    end
-    local duanwei = tonumber(duanweiData.duanWei)
-    if not duanwei then
-        return
-    end
-    local level = tonumber(duanweiData.level)
-    if not level then
-        return
-    end
-    local duanweiConfig = DuanWeiType[duanwei]
-    if not duanweiConfig then
-        return
-    end
-    return duanweiConfig.icons[level]
-end
 
 function LevelService:KnitInit()
 end
@@ -183,33 +86,6 @@ end
 
 function LevelService:GetLevelData(player)
     return self.DuanWeiData[player.UserId]
-end
-
-function LevelService:GetLevelIcon(player)
-    if not player or not player.UserId then
-        return
-    end
-
-    local levelData = self.DuanWeiData[player.UserId]
-    if not levelData then
-        return
-    end
-
-    local duanwei = levelData.duanWei
-    local level = levelData.level
-    if not duanwei or not level then
-        return
-    end
-
-    local duanweiConfig = DuanWeiType[duanwei]
-    if not duanweiConfig then
-        return
-    end
-
-    if duanweiConfig.levelNum == -1 then
-        return duanweiConfig.icons
-    end
-    return duanweiConfig.icons[level]
 end
 
 function LevelService:Updata(player, escapeSucc)
@@ -299,7 +175,7 @@ function LevelService:CreatePlayerBillboard(player)
 	rankIcon.Size = UDim2.new(0.3, 0, 1, 0) -- 增大图标尺寸
 	rankIcon.Position = UDim2.new(0, 0, 0, 0) -- 左侧固定位置，垂直居中
 	rankIcon.BackgroundTransparency = 1
-	rankIcon.Image = GetDuanWeiIcon(self.DuanWeiData[player.UserId])
+	rankIcon.Image = GameConfig.GetDuanWeiIcon(self.DuanWeiData[player.UserId])
 	rankIcon.ScaleType = Enum.ScaleType.Fit
 	rankIcon.ImageColor3 = Color3.fromRGB(255, 255, 255) -- 默认白色
 	rankIcon.Parent = mainFrame
@@ -344,7 +220,7 @@ function LevelService:UpdateBillboard(player)
 	if not rankIcon then
 		return
 	end
-	rankIcon.Image = GetDuanWeiIcon(self.DuanWeiData[player.UserId])
+	rankIcon.Image = GameConfig.GetDuanWeiIcon(self.DuanWeiData[player.UserId])
 end
 
 return LevelService

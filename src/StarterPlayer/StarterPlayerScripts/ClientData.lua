@@ -22,8 +22,7 @@ local function setInitData(data)
     Knit.GetController("InventoryController"):Event_UpdateBackpack(data.Inventory)
     Knit.GetController("UIController").UpdateToolUI:Fire(data.ToolData)
     Knit.GetController("UIController").ShowAdminButton:Fire(data.IsAdmin)
-    
-    require(script.Parent:WaitForChild("LoadingUI")).Hide()
+    Knit.GetController("UIController").HideLoadingUI:Fire()
 end
 
 local function init()

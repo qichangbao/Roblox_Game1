@@ -6,6 +6,7 @@ local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitFo
 local UIController = Knit.CreateController {
     Name = "UIController",
     
+    HideLoadingUI = Signal.new(),
     ShowStoreUI = Signal.new(),
     ShowSellUI = Signal.new(),
     ShowTip = Signal.new(),
