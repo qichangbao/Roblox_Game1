@@ -88,12 +88,6 @@ local function CollectAllAssets()
 		table.insert(allAssets, asset)
 	end
 	
-	-- 收集Workspace资源
-	local workspaceAssets = CollectWorkspaceAssets()
-	for _, asset in pairs(workspaceAssets) do
-		table.insert(allAssets, asset)
-	end
-	
 	return allAssets
 end
 

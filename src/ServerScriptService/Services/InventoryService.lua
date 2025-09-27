@@ -31,16 +31,15 @@ end
 function InventoryService:playerAdd(player, inventory, toolData)
 	self.Inventory[player.UserId] = {}
 	for _, v in pairs(inventory) do
-        local itemAttribute = GameConfig.GetItemAttribute()
-		v.Attribute = itemAttribute
 		table.insert(self.Inventory[player.UserId], v)
 	end
 
 	self.ToolData[player.UserId] = {}
 	for i = 1, GameConfig.SLOT_NUM do
+		local data = toolData[i]
 		table.insert(self.ToolData[player.UserId], {
-            ItemId = (toolData[i] and toolData[i].ItemId) or 0,
-            Attribute = GameConfig.GetItemAttribute(),
+            ItemId = (data and data.ItemId) or 0,
+            Attribute = (data and data.Attribute) or GameConfig.GetItemAttribute(),
 		})
 	end
 end
@@ -58,28 +57,16 @@ end
 -- @param player Player 玩家对象
 -- @return void
 function InventoryService:InventoryToDB(player)
-	local inventory = {}
-	for _, v in pairs(self.Inventory[player.UserId]) do
-		table.insert(inventory, {
-			ItemId = v.ItemId,
-		})
-	end
 	local DBService = Knit.GetService("DBService")
-	DBService:Set(player.UserId, "PlayerInventory", inventory)
+	DBService:Set(player.UserId, "PlayerInventory", self.Inventory[player.UserId])
 end
 
 -- 工具栏数据转换为数据库格式
 -- @param player Player 玩家对象
 -- @return void
 function InventoryService:ToolDataToDB(player)
-	local toolData = {}
-	for _, v in pairs(self.ToolData[player.UserId]) do
-		table.insert(toolData, {
-			ItemId = v.ItemId,
-		})
-	end
 	local DBService = Knit.GetService("DBService")
-	DBService:Set(player.UserId, "PlayerToolData", toolData)
+	DBService:Set(player.UserId, "PlayerToolData", self.ToolData[player.UserId])
 end
 
 function InventoryService:AddItem(player, itemData)
@@ -257,8 +244,6 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
 	tool.ToolTip = itemInfo.Description or ""
 	tool.CanBeDropped = true
 	tool.RequiresHandle = true
-	tool:SetAttribute("CD", itemInfo.CD)
-	tool:SetAttribute("Duration", itemInfo.Duration)
 	tool:SetAttribute("ItemId", itemData.ItemId)
 	GameConfig.SetItemAttribute(tool, itemData.Attribute)
 
@@ -404,21 +389,21 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
         local attribute = GameConfig.GetItemAttribute(tool)
 
         -- 在冷却时间内，忽略激活
-        if currentTime < attribute.UseElapsedTime then
+        if currentTime < attribute.CDElapsedTime then
             return
         end
-
-        local cooldownTime = tool:GetAttribute("CD") or 0
-        local useElapsedTime = currentTime + cooldownTime
-        self.ToolData[player.UserId][slot].Attribute.UseElapsedTime = useElapsedTime
-        GameConfig.UpdateItemAttribute(tool, "UseElapsedTime", useElapsedTime)
-		self.Client.SendToolData:Fire(player, self.ToolData[player.UserId])
 
 		local script = tool:FindFirstChild("ModuleScript")
 		if script then
 			local module = require(script)
 			if module then
-                module:Activate(player, itemInfo)
+                local isSuccess = module:Activate(player, itemInfo)
+                if isSuccess then
+					local CDElapsedTime = currentTime + itemInfo.CD
+					self.ToolData[player.UserId][slot].Attribute.CDElapsedTime = CDElapsedTime
+					GameConfig.UpdateItemAttribute(tool, "CDElapsedTime", CDElapsedTime)
+					self.Client.SendToolData:Fire(player, self.ToolData[player.UserId])
+                end
 			end
 
 			if itemInfo.Type == GameConfig.ItemType.Weapon then    -- 进攻类
@@ -483,11 +468,11 @@ function InventoryService:EquipToolByKey(player, slot)
 			if currentTool then
 				for i, v in pairs(toolData) do
 					if v.ItemId == currentItemId and v.Attribute.CreateTime == attribute.CreateTime then
-						v.Attribute.IsEquipped = false
+						v.Attribute.IsEquipped = 0
 						break
 					end
 				end
-				GameConfig.UpdateItemAttribute(currentTool, "IsEquipped", false)
+				GameConfig.UpdateItemAttribute(currentTool, "IsEquipped", 0)
 				currentTool:Destroy()
 			end
 			return 1, toolData
@@ -496,11 +481,11 @@ function InventoryService:EquipToolByKey(player, slot)
 		-- 否则，卸下当前工具并装备新工具
 		for i, v in pairs(toolData) do
 			if v.ItemId == currentItemId and v.Attribute.CreateTime == attribute.CreateTime then
-				v.Attribute.IsEquipped = false
+				v.Attribute.IsEquipped = 0
 				break
 			end
 		end
-		GameConfig.UpdateItemAttribute(currentTool, "IsEquipped", false)
+		GameConfig.UpdateItemAttribute(currentTool, "IsEquipped", 0)
 		currentTool:Destroy()
     end
     
@@ -512,8 +497,8 @@ function InventoryService:EquipToolByKey(player, slot)
         -- 确保工具被正确装备
         if character:FindFirstChild("Humanoid") then
             character.Humanoid:EquipTool(newTool)
-        	itemData.Attribute.IsEquipped = true
-			GameConfig.UpdateItemAttribute(newTool, "IsEquipped", true)
+        	itemData.Attribute.IsEquipped = 1
+			GameConfig.UpdateItemAttribute(newTool, "IsEquipped", 1)
         end
         
         return 2, toolData

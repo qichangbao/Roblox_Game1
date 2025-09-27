@@ -14,6 +14,8 @@ local TeleportServiceModule = Knit.CreateService {
 	Client = {
 		-- 客户端远程信号：请求选择人数
 		RequestPlayerCount = Knit.CreateSignal(),
+		-- 客户端远程信号：开始传送
+        SendStartTeleport = Knit.CreateSignal(),
 	},
 }
 
@@ -246,7 +248,7 @@ end
 -- 传送玩家到预留服务器副本
 -- @param players table 要传送的玩家列表
 -- @return void
-local function teleportToReserveServer(players)
+function TeleportServiceModule:teleportToReserveServer(players)
     if isInStudio() then
         logMessage("INFO", "在Studio环境中，跳过传送操作")
         return
@@ -263,6 +265,10 @@ local function teleportToReserveServer(players)
 	if not accessCode then
 		logMessage("ERROR", "无法创建预留服务器")
 		return
+	end
+	
+	for _, player in ipairs(players) do
+		self.Client.SendStartTeleport:Fire(player)
 	end
 	
 	logMessage("INFO", string.format("成功创建预留服务器，访问码: %s", accessCode))
@@ -314,7 +320,7 @@ end
 -- 传送触发区域内的所有玩家
 -- @param modelName string 触发区域名称
 -- @return void
-local function teleportAllPlayersInZone(modelName)
+function TeleportServiceModule:teleportAllPlayersInZone(modelName)
 	local zoneState = triggerZoneStates[modelName]
 	if not zoneState then
 		logMessage("ERROR", string.format("未找到触发区域状态: %s", modelName))
@@ -357,7 +363,7 @@ local function teleportAllPlayersInZone(modelName)
 	logMessage("INFO", string.format("开始传送区域 %s 的 %d 个玩家", modelName, #playersToTeleport))
 	
 	-- 传送所有收集到的玩家
-    teleportToReserveServer(playersToTeleport)
+    self:teleportToReserveServer(playersToTeleport)
 	
 	-- 延迟重置触发区域状态，确保传送完成
 	task.wait(2) -- 等待2秒确保传送请求已发送
@@ -493,7 +499,7 @@ function TeleportServiceModule:KnitStart()
                     -- 检查倒计时是否结束
                     if remainingTime <= 0 then
 					    updateBillboardGuiCountdown(modelName, "Transmitting")
-                        teleportAllPlayersInZone(modelName)
+                        self:teleportAllPlayersInZone(modelName)
                     else
                         updateBillboardGuiCountdown(modelName, math.ceil(remainingTime))
                     end

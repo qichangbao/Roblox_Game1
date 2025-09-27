@@ -22,7 +22,9 @@ local function setInitData(data)
     Knit.GetController("InventoryController"):Event_UpdateBackpack(data.Inventory)
     Knit.GetController("UIController").UpdateToolUI:Fire(data.ToolData)
     Knit.GetController("UIController").ShowAdminButton:Fire(data.IsAdmin)
-    Knit.GetController("UIController").HideLoadingUI:Fire()
+	local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+	local loadingUI = playerGui:FindFirstChild("LoadingUI")
+	loadingUI.Enabled = false
 end
 
 local function init()
@@ -74,6 +76,12 @@ local function init()
             end
             
             setInitData(data)
+        end)
+
+        Knit.GetService("TeleportService").SendStartTeleport:Connect(function()
+			local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+			local loadingUI = playerGui:FindFirstChild("LoadingUI")
+			loadingUI.Enabled = true
         end)
     end)
 end

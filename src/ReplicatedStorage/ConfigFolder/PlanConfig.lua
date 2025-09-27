@@ -76,7 +76,7 @@ PlanConfig.Data = {
     },
     [5] = {
         PlanId = 5005,
-        CanisterId = 1,
+        CanisterId = 501,
         ItemId = {
             1011,
             1014,
@@ -94,7 +94,7 @@ PlanConfig.Data = {
     },
     [6] = {
         PlanId = 5006,
-        CanisterId = 2,
+        CanisterId = 502,
         ItemId = {
             1024,
             1029,
@@ -112,7 +112,7 @@ PlanConfig.Data = {
     },
     [7] = {
         PlanId = 5007,
-        CanisterId = 2,
+        CanisterId = 502,
         ItemId = {
             1018,
             1025,
@@ -130,7 +130,7 @@ PlanConfig.Data = {
     },
     [8] = {
         PlanId = 5008,
-        CanisterId = 3,
+        CanisterId = 503,
         ItemId = {
             1026,
             1030,

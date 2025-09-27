@@ -38,14 +38,18 @@ GameConfig.GetItemAttribute = function(item)
     if not item then
         return {
             CreateTime = tick(),        -- 创建时间
-            IsEquipped = false,         -- 是否装备
-            UseElapsedTime = 0,         -- 能使用的截止时间
+            IsEquipped = 0,         -- 是否装备
+            CDElapsedTime = 0,          -- CD截止时间
+            UsedTime = 0,               -- 已使用时间
+            UsedNum = 0,                -- 已使用次数
         }
     end
     return {
         CreateTime = item:GetAttribute("CreateTime"),
         IsEquipped = item:GetAttribute("IsEquipped"),
-        UseElapsedTime = item:GetAttribute("UseElapsedTime"),
+        CDElapsedTime = item:GetAttribute("CDElapsedTime"),
+        UsedTime = item:GetAttribute("UsedTime"),
+        UsedNum = item:GetAttribute("UsedNum"),
     }
 end
 
@@ -55,7 +59,9 @@ GameConfig.SetItemAttribute = function(item, attribute)
     end
     item:SetAttribute("CreateTime", attribute.CreateTime)
     item:SetAttribute("IsEquipped", attribute.IsEquipped)
-    item:SetAttribute("UseElapsedTime", attribute.UseElapsedTime)
+    item:SetAttribute("CDElapsedTime", attribute.CDElapsedTime)
+    item:SetAttribute("UsedTime", attribute.UsedTime)
+    item:SetAttribute("UsedNum", attribute.UsedNum)
 end
 
 GameConfig.UpdateItemAttribute = function(item, key, value)

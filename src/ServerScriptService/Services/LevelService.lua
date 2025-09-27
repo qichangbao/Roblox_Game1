@@ -41,19 +41,19 @@ function LevelService:playerAdd(player, levelData)
     self.DuanWeiData[player.UserId].star = tonumber(self.DuanWeiData[player.UserId].star)
     self:CreatePlayerBillboard(player)
 
-    player.Chatted:Connect(function(message)
-        local lowerMessage = string.lower(message)
+    -- player.Chatted:Connect(function(message)
+    --     local lowerMessage = string.lower(message)
         
-        if lowerMessage == "add star" then
-	        Knit.GetService("LevelService"):Updata(player, true)
-            return true
-        elseif lowerMessage == "dec star" then
-	        Knit.GetService("LevelService"):Updata(player, false)
-            return true
-        end
+    --     if lowerMessage == "add star" then
+	--         Knit.GetService("LevelService"):Updata(player, true)
+    --         return true
+    --     elseif lowerMessage == "dec star" then
+	--         Knit.GetService("LevelService"):Updata(player, false)
+    --         return true
+    --     end
         
-        return false
-    end)
+    --     return false
+    -- end)
 end
 
 function LevelService:playerRemoved(player)
@@ -183,8 +183,8 @@ function LevelService:CreatePlayerBillboard(player)
 	-- 创建名字标签
 	local nameLabel = Instance.new("TextLabel")
 	nameLabel.Name = "NameLabel"
-	nameLabel.Size = UDim2.new(0.65, 0, 1, 0) -- 为图标留出更多空间
-	nameLabel.Position = UDim2.new(0.35, 0, 0, 0) -- 图标右侧位置
+	nameLabel.Size = UDim2.new(0.7, 0, 1, 0) -- 为图标留出更多空间
+	nameLabel.Position = UDim2.new(0.3, 0, 0, 0) -- 图标右侧位置
 	nameLabel.BackgroundTransparency = 1
 	nameLabel.Text = player.Name
 	nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
