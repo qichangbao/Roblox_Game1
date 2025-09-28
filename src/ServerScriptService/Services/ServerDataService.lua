@@ -38,14 +38,8 @@ function ServerDataService:KnitStart()
         local joinData = player:GetJoinData()
         if joinData and joinData.TeleportData then
             local teleportData = joinData.TeleportData
-            if teleportData and teleportData.EscapeItems then
-                for _, itemId in pairs(teleportData.EscapeItems) do
-                    Knit.GetService("InventoryService"):AddItem(player, {ItemId = itemId}, 1)
-                end
-            end
-
             if teleportData.IsSuccess then
-                -- 成功撤离，更新等级数据
+                -- 成功撤离，更新排行榜数据
                 Knit.GetService("RankService"):Update(player, {
                     EscapeActions = teleportData.EscapeActions,
                     TotalTime = teleportData.TotalTime,
@@ -60,6 +54,21 @@ function ServerDataService:KnitStart()
 
         if not self.HasInitData[player.UserId] then
             self.Client.SendInitData:Fire(player, self:GetInitData(player))
+        end
+        
+        local function characterAdd(character)
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+            end
+            Knit.GetService("LevelService"):CreatePlayerBillboard(player)
+        end
+        if player.Character then
+            characterAdd(player.Character)
+        else
+            player.CharacterAdded:Connect(function(character)
+                characterAdd(character)
+            end)
         end
     end
 

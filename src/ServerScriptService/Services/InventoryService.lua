@@ -31,17 +31,33 @@ end
 function InventoryService:playerAdd(player, inventory, toolData)
 	self.Inventory[player.UserId] = {}
 	for _, v in pairs(inventory) do
-		table.insert(self.Inventory[player.UserId], v)
+        local attribute = GameConfig.GetItemAttribute()
+        attribute.UsedTime = v.UsedTime
+        attribute.UsedNum = v.UsedNum
+		table.insert(self.Inventory[player.UserId], {
+            ItemId = v.ItemId,
+            Attribute = attribute,
+        })
 	end
 
 	self.ToolData[player.UserId] = {}
-	for i = 1, GameConfig.SLOT_NUM do
-		local data = toolData[i]
-		table.insert(self.ToolData[player.UserId], {
-            ItemId = (data and data.ItemId) or 0,
-            Attribute = (data and data.Attribute) or GameConfig.GetItemAttribute(),
-		})
-	end
+    for i = 1, GameConfig.SLOT_NUM do
+        local data = toolData[i]
+        local attribute = GameConfig.GetItemAttribute()
+        if data then
+            attribute.UsedTime = data.UsedTime
+            attribute.UsedNum = data.UsedNum
+            table.insert(self.ToolData[player.UserId], {
+                ItemId = data.ItemId,
+                Attribute = attribute
+            })
+        else
+            table.insert(self.ToolData[player.UserId], {
+                ItemId = 0,
+                Attribute = attribute
+            })
+        end
+    end
 end
 
 function InventoryService:playerRemoved(player)
@@ -58,7 +74,15 @@ end
 -- @return void
 function InventoryService:InventoryToDB(player)
 	local DBService = Knit.GetService("DBService")
-	DBService:Set(player.UserId, "PlayerInventory", self.Inventory[player.UserId])
+    local data = {}
+    for _, v in pairs(self.Inventory[player.UserId]) do
+        table.insert(data, {
+            ItemId = v.ItemId,
+            UsedTime = v.Attribute.UsedTime,
+            UsedNum = v.Attribute.UsedNum,
+        })
+    end
+	DBService:Set(player.UserId, "PlayerInventory", data)
 end
 
 -- 工具栏数据转换为数据库格式
@@ -66,7 +90,15 @@ end
 -- @return void
 function InventoryService:ToolDataToDB(player)
 	local DBService = Knit.GetService("DBService")
-	DBService:Set(player.UserId, "PlayerToolData", self.ToolData[player.UserId])
+    local data = {}
+    for _, v in pairs(self.ToolData[player.UserId]) do
+        table.insert(data, {
+            ItemId = v.ItemId,
+            UsedTime = v.Attribute.UsedTime,
+            UsedNum = v.Attribute.UsedNum,
+        })
+    end
+	DBService:Set(player.UserId, "PlayerToolData", data)
 end
 
 function InventoryService:AddItem(player, itemData)

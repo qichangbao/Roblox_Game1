@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 -- 初始化Knit框架
 local Knit = require(ReplicatedStorage:WaitForChild('Packages'):WaitForChild('Knit'):waitForChild('Knit'))
 local DataRetryUtil = require(ReplicatedStorage:WaitForChild('ToolFolder'):WaitForChild('DataRetryUtil'))
+local Interface = require(ReplicatedStorage:WaitForChild('ToolFolder'):WaitForChild('Interface'))
 
 local ClientData = {}
 ClientData.Gold = 0
@@ -18,13 +19,15 @@ local function setInitData(data)
     ClientData.Inventory = data.Inventory or {}
     ClientData.ToolData = data.ToolData or {}
     ClientData.IsAdmin = data.IsAdmin or false
+    local playerGui = Interface.safeWaitPart(game.Players.LocalPlayer, "PlayerGui")
+	local loadingUI = Interface.safeWaitPart(playerGui, "LoadingUI")
+	loadingUI.Enabled = false
     Knit.GetController("UIController").ChangeGoldUI:Fire(data.Gold)
     Knit.GetController("InventoryController"):Event_UpdateBackpack(data.Inventory)
     Knit.GetController("UIController").UpdateToolUI:Fire(data.ToolData)
     Knit.GetController("UIController").ShowAdminButton:Fire(data.IsAdmin)
-	local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
-	local loadingUI = playerGui:FindFirstChild("LoadingUI")
-	loadingUI.Enabled = false
+
+    require(script.Parent:WaitForChild("Sound"))
 end
 
 local function init()

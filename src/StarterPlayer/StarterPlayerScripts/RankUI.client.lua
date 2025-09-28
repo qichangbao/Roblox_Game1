@@ -1,29 +1,25 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
+local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
 
-local InitLand = workspace:FindFirstChild("出生岛")
-while not InitLand do
-	task.wait(1)
-	InitLand = workspace:FindFirstChild("出生岛")
-end
-
-local SpecialFolder = InitLand:WaitForChild("Special")
-local RankFolder = SpecialFolder:WaitForChild("Rank")
-local Rank = RankFolder:WaitForChild("排行榜")
-local RankPart = Rank:WaitForChild("RankPart")
-local SrufaceGui = RankPart:WaitForChild("SurfaceGui")
-local ContentFrame = SrufaceGui:WaitForChild("ContentFrame")
-local ScrollingFrame = ContentFrame:WaitForChild("ScrollingFrame")
-local Template = ScrollingFrame:WaitForChild("Template")
+local InitLand = Interface.safeWaitPart(workspace, "出生岛")
+local SpecialFolder = Interface.safeWaitPart(InitLand, "Special")
+local RankFolder = Interface.safeWaitPart(SpecialFolder, "Rank")
+local Rank = Interface.safeWaitPart(RankFolder, "排行榜")
+local RankPart = Interface.safeWaitPart(Rank, "RankPart")
+local SrufaceGui = Interface.safeWaitPart(RankPart, "SurfaceGui")
+local ContentFrame = Interface.safeWaitPart(SrufaceGui, "ContentFrame")
+local ScrollingFrame = Interface.safeWaitPart(ContentFrame, "ScrollingFrame")
+local Template = Interface.safeWaitPart(ScrollingFrame, "Template")
 Template.Visible = false
-local MeFrame = ContentFrame:WaitForChild("MeFrame")
+local MeFrame = Interface.safeWaitPart(ContentFrame, "MeFrame")
 MeFrame.Visible = false
-local MeName = MeFrame:WaitForChild("name")
-local MeActions = MeFrame:WaitForChild("actions")
-local MeAvg = MeFrame:WaitForChild("avg")
-local MeNumber = MeFrame:WaitForChild("number")
-local MeValue = MeFrame:WaitForChild("value")
+local MeName = Interface.safeWaitPart(MeFrame, "name")
+local MeActions = Interface.safeWaitPart(MeFrame, "actions")
+local MeAvg = Interface.safeWaitPart(MeFrame, "avg")
+local MeNumber = Interface.safeWaitPart(MeFrame, "number")
+local MeValue = Interface.safeWaitPart(MeFrame, "value")
 
 local function UpdataRankUI(rankData)
 	-- 清空现有物品槽（保留模板）

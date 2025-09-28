@@ -275,27 +275,8 @@ function TeleportServiceModule:teleportToReserveServer(players)
 
 	-- 准备传送数据
 	local teleportData = {}
-	
-	-- 收集所有玩家的工具数据
-	local playersToolData = {}
-	local InventoryService = Knit.GetService("InventoryService")
-	
-	for _, player in ipairs(players) do
-		if player and player.Parent then -- 确保玩家仍然在游戏中
-			local toolData = InventoryService:GetToolData(player)
-			if toolData then
-				playersToolData[player.UserId] = toolData
-			end
-		end
-	end
-	
-	-- 设置传送数据
-	if next(playersToolData) then
-		teleportData.PlayersToolData = playersToolData
-		teleportData.EscapeTask = 100			-- 逃生目标金钱
-		teleportData.EscapeTime = 10 * 60		-- 逃生时间
-		logMessage("INFO", string.format("已为 %d 个玩家准备工具数据传送", #players))
-	end
+	teleportData.EscapeTask = 10000			-- 逃生目标金钱
+	teleportData.EscapeTime = 10 * 60		-- 逃生时间
 
 	-- 执行传送到预留服务器 - 使用现代化的TeleportAsync API
 	local teleportOptions = Instance.new("TeleportOptions")

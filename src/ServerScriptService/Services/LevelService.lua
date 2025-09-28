@@ -4,8 +4,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
-
-local DuanWeiType = GameConfig.DuanWeiType
+local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
 
 -- Billboard样式配置
 local BILLBOARD_CONFIG = {
@@ -39,7 +38,6 @@ function LevelService:playerAdd(player, levelData)
     self.DuanWeiData[player.UserId].duanWei = tonumber(self.DuanWeiData[player.UserId].duanWei)
     self.DuanWeiData[player.UserId].level = tonumber(self.DuanWeiData[player.UserId].level)
     self.DuanWeiData[player.UserId].star = tonumber(self.DuanWeiData[player.UserId].star)
-    self:CreatePlayerBillboard(player)
 
     -- player.Chatted:Connect(function(message)
     --     local lowerMessage = string.lower(message)
@@ -89,43 +87,7 @@ function LevelService:GetLevelData(player)
 end
 
 function LevelService:Updata(player, escapeSucc)
-    if escapeSucc then
-        self.DuanWeiData[player.UserId].star += 1
-        -- 到达当前升级星数
-        if self.DuanWeiData[player.UserId].star > DuanWeiType[self.DuanWeiData[player.UserId].duanWei].levelStarNum
-        and DuanWeiType[self.DuanWeiData[player.UserId].duanWei].levelStarNum ~= -1 then
-            self.DuanWeiData[player.UserId].level += 1
-            self.DuanWeiData[player.UserId].star = 1
-        end
-
-        -- 到达当前升段位标准
-        if self.DuanWeiData[player.UserId].level > DuanWeiType[self.DuanWeiData[player.UserId].duanWei].levelNum
-        and DuanWeiType[self.DuanWeiData[player.UserId].duanWei].levelNum ~= -1 then
-            self.DuanWeiData[player.UserId].duanWei = math.min(self.DuanWeiData[player.UserId].duanWei + 1, #DuanWeiType)
-            self.DuanWeiData[player.UserId].level = 1
-            self.DuanWeiData[player.UserId].star = 1
-        end
-    else
-        if DuanWeiType[self.DuanWeiData[player.UserId].duanWei].allowDeduction then
-            self.DuanWeiData[player.UserId].star = self.DuanWeiData[player.UserId].star - 1
-            if self.DuanWeiData[player.UserId].star <= 0 then
-                self.DuanWeiData[player.UserId].level = self.DuanWeiData[player.UserId].level - 1
-                if self.DuanWeiData[player.UserId].level <= 0 then
-                    if self.DuanWeiData[player.UserId].duanWei > 1 then
-                        self.DuanWeiData[player.UserId].duanWei = self.DuanWeiData[player.UserId].duanWei - 1
-                        self.DuanWeiData[player.UserId].level = DuanWeiType[self.DuanWeiData[player.UserId].duanWei].levelNum
-                        self.DuanWeiData[player.UserId].star = DuanWeiType[self.DuanWeiData[player.UserId].duanWei].levelStarNum
-                    else
-                        self.DuanWeiData[player.UserId].duanWei = 1
-                        self.DuanWeiData[player.UserId].level = 1
-                        self.DuanWeiData[player.UserId].star = 0
-                    end
-                else
-                    self.DuanWeiData[player.UserId].star = DuanWeiType[self.DuanWeiData[player.UserId].duanWei].levelStarNum
-                end
-            end
-        end
-    end
+	self.DuanWeiData[player.UserId] = Interface.calculateDuanWei(self.DuanWeiData[player.UserId], escapeSucc)
     Knit.GetService("DBService"):Set(player.UserId, "DuanWeiData", self.DuanWeiData[player.UserId])
     self:UpdateBillboard(player)
     
