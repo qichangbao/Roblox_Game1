@@ -137,7 +137,7 @@ function LevelService:CreatePlayerBillboard(player)
 	rankIcon.Size = UDim2.new(0.3, 0, 1, 0) -- 增大图标尺寸
 	rankIcon.Position = UDim2.new(0, 0, 0, 0) -- 左侧固定位置，垂直居中
 	rankIcon.BackgroundTransparency = 1
-	rankIcon.Image = GameConfig.GetDuanWeiIcon(self.DuanWeiData[player.UserId])
+	rankIcon.Image = Interface.GetDuanWeiIcon(self.DuanWeiData[player.UserId])
 	rankIcon.ScaleType = Enum.ScaleType.Fit
 	rankIcon.ImageColor3 = Color3.fromRGB(255, 255, 255) -- 默认白色
 	rankIcon.Parent = mainFrame
@@ -182,7 +182,7 @@ function LevelService:UpdateBillboard(player)
 	if not rankIcon then
 		return
 	end
-	rankIcon.Image = GameConfig.GetDuanWeiIcon(self.DuanWeiData[player.UserId])
+	rankIcon.Image = Interface.GetDuanWeiIcon(self.DuanWeiData[player.UserId])
 end
 
 return LevelService

@@ -12,7 +12,7 @@ local camera = workspace.CurrentCamera
 ]]
 local function resetCamera(character)
     camera.CameraType = Enum.CameraType.Scriptable
-    task.wait(0.1)
+    task.wait(1)
     -- 重置摄像机类型为默认
     camera.CameraType = Enum.CameraType.Custom
     camera.CameraSubject = character:FindFirstChild("Humanoid")

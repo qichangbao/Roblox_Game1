@@ -121,6 +121,25 @@ function Interface.safeWaitPart(parent, childName, time)
     return child
 end
 
+function Interface.GetDuanWeiIcon(duanweiData)
+    if not duanweiData then
+        return
+    end
+    local duanwei = tonumber(duanweiData.duanWei)
+    if not duanwei then
+        return
+    end
+    local level = tonumber(duanweiData.level)
+    if not level then
+        return
+    end
+    local duanweiConfig = GameConfig.DuanWeiType[duanwei]
+    if not duanweiConfig then
+        return
+    end
+    return duanweiConfig.icons[level]
+end
+
 --[[
     计算 DuanWei 升级
     @param duanWeiData table DuanWei 数据

@@ -151,23 +151,4 @@ GameConfig.DuanWeiType = {
     },
 }
 
-function GameConfig.GetDuanWeiIcon(duanweiData)
-    if not duanweiData then
-        return
-    end
-    local duanwei = tonumber(duanweiData.duanWei)
-    if not duanwei then
-        return
-    end
-    local level = tonumber(duanweiData.level)
-    if not level then
-        return
-    end
-    local duanweiConfig = GameConfig.DuanWeiType[duanwei]
-    if not duanweiConfig then
-        return
-    end
-    return duanweiConfig.icons[level]
-end
-
 return GameConfig

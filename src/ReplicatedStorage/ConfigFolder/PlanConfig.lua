@@ -5,6 +5,7 @@ PlanConfig.Data = {
     [1] = {
         PlanId = 5001,
         CanisterId = 0,
+        ChestProbability = 0,
         ItemId = {
             1001,
             1002,
@@ -23,6 +24,7 @@ PlanConfig.Data = {
     [2] = {
         PlanId = 5002,
         CanisterId = 0,
+        ChestProbability = 0,
         ItemId = {
             1009,
             1010,
@@ -41,6 +43,7 @@ PlanConfig.Data = {
     [3] = {
         PlanId = 5003,
         CanisterId = 0,
+        ChestProbability = 0,
         ItemId = {
             1003,
             1004,
@@ -59,6 +62,7 @@ PlanConfig.Data = {
     [4] = {
         PlanId = 5004,
         CanisterId = 0,
+        ChestProbability = 0,
         ItemId = {
             1012,
             1015,
@@ -77,6 +81,7 @@ PlanConfig.Data = {
     [5] = {
         PlanId = 5005,
         CanisterId = 501,
+        ChestProbability = 5000,
         ItemId = {
             1011,
             1014,
@@ -95,6 +100,7 @@ PlanConfig.Data = {
     [6] = {
         PlanId = 5006,
         CanisterId = 502,
+        ChestProbability = 5000,
         ItemId = {
             1024,
             1029,
@@ -113,42 +119,49 @@ PlanConfig.Data = {
     [7] = {
         PlanId = 5007,
         CanisterId = 502,
+        ChestProbability = 5000,
         ItemId = {
             1018,
             1025,
             1029,
             1006,
-            1013
+            1013,
+            1033
         },
         Probability = {
-            5000,
             4500,
-            4500,
+            4000,
+            4000,
             3500,
-            2500
+            3000,
+            1500
         },
     },
     [8] = {
         PlanId = 5008,
         CanisterId = 503,
+        ChestProbability = 5000,
         ItemId = {
             1026,
             1030,
             1031,
             1001,
-            1005
+            1005,
+            1034
         },
         Probability = {
-            5000,
             4500,
-            4500,
+            4000,
+            4000,
             3500,
+            3000,
             2500
         },
     },
     [9] = {
         PlanId = 5009,
         CanisterId = 0,
+        ChestProbability = 0,
         ItemId = {
             1011,
             1018,
@@ -167,6 +180,7 @@ PlanConfig.Data = {
     [10] = {
         PlanId = 5010,
         CanisterId = 0,
+        ChestProbability = 0,
         ItemId = {
             1022,
             1020,
@@ -206,6 +220,15 @@ end
 function PlanConfig:GetByCanisterId(value)
     for i, item in pairs(self.Data) do
         if item.CanisterId == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function PlanConfig:GetByChestProbability(value)
+    for i, item in pairs(self.Data) do
+        if item.ChestProbability == value then
             return item
         end
     end
