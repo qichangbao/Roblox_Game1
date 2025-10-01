@@ -21,49 +21,77 @@ local MeAvg = Interface.safeWaitPart(MeFrame, "avg")
 local MeNumber = Interface.safeWaitPart(MeFrame, "number")
 local MeValue = Interface.safeWaitPart(MeFrame, "value")
 
+-- 根据排名设置前三名的字体颜色
+local function applyRankColor(index, frame)
+    local color = Color3.fromRGB(255, 255, 255)
+    frame.BackgroundTransparency = 1
+    if index == 1 then
+        color = Color3.fromRGB(255, 215, 0)
+        frame.BackgroundTransparency = 0.75
+    elseif index == 2 then
+        -- 与白色区分更明显：使用更深的灰银色
+        color = Color3.fromRGB(160, 160, 160)
+        frame.BackgroundTransparency = 0.75
+    elseif index == 3 then
+        color = Color3.fromRGB(205, 127, 50)
+        frame.BackgroundTransparency = 0.75
+    end
+    frame.BackgroundColor3 = color
+end
+
 local function UpdataRankUI(rankData)
-	-- 清空现有物品槽（保留模板）
-	for _, child in ipairs(ScrollingFrame:GetChildren()) do
-		if child:IsA('Frame') and child ~= Template then
-			child:Destroy()
-		end
-	end
+    -- 清空现有物品槽（保留模板）
+    for _, child in ipairs(ScrollingFrame:GetChildren()) do
+        if child:IsA('Frame') and child ~= Template then
+            child:Destroy()
+        end
+    end
 
-	for index, data in ipairs(rankData) do
-		local clone = Template:Clone()
-		clone.Visible = true
-		clone.Name = "Rank" .. index
-		clone.Parent = ScrollingFrame
+    for index, data in ipairs(rankData) do
+        local clone = Template:Clone()
+        clone.Visible = true
+        clone.Name = "Rank" .. index
+        clone.Parent = ScrollingFrame
 
-		local number = clone:FindFirstChild("number")
-		number.Text = index
-		local name = clone:FindFirstChild("name")
+        local number = clone:FindFirstChild("number")
+        number.Text = index
+        local name = clone:FindFirstChild("name")
 		name.Text = data.playerName
-		local actions = clone:FindFirstChild("actions")
-		actions.Text = data.successNum
-		local avg = clone:FindFirstChild("avg")
-		if data.successNum > 0 then
-			avg.Text = string.format("%.2f", data.totalTime / data.successNum)
-		else
-			avg.Text = "0"
-		end
-		local value = clone:FindFirstChild("value")
-		value.Text = data.totalValue
-	end
+        local actions = clone:FindFirstChild("actions")
+        actions.Text = data.successNum
+        local avg = clone:FindFirstChild("avg")
+        if data.successNum > 0 then
+            local time = math.floor(data.totalTime / data.successNum)
+            avg.Text = Interface.formatTimeMMSS(time)
+        else
+            avg.Text = "0"
+        end
+        local value = clone:FindFirstChild("value")
+        value.Text = data.totalValue
+        -- 设置前三名的字体颜色（金/银/橙铜）
+        applyRankColor(index, clone)
+    end
 end
 
 -- 更新玩家自己的数据
 local function UpdatePlayerInfo(playerInfo)
 	MeFrame.Visible = true
 	MeName.Text = Players.LocalPlayer.Name
-	MeNumber.Text = playerInfo.escapeActionsRank
+	if playerInfo.escapeActionsRank > 0 then
+		MeNumber.Text = playerInfo.escapeActionsRank
+	else
+		MeNumber.Text = "Unranked"
+	end
 	MeActions.Text = playerInfo.escapeActions.successNum
 	if playerInfo.escapeActions.successNum > 0 then
-		MeAvg.Text = string.format("%.2f", playerInfo.escapeActions.totalTime / playerInfo.escapeActions.successNum)
+		local time = math.floor(playerInfo.escapeActions.totalTime / playerInfo.escapeActions.successNum)
+		MeAvg.Text = Interface.formatTimeMMSS(time)
 	else
 		MeAvg.Text = "0"
 	end
 	MeValue.Text = playerInfo.escapeActions.totalValue
+    -- 设置前三名的字体颜色（金/银/橙铜）
+    applyRankColor(playerInfo.escapeActionsRank, MeFrame)
 end
 
 Knit.OnStart():andThen(function()

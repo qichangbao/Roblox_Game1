@@ -37,7 +37,7 @@ local RankService = Knit.CreateService({
 })
 
 -- 配置参数
-local CACHE_UPDATE_INTERVAL = 10--3600 -- 缓存更新间隔（秒）
+local CACHE_UPDATE_INTERVAL = 3600 -- 缓存更新间隔（秒）
 local LEADERBOARD_SIZE = 15 -- 排行榜显示数量
 local BATCH_UPDATE_INTERVAL = 30 -- 批量更新间隔（秒）
 
@@ -341,9 +341,9 @@ end
     @param player Player 玩家对象
     @param data table 包含玩家逃生数据的表，格式: { escapeActions = number }
 ]]
-function RankService:Update(player, data)
+function RankService:UpdatePlayerRank(player, data)
     if not player or not data then
-        warn("RankService:Update - 无效的参数")
+        warn("RankService:UpdatePlayerRank - 无效的参数")
         return
     end
 
@@ -375,6 +375,11 @@ function RankService:Update(player, data)
         escapeActions = escapeActions,
         playerName = player.Name
     }
+
+    local playerData = self:GetPersonalDataWithRank(player)
+    if playerData then
+        self.Client.SendPersonalData:Fire(player, playerData)
+    end
     
     print(string.format("RankService: 更新玩家 %s (ID: %d) 的逃生次数: %d, 总价值: %d, 总时间: %d", 
         player.Name, userId, escapeActions.successNum, escapeActions.totalValue, escapeActions.totalTime))

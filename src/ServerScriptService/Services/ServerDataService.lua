@@ -40,7 +40,7 @@ function ServerDataService:KnitStart()
             local teleportData = joinData.TeleportData
             if teleportData.IsSuccess then
                 -- 成功撤离，更新排行榜数据
-                Knit.GetService("RankService"):Update(player, {
+                Knit.GetService("RankService"):UpdatePlayerRank(player, {
                     EscapeActions = teleportData.EscapeActions,
                     TotalTime = teleportData.TotalTime,
                     TotalValue = teleportData.TotalValue,

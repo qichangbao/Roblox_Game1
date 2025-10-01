@@ -34,6 +34,11 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 -- 初始化Knit框架
 local Knit = require(ReplicatedStorage:WaitForChild('Packages'):WaitForChild('Knit'):waitForChild('Knit'))
 Knit.AddControllers(script.Parent:WaitForChild('ControllersFolder'))
+local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
+
+local playerGui = Interface.safeWaitPart(game.Players.LocalPlayer, "PlayerGui")
+local loadingUI = Interface.safeWaitPart(playerGui, "LoadingUI")
+loadingUI.Enabled = true
 
 _G.ClientData = require(game.Players.LocalPlayer:WaitForChild("PlayerScripts"):WaitForChild("ClientData"))
 

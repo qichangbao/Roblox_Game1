@@ -23,7 +23,7 @@ function TeleportController:KnitInit()
     
         -- 监听服务器的显示传送界面请求
         TeleportService.RequestPlayerCount:Connect(function(partName)
-			Knit.GetController("UIController").ShowTeleportUI:Fire(partName)
+			Knit.GetController("UIController").ShowChoosePeopleNumUI:Fire(partName)
         end)
     end)
 end

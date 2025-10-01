@@ -83,8 +83,15 @@ local function init()
 
         Knit.GetService("TeleportService").SendStartTeleport:Connect(function()
 			local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
-			local loadingUI = playerGui:FindFirstChild("LoadingUI")
-			loadingUI.Enabled = true
+            if not playerGui then
+                return
+            end
+			local teleportUI = playerGui:FindFirstChild("TeleportUI")
+            if not teleportUI then
+                return
+            end
+			
+			teleportUI.Enabled = true
         end)
     end)
 end
