@@ -267,14 +267,33 @@ function TeleportServiceModule:teleportToReserveServer(players)
 		return
 	end
 	
+	local playerData = {}
 	for _, player in ipairs(players) do
 		self.Client.SendStartTeleport:Fire(player)
+		playerData[player.UserId] = {InventoryData = {}, ToolData = {}}
+		local inventory = Knit.GetService("InventoryService"):GetInventoryData(player) or {}
+		for _, v in pairs(inventory) do
+			table.insert(playerData[player.UserId].InventoryData, {
+				ItemId = v.ItemId,
+				UsedTime = v.Attribute.UsedTime,
+				UsedNum = v.Attribute.UsedNum,
+			})
+		end
+		local toolData = Knit.GetService("InventoryService"):GetToolData(player) or {}
+		for _, v in pairs(toolData) do
+			table.insert(playerData[player.UserId].ToolData, {
+				ItemId = v.ItemId,
+				UsedTime = v.Attribute.UsedTime,
+				UsedNum = v.Attribute.UsedNum,
+			})
+		end
 	end
 	
 	logMessage("INFO", string.format("成功创建预留服务器，访问码: %s", accessCode))
 
 	-- 准备传送数据
 	local teleportData = {}
+	teleportData.PlayerData = playerData
 	teleportData.EscapeTask = 10000			-- 逃生目标金钱
 	teleportData.EscapeTime = 10 * 60		-- 逃生时间
 

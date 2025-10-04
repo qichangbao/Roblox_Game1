@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
+local DataRetryUtil = require(ReplicatedStorage:WaitForChild('ToolFolder'):WaitForChild('DataRetryUtil'))
 
 local InitLand = Interface.safeWaitPart(workspace, "出生岛")
 local SpecialFolder = Interface.safeWaitPart(InitLand, "Special")
@@ -95,23 +96,81 @@ local function UpdatePlayerInfo(playerInfo)
 end
 
 Knit.OnStart():andThen(function()
-	Knit.GetService("RankService").GetPersonalData():andThen(function(playerInfo)
+    local RankService = Knit.GetService("RankService")
+	-- RankService.GetPersonalData():andThen(function(playerInfo)
+	-- 	if playerInfo then
+	-- 		task.spawn(function()
+	-- 			UpdatePlayerInfo(playerInfo)
+	-- 		end)
+	-- 	end
+	-- end)
+	RankService.SendPersonalData:Connect(function(playerInfo)
 		if playerInfo then
 			task.spawn(function()
 				UpdatePlayerInfo(playerInfo)
 			end)
 		end
 	end)
-	Knit.GetService("RankService").SendPersonalData:Connect(function(playerInfo)
-		if playerInfo then
-			task.spawn(function()
-				UpdatePlayerInfo(playerInfo)
-			end)
-		end
-	end)
-	Knit.GetService("RankService").UpdateLeaderboard:Connect(function(rankData)
+    -- RankService.GetLeaderboard():andThen(function(rankData)
+	-- 	if rankData then
+	-- 		task.spawn(function()
+	-- 			UpdataRankUI(rankData)
+	-- 		end)
+	-- 	end
+	-- end)
+	RankService.UpdateLeaderboard:Connect(function(rankData)
 		task.spawn(function()
 			UpdataRankUI(rankData)
 		end)
 	end)
+
+    
+    local KnitInitClient = require(script.Parent:WaitForChild("KnitInitClient"))
+    KnitInitClient.AddListener(function()
+        -- 使用通用重试工具获取排行榜数据
+        DataRetryUtil.RetryDataFetch(
+            function()
+                return RankService.GetPersonalData()
+            end,
+            {
+                maxRetries = 15,
+                retryDelay = 2,
+                operationName = "玩家数据获取",
+                dataValidator = function(data)
+                    return data and type(data) == "table" and data.escapeActionsRank ~= nil and data.escapeActions ~= nil
+                end,
+                onSuccess = function(data)
+                    task.spawn(function()
+                        UpdatePlayerInfo(data)
+                    end)
+                end,
+                onFailure = function(errorMsg)
+                    warn("玩家数据获取失败:", errorMsg)
+                end
+            }
+        )
+
+        -- 使用通用重试工具获取排行榜数据
+        DataRetryUtil.RetryDataFetch(
+            function()
+                return RankService.GetLeaderboard()
+            end,
+            {
+                maxRetries = 15,
+                retryDelay = 2,
+                operationName = "排行榜数据获取",
+                dataValidator = function(data)
+                    return data and type(data) == "table" and #data > 0
+                end,
+                onSuccess = function(data)
+                    task.spawn(function()
+                        UpdataRankUI(data)
+                    end)
+                end,
+                onFailure = function(errorMsg)
+                    warn("排行榜数据获取失败:", errorMsg)
+                end
+            }
+        )
+    end)
 end)

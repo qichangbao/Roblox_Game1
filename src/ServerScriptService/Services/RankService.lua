@@ -385,11 +385,10 @@ function RankService:UpdatePlayerRank(player, data)
         player.Name, userId, escapeActions.successNum, escapeActions.totalValue, escapeActions.totalTime))
 end
 
--- 客户端请求排行榜数据
-function RankService.Client:GetLeaderboard(player)
-    local cache = self.Server.leaderboardCache
-    if cache then
-        return cache
+function RankService:GetLeaderboard(player)
+    local cache = self.leaderboardCache
+    if cache and cache.escapeActions then
+        return cache.escapeActions
     else
         self.lastCacheUpdate = tick()
         local escapeActionsLeaderboard = self:GetGlobalLeaderboardData("escapeActions", LEADERBOARD_SIZE)
@@ -400,6 +399,11 @@ function RankService.Client:GetLeaderboard(player)
         }
         return escapeActionsLeaderboard
     end
+end
+
+-- 客户端请求排行榜数据
+function RankService.Client:GetLeaderboard(player)
+    return self.Server:GetLeaderboard(player)
 end
 
 -- 客户端请求个人数据
