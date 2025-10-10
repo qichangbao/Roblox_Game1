@@ -24,7 +24,7 @@ local EscapeActionsDataStore = DataStoreService:GetOrderedDataStore("EscapeActio
 local RankService = Knit.CreateService({
     Name = 'RankService',
     Client = {
-        SendPersonalData = Knit.CreateSignal(),
+        UpdateRankPersonalData = Knit.CreateSignal(),
         UpdateLeaderboard = Knit.CreateSignal(),
     },
     
@@ -140,11 +140,6 @@ function RankService:playerAdd(player)
             escapeActions = escapeActions,
             playerName = player.Name
         }
-    end
-
-    local data = self:GetPersonalDataWithRank(player)
-    if data then
-        self.Client.SendPersonalData:Fire(player, data)
     end
 end
 
@@ -378,7 +373,7 @@ function RankService:UpdatePlayerRank(player, data)
 
     local playerData = self:GetPersonalDataWithRank(player)
     if playerData then
-        self.Client.SendPersonalData:Fire(player, playerData)
+        self.Client.UpdateRankPersonalData:Fire(player, playerData)
     end
     
     print(string.format("RankService: 更新玩家 %s (ID: %d) 的逃生次数: %d, 总价值: %d, 总时间: %d", 

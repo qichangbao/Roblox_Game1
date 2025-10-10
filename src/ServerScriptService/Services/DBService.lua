@@ -6,7 +6,23 @@ local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Kn
 local _dataTemplate = {
 	Gold = 0,					-- 金币
 	PlayerInventory = {},		-- 背包数据
-	PlayerToolData = {},		-- 工具栏数据
+	PlayerToolData = {
+		[1] = {
+			ItemId = 1,
+			UsedTime = 0,
+			UsedNum = 0,
+		},
+		[2] = {
+			ItemId = 0,
+			UsedTime = 0,
+			UsedNum = 0,
+		},
+		[3] = {
+			ItemId = 0,
+			UsedTime = 0,
+			UsedNum = 0,
+		},
+	},		-- 工具栏数据
 	EscapeActions = {},			-- 逃生数据
 	DuanWeiData = {				-- 段位数据
 		duanWei = 1,			-- 段位等级 (1-7)

@@ -5,14 +5,12 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
+local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 
 local ServerDataService = Knit.CreateService {
 	Name = "ServerDataService",
 	Client = {
-        SendInitData = Knit.CreateSignal(),
 	},
-
-    HasInitData = {},       -- 记录玩家是否初始化数据
 }
 
 function ServerDataService:KnitInit()
@@ -22,40 +20,6 @@ end
 -- @return void
 function ServerDataService:KnitStart()
     local function playerAdd(player)
-        local DBService = Knit.GetService("DBService")
-        DBService:PlayerAdded(player)
-
-        local gold = DBService:Get(player.UserId, "Gold")
-        local inventory = DBService:Get(player.UserId, "PlayerInventory")
-        local toolData = DBService:Get(player.UserId, "PlayerToolData")
-        local duanWeiData = DBService:Get(player.UserId, "DuanWeiData")
-        Knit.GetService("GoldService"):playerAdd(player, gold)
-        Knit.GetService("InventoryService"):playerAdd(player, inventory, toolData)
-        Knit.GetService("RankService"):playerAdd(player)
-        Knit.GetService("LevelService"):playerAdd(player, duanWeiData)
-        
-        -- 获取传送数据
-        local joinData = player:GetJoinData()
-        if joinData and joinData.TeleportData then
-            local teleportData = joinData.TeleportData
-            if teleportData.IsSuccess then
-                -- 成功撤离，更新排行榜数据
-                Knit.GetService("RankService"):UpdatePlayerRank(player, {
-                    EscapeActions = teleportData.EscapeActions,
-                    TotalTime = teleportData.TotalTime,
-                    TotalValue = teleportData.TotalValue,
-                    IsSuccess = teleportData.IsSuccess,
-                })
-            end
-
-            -- 更新等级数据
-            Knit.GetService("LevelService"):Updata(player, teleportData.IsSuccess)
-        end
-
-        if not self.HasInitData[player.UserId] then
-            self.Client.SendInitData:Fire(player, self:GetInitData(player))
-        end
-        
         local function characterAdd(character)
             local humanoid = character:FindFirstChildOfClass("Humanoid")
             if humanoid then
@@ -97,23 +61,48 @@ function ServerDataService:KnitStart()
 end
 
 function ServerDataService:GetInitData(player)
-    if self.HasInitData[player.UserId] then
-        return
+    local DBService = Knit.GetService("DBService")
+    DBService:PlayerAdded(player)
+
+    local gold = DBService:Get(player.UserId, "Gold")
+    local inventory = DBService:Get(player.UserId, "PlayerInventory")
+    local tool = DBService:Get(player.UserId, "PlayerToolData")
+    local duanWeiData = DBService:Get(player.UserId, "DuanWeiData")
+    Knit.GetService("GoldService"):playerAdd(player, gold)
+    Knit.GetService("InventoryService"):playerAdd(player, inventory, tool)
+    Knit.GetService("RankService"):playerAdd(player)
+    Knit.GetService("LevelService"):playerAdd(player, duanWeiData)
+    
+    -- 获取传送数据
+    local joinData = player:GetJoinData()
+    if joinData and joinData.TeleportData then
+        local teleportData = joinData.TeleportData
+        if teleportData.IsSuccess then
+            -- 成功撤离，更新排行榜数据
+            Knit.GetService("RankService"):UpdatePlayerRank(player, {
+                EscapeActions = teleportData.EscapeActions,
+                TotalTime = teleportData.TotalTime,
+                TotalValue = teleportData.TotalValue,
+                IsSuccess = teleportData.IsSuccess,
+            })
+        end
+
+        -- 更新等级数据
+        Knit.GetService("LevelService"):Updata(player, teleportData.IsSuccess)
     end
 
-    local gold = Knit.GetService("GoldService"):GetGoldData(player)
-    local inventory = Knit.GetService("InventoryService"):GetInventoryData(player)
+    local inventoryData = Knit.GetService("InventoryService"):GetInventoryData(player)
     local toolData = Knit.GetService("InventoryService"):GetToolData(player)
+    local rankPersonalData = Knit.GetService("RankService"):GetPersonalDataWithRank(player)
+    local rankData = Knit.GetService("RankService"):GetLeaderboard()
     local isAdmin = Knit.GetService("DBService"):IsAdmin(player)
-
-    if gold and inventory and toolData then
-        self.HasInitData[player.UserId] = true
-    end
 
     return {
         Gold = gold,
-        Inventory = inventory,
+        Inventory = inventoryData,
         ToolData = toolData,
+        RankPersonalData = rankPersonalData,
+        RankData = rankData,
         IsAdmin = isAdmin,
     }
 end

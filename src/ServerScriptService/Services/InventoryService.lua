@@ -365,6 +365,8 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
     -- 直接设置Tool的Grip属性来控制握持方向
     if itemInfo.Index ~= 4 then
         tool.Grip = CFrame.Angles(0, 0, math.rad(90))  -- 只旋转，不偏移位置
+    else
+        tool.Grip = CFrame.Angles(0, 0, math.rad(180))  -- 只旋转，不偏移位置
     end
 
 	-- 连接工具装备事件，重置状态

@@ -96,81 +96,18 @@ local function UpdatePlayerInfo(playerInfo)
 end
 
 Knit.OnStart():andThen(function()
-    local RankService = Knit.GetService("RankService")
-	-- RankService.GetPersonalData():andThen(function(playerInfo)
-	-- 	if playerInfo then
-	-- 		task.spawn(function()
-	-- 			UpdatePlayerInfo(playerInfo)
-	-- 		end)
-	-- 	end
-	-- end)
-	RankService.SendPersonalData:Connect(function(playerInfo)
-		if playerInfo then
-			task.spawn(function()
-				UpdatePlayerInfo(playerInfo)
-			end)
-		end
-	end)
-    -- RankService.GetLeaderboard():andThen(function(rankData)
-	-- 	if rankData then
-	-- 		task.spawn(function()
-	-- 			UpdataRankUI(rankData)
-	-- 		end)
-	-- 	end
-	-- end)
-	RankService.UpdateLeaderboard:Connect(function(rankData)
-		task.spawn(function()
-			UpdataRankUI(rankData)
-		end)
-	end)
-
-    
-    local KnitInitClient = require(script.Parent:WaitForChild("KnitInitClient"))
-    KnitInitClient.AddListener(function()
-        -- 使用通用重试工具获取排行榜数据
-        DataRetryUtil.RetryDataFetch(
-            function()
-                return RankService.GetPersonalData()
-            end,
-            {
-                maxRetries = 15,
-                retryDelay = 2,
-                operationName = "玩家数据获取",
-                dataValidator = function(data)
-                    return data and type(data) == "table" and data.escapeActionsRank ~= nil and data.escapeActions ~= nil
-                end,
-                onSuccess = function(data)
-                    task.spawn(function()
-                        UpdatePlayerInfo(data)
-                    end)
-                end,
-                onFailure = function(errorMsg)
-                    warn("玩家数据获取失败:", errorMsg)
-                end
-            }
-        )
-
-        -- 使用通用重试工具获取排行榜数据
-        DataRetryUtil.RetryDataFetch(
-            function()
-                return RankService.GetLeaderboard()
-            end,
-            {
-                maxRetries = 15,
-                retryDelay = 2,
-                operationName = "排行榜数据获取",
-                dataValidator = function(data)
-                    return data and type(data) == "table" and #data > 0
-                end,
-                onSuccess = function(data)
-                    task.spawn(function()
-                        UpdataRankUI(data)
-                    end)
-                end,
-                onFailure = function(errorMsg)
-                    warn("排行榜数据获取失败:", errorMsg)
-                end
-            }
-        )
+    Knit.GetController("UIController").UpdateRankPersonalData:Connect(function(rankPersonalData)
+        if rankPersonalData then
+            task.spawn(function()
+                UpdatePlayerInfo(rankPersonalData)
+            end)
+        end
+    end)
+    Knit.GetController("UIController").UpdateRankData:Connect(function(rankData)
+        if rankData then
+            task.spawn(function()
+                UpdataRankUI(rankData)
+            end)
+        end
     end)
 end)

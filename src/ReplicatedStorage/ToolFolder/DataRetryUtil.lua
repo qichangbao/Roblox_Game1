@@ -11,7 +11,6 @@ local DataRetryUtil = {}
 local DEFAULT_CONFIG = {
     maxRetries = 5,          -- 最大重试次数
     retryDelay = 1,          -- 重试间隔（秒）
-    timeout = 30,            -- 超时时间（秒）
     validateData = true,     -- 是否验证数据
     logErrors = true,        -- 是否记录错误日志
     logSuccess = true        -- 是否记录成功日志
@@ -23,7 +22,6 @@ local DEFAULT_CONFIG = {
     @param config: table - 配置参数
         - maxRetries: number - 最大重试次数（默认5）
         - retryDelay: number - 重试间隔秒数（默认2）
-        - timeout: number - 超时时间秒数（默认30）
         - validateData: boolean - 是否验证数据（默认true）
         - dataValidator: function - 自定义数据验证函数
         - onSuccess: function - 成功回调
@@ -48,7 +46,6 @@ function DataRetryUtil.RetryDataFetch(serviceCall, config)
     end
     
     local retryCount = 0
-    local startTime = tick()
     local operationName = finalConfig.operationName or "数据获取"
     local isStopped = false -- 添加停止标志
     
@@ -78,29 +75,18 @@ function DataRetryUtil.RetryDataFetch(serviceCall, config)
             return
         end
         
-        -- 检查超时
-        if tick() - startTime > finalConfig.timeout then
-            local errorMsg = operationName .. "超时，停止重试"
-            if finalConfig.logErrors then
-                warn(errorMsg)
-            end
-            if finalConfig.onFailure then
-                finalConfig.onFailure(errorMsg)
-            end
-            return
-        end
-        
         retryCount = retryCount + 1
         
         return serviceCall():andThen(function(data)
             -- 数据验证
             if finalConfig.validateData and not dataValidator(data) then
-                local errorMsg = operationName .. "数据验证失败，重试次数: " .. retryCount .. "/" .. finalConfig.maxRetries
+                local retryInfo = finalConfig.maxRetries == -1 and "无限重连" or (retryCount .. "/" .. finalConfig.maxRetries)
+                local errorMsg = operationName .. "数据验证失败，重试次数: " .. retryInfo
                 if finalConfig.logErrors then
                     print(errorMsg)
                 end
                 
-                if retryCount < finalConfig.maxRetries then
+                if finalConfig.maxRetries == -1 or retryCount < finalConfig.maxRetries then
                     task.wait(finalConfig.retryDelay)
                     -- 在重试前检查是否已停止
                     if not isStopped then
@@ -126,12 +112,13 @@ function DataRetryUtil.RetryDataFetch(serviceCall, config)
                 return data
             end
         end):catch(function(err)
-            local errorMsg = operationName .. "失败，重试次数: " .. retryCount .. "/" .. finalConfig.maxRetries .. "，错误: " .. tostring(err)
+            local retryInfo = finalConfig.maxRetries == -1 and "无限重连" or (retryCount .. "/" .. finalConfig.maxRetries)
+            local errorMsg = operationName .. "失败，重试次数: " .. retryInfo .. "，错误: " .. tostring(err)
             if finalConfig.logErrors then
                 print(errorMsg)
             end
             
-            if retryCount < finalConfig.maxRetries then
+            if finalConfig.maxRetries == -1 or retryCount < finalConfig.maxRetries then
                 task.wait(finalConfig.retryDelay)
                 -- 在重试前检查是否已停止
                 if not isStopped then

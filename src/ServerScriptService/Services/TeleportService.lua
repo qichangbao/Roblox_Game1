@@ -29,7 +29,8 @@ local COUNTDOWN_DURATION = 15 -- 倒计时持续时间（秒）
 local CREATE_COUNTDOWN_DURATION = 15 -- 创建倒计时持续时间（秒）
 
 -- ReserveServer配置
-local TARGET_PLACE_ID = 76972960957805  -- 目标传送场景ID（TestBoat_Fuben）
+--local TARGET_PLACE_ID = 76972960957805  -- 目标传送场景ID（TestBoat_Fuben）
+local TARGET_PLACE_ID = 101522977890308
 
 -- 检查是否在Studio环境中
 -- @return boolean 是否在Studio环境
@@ -49,7 +50,7 @@ local function logMessage(level, message, player)
 	if level == "ERROR" then
 		warn(logText)
 	else
-		warn(logText)
+		print(logText)
 	end
 end
 
@@ -275,46 +276,50 @@ function TeleportServiceModule:teleportToReserveServer(players)
 		for _, v in pairs(inventory) do
 			table.insert(playerData[player.UserId].InventoryData, {
 				ItemId = v.ItemId,
-				UsedTime = v.Attribute.UsedTime,
-				UsedNum = v.Attribute.UsedNum,
+				UsedTime = v.Attribute.UsedTime or 0,
+				UsedNum = v.Attribute.UsedNum or 0,
 			})
 		end
 		local toolData = Knit.GetService("InventoryService"):GetToolData(player) or {}
 		for _, v in pairs(toolData) do
 			table.insert(playerData[player.UserId].ToolData, {
 				ItemId = v.ItemId,
-				UsedTime = v.Attribute.UsedTime,
-				UsedNum = v.Attribute.UsedNum,
+				UsedTime = v.Attribute.UsedTime or 0,
+				UsedNum = v.Attribute.UsedNum or 0,
 			})
 		end
 	end
 	
 	logMessage("INFO", string.format("成功创建预留服务器，访问码: %s", accessCode))
-
 	-- 准备传送数据
 	local teleportData = {}
 	teleportData.PlayerData = playerData
 	teleportData.EscapeTask = 10000			-- 逃生目标金钱
 	teleportData.EscapeTime = 10 * 60		-- 逃生时间
 
-	-- 执行传送到预留服务器 - 使用现代化的TeleportAsync API
-	local teleportOptions = Instance.new("TeleportOptions")
-	teleportOptions.ReservedServerAccessCode = accessCode -- 指定传送到我们创建的预留服务器
-	teleportOptions:SetTeleportData(teleportData)
-	-- 执行传送到预留服务器 - 使用新的API替换已弃用的TeleportAsync
-	local teleportSuccess, teleportError = pcall(function()
-		TeleportService:TeleportAsync(
-			TARGET_PLACE_ID,
-			players,
-			teleportOptions
-		)
-	end)
+	local function teleportPlayersToReserveServer(data)
+		-- 执行传送到预留服务器 - 使用现代化的TeleportAsync API
+		local teleportOptions = Instance.new("TeleportOptions")
+		teleportOptions.ReservedServerAccessCode = accessCode -- 指定传送到我们创建的预留服务器
+		teleportOptions:SetTeleportData(data)
+		-- 执行传送到预留服务器 - 使用新的API替换已弃用的TeleportAsync
+		local teleportSuccess, teleportError = pcall(function()
+			TeleportService:TeleportAsync(
+				TARGET_PLACE_ID,
+				players,
+				teleportOptions
+			)
+		end)
 
-	if not teleportSuccess then
+		if teleportSuccess then
+			logMessage("INFO", string.format("成功传送 %d 个玩家到预留服务器 (访问码: %s)", #players, accessCode))
+			return
+		end
+
 		logMessage("ERROR", string.format("传送到预留服务器失败: %s", tostring(teleportError)))
-	else
-		logMessage("INFO", string.format("成功传送 %d 个玩家到预留服务器 (访问码: %s)", #players, accessCode))
+		teleportPlayersToReserveServer(data)
 	end
+	teleportPlayersToReserveServer(teleportData)
 end
 
 -- 传送触发区域内的所有玩家

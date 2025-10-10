@@ -22,4 +22,12 @@ end
 playSound1()
 playSound2()
 
+local gameSound = Interface.safeWaitPart(game:GetService("SoundService"), "GAME")
+local BackMusic = Interface.safeWaitPart(gameSound, "BackMusic")
+BackMusic.Looped = true
+BackMusic:Play()
+local SeaSound = Interface.safeWaitPart(gameSound, "Sea")
+SeaSound.Looped = true
+SeaSound:Play()
+
 return Sound

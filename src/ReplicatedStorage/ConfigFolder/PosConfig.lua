@@ -249,7 +249,7 @@ PosConfig.Coordinates = {
     },
     [50] = {
         Index = 50,
-        Position = Vector3.new(284.8, 108.6, 311.1),
+        Position = Vector3.new(284.8, 108.8, 311.1),
         PlanId = 5009,
     },
     [51] = {

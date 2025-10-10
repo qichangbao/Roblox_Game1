@@ -173,6 +173,40 @@ ItemConfig.Data = {
         TimeUsed = 0,
     },
     [11] = {
+        Index = 601,
+        Item = "土堆",
+        DisplayName = "Dirt Mound",
+        Icon = nil,
+        Model = "土堆",
+        Description = nil,
+        Type = 6,
+        RobloxPrice = 0,
+        Price = 0,
+        SellPrice = 0,
+        Gift = 0,
+        PickTime = 0,
+        CD = 0,
+        Duration = 0,
+        TimeUsed = 0,
+    },
+    [12] = {
+        Index = 602,
+        Item = "散落的土堆",
+        DisplayName = "Scattered Dirt Mounds",
+        Icon = nil,
+        Model = "散落的土堆",
+        Description = nil,
+        Type = 6,
+        RobloxPrice = 0,
+        Price = 0,
+        SellPrice = 0,
+        Gift = 0,
+        PickTime = 0,
+        CD = 0,
+        Duration = 0,
+        TimeUsed = 0,
+    },
+    [13] = {
         Index = 1001,
         Item = "破碎陶片",
         DisplayName = "Broken Pottery Shard",
@@ -189,7 +223,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [12] = {
+    [14] = {
         Index = 1002,
         Item = "生锈铁钉",
         DisplayName = "Rusty Nail",
@@ -206,7 +240,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [13] = {
+    [15] = {
         Index = 1003,
         Item = "海玻璃碎片",
         DisplayName = "Sea Glass Fragment",
@@ -223,7 +257,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [14] = {
+    [16] = {
         Index = 1004,
         Item = "石化木片",
         DisplayName = "Petrified Wood Chip",
@@ -240,7 +274,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [15] = {
+    [17] = {
         Index = 1005,
         Item = "旧布条",
         DisplayName = "Old Cloth Strip",
@@ -257,7 +291,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [16] = {
+    [18] = {
         Index = 1006,
         Item = "破旧绳索",
         DisplayName = "Worn Rope",
@@ -274,7 +308,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [17] = {
+    [19] = {
         Index = 1007,
         Item = "骨头碎片",
         DisplayName = "Bone Fragment",
@@ -291,7 +325,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [18] = {
+    [20] = {
         Index = 1008,
         Item = "旧报纸残页",
         DisplayName = "Old Newspaper Scrap",
@@ -308,7 +342,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [19] = {
+    [21] = {
         Index = 1009,
         Item = "信封",
         DisplayName = "Envelope",
@@ -325,7 +359,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [20] = {
+    [22] = {
         Index = 1010,
         Item = "陶罐",
         DisplayName = "Clay Pot",
@@ -342,7 +376,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [21] = {
+    [23] = {
         Index = 1011,
         Item = "海盗帽",
         DisplayName = "Pirate Hat",
@@ -359,7 +393,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [22] = {
+    [24] = {
         Index = 1012,
         Item = "提灯",
         DisplayName = "Lantern",
@@ -376,7 +410,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [23] = {
+    [25] = {
         Index = 1013,
         Item = "大葱",
         DisplayName = "Green Onion",
@@ -393,7 +427,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [24] = {
+    [26] = {
         Index = 1014,
         Item = "扇子",
         DisplayName = "Fan",
@@ -410,7 +444,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [25] = {
+    [27] = {
         Index = 1015,
         Item = "木桶",
         DisplayName = "Wooden Barrel",
@@ -427,7 +461,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [26] = {
+    [28] = {
         Index = 1016,
         Item = "水壶",
         DisplayName = "Water Kettle",
@@ -444,7 +478,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [27] = {
+    [29] = {
         Index = 1017,
         Item = "木条",
         DisplayName = "Wooden Plank",
@@ -461,7 +495,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [28] = {
+    [30] = {
         Index = 1018,
         Item = "钱袋",
         DisplayName = "Money Bag",
@@ -478,7 +512,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [29] = {
+    [31] = {
         Index = 1019,
         Item = "面具",
         DisplayName = "Mask",
@@ -495,7 +529,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [30] = {
+    [32] = {
         Index = 1020,
         Item = "鬼脸娃娃",
         DisplayName = "Grimace Doll",
@@ -512,7 +546,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [31] = {
+    [33] = {
         Index = 1021,
         Item = "靴子",
         DisplayName = "Boots",
@@ -529,7 +563,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [32] = {
+    [34] = {
         Index = 1022,
         Item = "魔法帽",
         DisplayName = "Wizard Hat",
@@ -546,7 +580,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [33] = {
+    [35] = {
         Index = 1023,
         Item = "手套",
         DisplayName = "Gloves",
@@ -563,7 +597,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [34] = {
+    [36] = {
         Index = 1024,
         Item = "生锈的齿轮",
         DisplayName = "Rusty Gear",
@@ -580,7 +614,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [35] = {
+    [37] = {
         Index = 1025,
         Item = "兽角",
         DisplayName = "Beast Horn",
@@ -597,7 +631,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [36] = {
+    [38] = {
         Index = 1026,
         Item = "野兽骸骨",
         DisplayName = "Beast Skeleton",
@@ -614,7 +648,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [37] = {
+    [39] = {
         Index = 1027,
         Item = "粘液",
         DisplayName = "Slime",
@@ -631,7 +665,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [38] = {
+    [40] = {
         Index = 1028,
         Item = "一瓶粘液",
         DisplayName = "Vial of Slime",
@@ -648,7 +682,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [39] = {
+    [41] = {
         Index = 1029,
         Item = "潜水头盔",
         DisplayName = "Diving Helmet",
@@ -665,7 +699,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [40] = {
+    [42] = {
         Index = 1030,
         Item = "船锚",
         DisplayName = "Anchor",
@@ -682,7 +716,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [41] = {
+    [43] = {
         Index = 1031,
         Item = "船舵",
         DisplayName = "Ship's Wheel",
@@ -699,7 +733,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [42] = {
+    [44] = {
         Index = 1032,
         Item = "发霉书页",
         DisplayName = "Moldy Book Page",
@@ -716,7 +750,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [43] = {
+    [45] = {
         Index = 1033,
         Item = "枪",
         DisplayName = "Gun",
@@ -733,7 +767,7 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
-    [44] = {
+    [46] = {
         Index = 1034,
         Item = "刀",
         DisplayName = "Knife",
