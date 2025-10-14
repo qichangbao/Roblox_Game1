@@ -13,7 +13,7 @@ local _dataTemplate = {
 			UsedNum = 0,
 		},
 		[2] = {
-			ItemId = 0,
+			ItemId = 5,
 			UsedTime = 0,
 			UsedNum = 0,
 		},

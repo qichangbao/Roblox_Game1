@@ -177,6 +177,32 @@ PlanConfig.Data = {
             7000
         },
     },
+    [10] = {
+        PlanId = 5010,
+        CanisterId = 601,
+        ChestProbability = 9000,
+        ItemId = {
+            1013,
+            1014,
+            1019,
+            1022,
+            1034
+        },
+        Probability = {
+            4500,
+            5500,
+            5500,
+            4500,
+            3000
+        },
+    },
+    [11] = {
+        PlanId = 5011,
+        CanisterId = 503,
+        ChestProbability = 10000,
+        ItemId = 1035,
+        Probability = 10000,
+    },
 }
 
 -- 辅助函数

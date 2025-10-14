@@ -72,8 +72,3 @@ serverStartCheckEvent.OnServerEvent:Connect(function(player)
 	-- 向客户端发送服务器启动状态
 	serverStartCheckEvent:FireClient(player, isServerStarted)
 end)
-
-
-task.spawn(function()
-	require(script.Parent:WaitForChild("NpcInit"))
-end)

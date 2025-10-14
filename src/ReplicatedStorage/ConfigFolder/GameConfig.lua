@@ -23,6 +23,12 @@ GameConfig.NpcUIType = {
     Sell = 2, -- 出售
 }
 
+GameConfig.Difficulty = {
+    Easy = 1,           -- 简单
+    Difficulty = 2,     -- 困难
+    HellDifficulty = 3, -- 地狱
+}
+
 GameConfig.BackpackSlotCount = 6    -- 背包槽位数量
 GameConfig.InitItemNums = 30        -- 初始物品数量
 GameConfig.LandName = "出生岛"

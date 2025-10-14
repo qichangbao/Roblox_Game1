@@ -10,7 +10,7 @@ MonsterPosConfig.Coordinates = {
     [2] = {
         Index = 2,
         Position = Vector3.new(489.8, -0.7, -194.1),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
     [3] = {
         Index = 3,
@@ -20,7 +20,7 @@ MonsterPosConfig.Coordinates = {
     [4] = {
         Index = 4,
         Position = Vector3.new(612.9, -0.7, -147.5),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
     [5] = {
         Index = 5,
@@ -30,7 +30,7 @@ MonsterPosConfig.Coordinates = {
     [6] = {
         Index = 6,
         Position = Vector3.new(237.1, -0.7, -167.8),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
     [7] = {
         Index = 7,
@@ -40,7 +40,7 @@ MonsterPosConfig.Coordinates = {
     [8] = {
         Index = 8,
         Position = Vector3.new(188.8, -0.7, 35.9),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
     [9] = {
         Index = 9,
@@ -50,7 +50,7 @@ MonsterPosConfig.Coordinates = {
     [10] = {
         Index = 10,
         Position = Vector3.new(212.3, 77.3, -114.6),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
     [11] = {
         Index = 11,
@@ -60,7 +60,7 @@ MonsterPosConfig.Coordinates = {
     [12] = {
         Index = 12,
         Position = Vector3.new(-290.9, -0.7, -123.5),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
     [13] = {
         Index = 13,
@@ -70,7 +70,7 @@ MonsterPosConfig.Coordinates = {
     [14] = {
         Index = 14,
         Position = Vector3.new(362.7, 24.2, 124.7),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
     [15] = {
         Index = 15,
@@ -80,7 +80,7 @@ MonsterPosConfig.Coordinates = {
     [16] = {
         Index = 16,
         Position = Vector3.new(346.9, -0.7, 282.9),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
     [17] = {
         Index = 17,
@@ -90,7 +90,7 @@ MonsterPosConfig.Coordinates = {
     [18] = {
         Index = 18,
         Position = Vector3.new(478.1, -0.7, 390.7),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
     [19] = {
         Index = 19,
@@ -100,7 +100,7 @@ MonsterPosConfig.Coordinates = {
     [20] = {
         Index = 20,
         Position = Vector3.new(62.2, -0.7, 628.1),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
     [21] = {
         Index = 21,
@@ -110,7 +110,7 @@ MonsterPosConfig.Coordinates = {
     [22] = {
         Index = 22,
         Position = Vector3.new(366.4, 81.7, 449.2),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
     [23] = {
         Index = 23,
@@ -120,7 +120,7 @@ MonsterPosConfig.Coordinates = {
     [24] = {
         Index = 24,
         Position = Vector3.new(-489.1, -0.7, 146),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
     [25] = {
         Index = 25,
@@ -130,7 +130,7 @@ MonsterPosConfig.Coordinates = {
     [26] = {
         Index = 26,
         Position = Vector3.new(-418.1, -0.7, 366.4),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
     [27] = {
         Index = 27,
@@ -140,7 +140,7 @@ MonsterPosConfig.Coordinates = {
     [28] = {
         Index = 28,
         Position = Vector3.new(-52.8, -0.7, -32.6),
-        MonsterPlanId = 31001,
+        MonsterPlanId = 31002,
     },
 }
 

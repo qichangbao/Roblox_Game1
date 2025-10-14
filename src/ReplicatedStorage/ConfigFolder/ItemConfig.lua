@@ -784,6 +784,23 @@ ItemConfig.Data = {
         Duration = 0,
         TimeUsed = 0,
     },
+    [47] = {
+        Index = 1035,
+        Item = "龙珠",
+        DisplayName = "Dragon Orb",
+        Icon = "rbxassetid://103874659967279",
+        Model = "龙珠",
+        Description = nil,
+        Type = 4,
+        RobloxPrice = 0,
+        Price = 0,
+        SellPrice = 16000,
+        Gift = 0,
+        PickTime = 0,
+        CD = 0,
+        Duration = 0,
+        TimeUsed = 0,
+    },
 }
 
 -- 辅助函数

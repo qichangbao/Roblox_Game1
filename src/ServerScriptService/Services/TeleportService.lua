@@ -291,11 +291,23 @@ function TeleportServiceModule:teleportToReserveServer(players)
 	end
 	
 	logMessage("INFO", string.format("成功创建预留服务器，访问码: %s", accessCode))
+	local playerCount = #players
 	-- 准备传送数据
 	local teleportData = {}
 	teleportData.PlayerData = playerData
-	teleportData.EscapeTask = 10000			-- 逃生目标金钱
 	teleportData.EscapeTime = 10 * 60		-- 逃生时间
+	teleportData.Difficulty = GameConfig.Difficulty.Easy			-- 难度等级
+	if playerCount == 1 then
+		teleportData.EscapeTask = 2000			-- 逃生目标金钱
+	elseif playerCount == 2 then
+		teleportData.EscapeTask = 6000			-- 逃生目标金钱
+	elseif playerCount == 3 then
+		teleportData.EscapeTask = 10000			-- 逃生目标金钱
+	elseif playerCount == 4 then
+		teleportData.EscapeTask = 14000			-- 逃生目标金钱
+	elseif playerCount == 5 then
+		teleportData.EscapeTask = 18000			-- 逃生目标金钱
+	end
 
 	local function teleportPlayersToReserveServer(data)
 		-- 执行传送到预留服务器 - 使用现代化的TeleportAsync API
