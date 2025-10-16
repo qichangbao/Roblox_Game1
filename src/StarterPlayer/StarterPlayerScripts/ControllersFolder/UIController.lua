@@ -8,6 +8,7 @@ local UIController = Knit.CreateController {
     
     ShowStoreUI = Signal.new(),
     ShowSellUI = Signal.new(),
+    ShowAbilityUI = Signal.new(),
     ShowTip = Signal.new(),
 	ShowAdminUI = Signal.new(),
     ShowAdminButton = Signal.new(),

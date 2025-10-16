@@ -1,24 +1,23 @@
--- ServerDataService 服务
+-- PlayerService 服务
 -- 使用Knit框架管理服务器数据
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
-local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 
-local ServerDataService = Knit.CreateService {
-	Name = "ServerDataService",
+local PlayerService = Knit.CreateService {
+	Name = "PlayerService",
 	Client = {
 	},
 }
 
-function ServerDataService:KnitInit()
+function PlayerService:KnitInit()
 end
 
 -- 服务启动时的初始化
 -- @return void
-function ServerDataService:KnitStart()
+function PlayerService:KnitStart()
     local function playerAdd(player)
         local function characterAdd(character)
             local humanoid = character:FindFirstChildOfClass("Humanoid")
@@ -60,7 +59,7 @@ function ServerDataService:KnitStart()
 	end)
 end
 
-function ServerDataService:GetInitData(player)
+function PlayerService:GetInitData(player)
     local DBService = Knit.GetService("DBService")
     DBService:PlayerAdded(player)
 
@@ -110,8 +109,8 @@ end
 -- 客户端远程方法：获取玩家数据
 -- @param player Player 请求数据的玩家
 -- @return table 玩家数据
-function ServerDataService.Client:GetInitData(player)
+function PlayerService.Client:GetInitData(player)
     return self.Server:GetInitData(player)
 end
 
-return ServerDataService
+return PlayerService

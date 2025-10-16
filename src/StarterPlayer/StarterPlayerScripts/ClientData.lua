@@ -38,7 +38,7 @@ local function init()
     local KnitInitClient = require(script.Parent:WaitForChild("KnitInitClient"))
     KnitInitClient.AddListener(function()
         -- 监听服务器的发送初始化数据请求
-        Knit.GetService("ServerDataService").GetInitData():andThen(function(data)
+        Knit.GetService("PlayerService").GetInitData():andThen(function(data)
             setInitData(data)
         end)
 
@@ -101,6 +101,8 @@ local function init()
                 Knit.GetController("UIController").ShowStoreUI:Fire()
             elseif npcType == GameConfig.NpcUIType.Sell then
                 Knit.GetController("UIController").ShowSellUI:Fire()
+            elseif npcType == GameConfig.NpcUIType.Ability then
+                Knit.GetController("UIController").ShowAbilityUI:Fire()
             end
         end)
     end)
