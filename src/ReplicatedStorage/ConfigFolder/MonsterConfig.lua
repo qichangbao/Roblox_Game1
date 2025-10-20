@@ -44,6 +44,27 @@ MonsterConfig.Data = {
         AnimationAttack = 98792934038893,
         AnimationDeath = 122311177197535,
     },
+    [3] = {
+        MonsterId = 30003,
+        Name = "dinosaur",
+        DisplayName = "dinosaur",
+        Model = "dinosaur",
+        Type = 1,
+        HP = 200,
+        VisionRange = 100,
+        AttackRange = 20,
+        PatrolRadius = 30,
+        MaxDisForSpawn = 100,
+        RespawnTime = 0,
+        Attack = 100,
+        MoveSpeed = 15,
+        AttackSpeed = 4.5,
+        DropPlanId = nil,
+        AnimationIdle = 127174947382589,
+        AnimationRun = 102931343411723,
+        AnimationAttack = 86582808256856,
+        AnimationDeath = 140562207405408,
+    },
 }
 
 -- 辅助函数

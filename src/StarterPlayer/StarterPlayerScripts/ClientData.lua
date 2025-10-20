@@ -1,15 +1,13 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 -- 初始化Knit框架
 local Knit = require(ReplicatedStorage:WaitForChild('Packages'):WaitForChild('Knit'):waitForChild('Knit'))
-local DataRetryUtil = require(ReplicatedStorage:WaitForChild('ToolFolder'):WaitForChild('DataRetryUtil'))
-local Interface = require(ReplicatedStorage:WaitForChild('ToolFolder'):WaitForChild('Interface'))
 local GameConfig = require(ReplicatedStorage:WaitForChild('ConfigFolder'):WaitForChild('GameConfig'))
-
 
 local ClientData = {}
 ClientData.Gold = 0
 ClientData.Inventory = {}
 ClientData.ToolData = {}
+ClientData.AbilityData = {}
 ClientData.RankPersonalData = {}
 ClientData.RankData = {}
 ClientData.IsAdmin = false
@@ -19,17 +17,19 @@ local function setInitData(data)
     ClientData.Gold = data.Gold or 0
     ClientData.Inventory = data.Inventory or {}
     ClientData.ToolData = data.ToolData or {}
+    ClientData.AbilityData = data.AbilityData or {}
     ClientData.RankPersonalData = data.RankPersonalData or {}
     ClientData.RankData = data.RankData or {}
     ClientData.IsAdmin = data.IsAdmin or false
     -- local playerGui = Interface.safeWaitPart(game.Players.LocalPlayer, "PlayerGui")
 	-- local loadingUI = Interface.safeWaitPart(playerGui, "LoadingUI")
 	-- loadingUI.Enabled = false
-    Knit.GetController("UIController").ChangeGoldUI:Fire(data.Gold)
-    Knit.GetController("UIController").UpdateBackpack:Fire(data.Inventory)
-    Knit.GetController("UIController").UpdateToolUI:Fire(data.ToolData)
-    Knit.GetController("UIController").ShowAdminButton:Fire(data.IsAdmin)
-    Knit.GetController("UIController").UpdateRankPersonalData:Fire(data.RankPersonalData)
+    Knit.GetController("UIController").ChangeGoldUI:Fire(ClientData.Gold)
+    Knit.GetController("UIController").UpdateBackpack:Fire(ClientData.Inventory)
+    Knit.GetController("UIController").UpdateToolUI:Fire(ClientData.ToolData)
+    Knit.GetController("UIController").ShowAdminButton:Fire(ClientData.IsAdmin)
+    Knit.GetController("UIController").UpdateRankPersonalData:Fire(ClientData.RankPersonalData)
+    Knit.GetController("UIController").UpdateAbilityData:Fire(ClientData.AbilityData)
 
     require(script.Parent:WaitForChild("Sound"))
 end
@@ -104,6 +104,12 @@ local function init()
             elseif npcType == GameConfig.NpcUIType.Ability then
                 Knit.GetController("UIController").ShowAbilityUI:Fire()
             end
+        end)
+
+        -- 监听服务器的更新能力数据请求
+        Knit.GetService("AbilityService").UpdateAbilityData:Connect(function(abilityData)
+            ClientData.AbilityData = abilityData or {}
+            Knit.GetController("UIController").UpdateAbilityData:Fire(ClientData.AbilityData)
         end)
     end)
 end

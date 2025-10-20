@@ -271,7 +271,7 @@ function TeleportServiceModule:teleportToReserveServer(players)
 	local playerData = {}
 	for _, player in ipairs(players) do
 		self.Client.SendStartTeleport:Fire(player)
-		playerData[player.UserId] = {InventoryData = {}, ToolData = {}}
+		playerData[player.UserId] = {InventoryData = {}, ToolData = {}, AbilityData = {}}
 		local inventory = Knit.GetService("InventoryService"):GetInventoryData(player) or {}
 		for _, v in pairs(inventory) do
 			table.insert(playerData[player.UserId].InventoryData, {
@@ -286,6 +286,13 @@ function TeleportServiceModule:teleportToReserveServer(players)
 				ItemId = v.ItemId,
 				UsedTime = v.Attribute.UsedTime or 0,
 				UsedNum = v.Attribute.UsedNum or 0,
+			})
+		end
+		local abilityData = Knit.GetService("AbilityService"):GetAbilityData(player) or {}
+		for _, v in pairs(abilityData) do
+			table.insert(playerData[player.UserId].AbilityData, {
+				AbilityId = v.AbilityId,
+				Level = v.Level or 0,
 			})
 		end
 	end

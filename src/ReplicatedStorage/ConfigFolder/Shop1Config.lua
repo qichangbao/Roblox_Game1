@@ -30,6 +30,10 @@ Shop1Config.Data = {
         Index = 7,
         AssetId = 3386572591,
     },
+    [8] = {
+        Index = 8,
+        AssetId = 3435990708,
+    },
 }
 
 -- 辅助函数

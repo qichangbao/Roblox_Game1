@@ -29,6 +29,7 @@ local _dataTemplate = {
 		level = 1,				-- 当前段位的级别
 		star = 0				-- 当前级别的星级
 	},
+	AbilityData = {},			-- 能力列表
 }
 
 local ProfileStore = ProfileService.GetProfileStore(
@@ -175,6 +176,8 @@ function DBService:SetToAllStore(userId, key, value)
 		Knit.GetService("InventoryService"):GetToolFromDBService(userId, value)
 	elseif key == "DuanWeiData" then
 		Knit.GetService("LevelService"):GetLevelFromDBService(userId, value)
+	elseif key == "AbilityData" then
+		Knit.GetService("AbilityService"):GetAbilityFromDBService(userId, value)
 	end
 	-- 初始化用户数据，确保用户数据存在，并且可以设置value
 	self:InitDataFromUserId(userId)

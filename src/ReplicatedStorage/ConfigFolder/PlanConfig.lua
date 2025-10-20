@@ -5,7 +5,13 @@ PlanConfig.Data = {
     [1] = {
         PlanId = 5001,
         CanisterId = 0,
-        ChestProbability = 0,
+        ChestProbability = {
+            0,
+            0,
+            0,
+            0,
+            0
+        },
         ItemId = {
             1001,
             1002,
@@ -24,7 +30,13 @@ PlanConfig.Data = {
     [2] = {
         PlanId = 5002,
         CanisterId = 0,
-        ChestProbability = 0,
+        ChestProbability = {
+            0,
+            0,
+            0,
+            0,
+            0
+        },
         ItemId = {
             1003,
             1004,
@@ -43,7 +55,13 @@ PlanConfig.Data = {
     [3] = {
         PlanId = 5003,
         CanisterId = 0,
-        ChestProbability = 0,
+        ChestProbability = {
+            0,
+            0,
+            0,
+            0,
+            0
+        },
         ItemId = {
             1005,
             1006,
@@ -62,7 +80,13 @@ PlanConfig.Data = {
     [4] = {
         PlanId = 5004,
         CanisterId = 0,
-        ChestProbability = 0,
+        ChestProbability = {
+            0,
+            0,
+            0,
+            0,
+            0
+        },
         ItemId = {
             1007,
             1008,
@@ -81,7 +105,13 @@ PlanConfig.Data = {
     [5] = {
         PlanId = 5005,
         CanisterId = 501,
-        ChestProbability = 5000,
+        ChestProbability = {
+            5000,
+            5000,
+            5000,
+            5000,
+            5000
+        },
         ItemId = {
             1009,
             1010,
@@ -100,7 +130,13 @@ PlanConfig.Data = {
     [6] = {
         PlanId = 5006,
         CanisterId = 502,
-        ChestProbability = 5000,
+        ChestProbability = {
+            5000,
+            5000,
+            5000,
+            5000,
+            5000
+        },
         ItemId = {
             1013,
             1014,
@@ -119,7 +155,14 @@ PlanConfig.Data = {
     [7] = {
         PlanId = 5007,
         CanisterId = 502,
-        ChestProbability = 5000,
+        ChestProbability = {
+            5000,
+            5000,
+            5000,
+            5000,
+            5000,
+            5000
+        },
         ItemId = {
             1017,
             1021,
@@ -140,7 +183,14 @@ PlanConfig.Data = {
     [8] = {
         PlanId = 5008,
         CanisterId = 502,
-        ChestProbability = 5000,
+        ChestProbability = {
+            5000,
+            5000,
+            5000,
+            5000,
+            5000,
+            5000
+        },
         ItemId = {
             1023,
             1024,
@@ -161,7 +211,13 @@ PlanConfig.Data = {
     [9] = {
         PlanId = 5009,
         CanisterId = 503,
-        ChestProbability = 5000,
+        ChestProbability = {
+            5000,
+            5000,
+            5000,
+            5000,
+            5000
+        },
         ItemId = {
             1025,
             1028,
@@ -180,7 +236,13 @@ PlanConfig.Data = {
     [10] = {
         PlanId = 5010,
         CanisterId = 601,
-        ChestProbability = 9000,
+        ChestProbability = {
+            9000,
+            9000,
+            9000,
+            9000,
+            9000
+        },
         ItemId = {
             1013,
             1014,
@@ -201,6 +263,13 @@ PlanConfig.Data = {
         CanisterId = 503,
         ChestProbability = 10000,
         ItemId = 1035,
+        Probability = 10000,
+    },
+    [12] = {
+        PlanId = 5012,
+        CanisterId = 603,
+        ChestProbability = 7000,
+        ItemId = 1037,
         Probability = 10000,
     },
 }

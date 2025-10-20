@@ -26,6 +26,7 @@ local UIController = Knit.CreateController {
     UpdateRankData = Signal.new(),
     UpdateBackpack = Signal.new(),
 	UpdateToolData = Signal.new(),
+    UpdateAbilityData = Signal.new(),
 }
 
 function UIController:KnitInit()

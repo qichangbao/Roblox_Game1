@@ -142,6 +142,11 @@ MonsterPosConfig.Coordinates = {
         Position = Vector3.new(-52.8, -0.7, -32.6),
         MonsterPlanId = 31002,
     },
+    [29] = {
+        Index = 29,
+        Position = Vector3.new(345.98, 24.19, 128.79),
+        MonsterPlanId = 31003,
+    },
 }
 
 -- 辅助函数

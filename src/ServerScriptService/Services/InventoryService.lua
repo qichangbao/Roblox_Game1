@@ -58,6 +58,39 @@ function InventoryService:playerAdd(player, inventory, toolData)
             })
         end
     end
+
+    player.Chatted:Connect(function(message)
+        local lowerMessage = string.lower(message)
+        
+        -- 解析 "add item [itemId]" 命令
+        local addMatch = string.match(lowerMessage, "^add item (%d+)$")
+        if addMatch then
+            local itemId = tonumber(addMatch)
+            if itemId then
+                self:AddItem(player, {
+                    ItemId = itemId,
+                    Attribute = GameConfig.GetItemAttribute(),
+                })
+                print("已为玩家 " .. player.Name .. " 添加物品 ID: " .. itemId)
+                return true
+            end
+        end
+        
+        -- 解析 "remove item [itemId]" 或 "dec item [itemId]" 命令
+        local removeMatch = string.match(lowerMessage, "^remove item (%d+)$") or string.match(lowerMessage, "^dec item (%d+)$")
+        if removeMatch then
+            local itemId = tonumber(removeMatch)
+            if itemId then
+				local items = {}
+				items[itemId] = 1
+                self:RemoveItemsByNum(player, items)
+                print("已为玩家 " .. player.Name .. " 移除物品 ID: " .. itemId)
+                return true
+            end
+        end
+        
+        return false
+    end)
 end
 
 function InventoryService:playerRemoved(player)
@@ -140,6 +173,42 @@ function InventoryService:RemoveItems(player, items)
 	end
 	self.Client.SendBackpack:Fire(player, self.Inventory[player.UserId])
 	self:InventoryToDB(player)
+end
+
+-- 根据物品ID和数量移除玩家背包中的物品
+-- @param player Player 玩家对象
+-- @param items table 要移除的物品，格式为 {[itemId] = num, ...}
+-- @return void
+function InventoryService:RemoveItemsByNum(player, items)
+	local inventory = self.Inventory[player.UserId]
+	if not inventory then
+		return
+	end
+	
+	local isRemoveSuccess = false
+	local removedItems = {}
+	for itemId, num in pairs(items) do
+		local removedCount = 0
+		-- 倒序遍历避免索引错乱，提高效率
+		for i = #inventory, 1, -1 do
+			if inventory[i].ItemId == itemId then
+				isRemoveSuccess = true
+				table.remove(inventory, i)
+				removedCount = removedCount + 1
+				-- 达到移除数量则提前退出
+				if removedCount >= num then
+					break
+				end
+			end
+		end
+		removedItems[itemId] = removedCount
+	end
+		
+	if isRemoveSuccess then
+		self.Client.SendBackpack:Fire(player, self.Inventory[player.UserId])
+		self:InventoryToDB(player)
+	end
+	return isRemoveSuccess, removedItems
 end
 
 -- 更新玩家工具栏数据并创建工具

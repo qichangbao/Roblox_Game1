@@ -342,6 +342,56 @@ PosConfig.Coordinates = {
         Position = Vector3.new(-215.4, -0.7, -94.4),
         PlanId = 5009,
     },
+    [69] = {
+        Index = 69,
+        Position = Vector3.new(398.8, -1.7, -237.6),
+        PlanId = 5010,
+    },
+    [70] = {
+        Index = 70,
+        Position = Vector3.new(327.7, -1.7, -182),
+        PlanId = 5010,
+    },
+    [71] = {
+        Index = 71,
+        Position = Vector3.new(394.5, -1.7, -89.6),
+        PlanId = 5010,
+    },
+    [72] = {
+        Index = 72,
+        Position = Vector3.new(478.5, -0.7, -52.4),
+        PlanId = 5010,
+    },
+    [73] = {
+        Index = 73,
+        Position = Vector3.new(267.5, -0.7, -95.3),
+        PlanId = 5010,
+    },
+    [74] = {
+        Index = 74,
+        Position = Vector3.new(346, 24.2, 128.8),
+        PlanId = 5010,
+    },
+    [75] = {
+        Index = 75,
+        Position = Vector3.new(211, 19.7, 147.5),
+        PlanId = 5010,
+    },
+    [76] = {
+        Index = 76,
+        Position = Vector3.new(149.5, -0.7, 204.8),
+        PlanId = 5010,
+    },
+    [77] = {
+        Index = 77,
+        Position = Vector3.new(130.5, -0.7, 356.9),
+        PlanId = 5010,
+    },
+    [78] = {
+        Index = 78,
+        Position = Vector3.new(27.2, -0.7, 481.6),
+        PlanId = 5010,
+    },
 }
 
 -- 辅助函数

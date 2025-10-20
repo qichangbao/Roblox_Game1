@@ -7,7 +7,9 @@ GameConfig.ItemType = {
     Assistance = 3, -- 辅助类
     Collect = 4,    -- 搜集类
     Chest = 5,      -- 宝箱类
-    Max = 6,        -- 最大物品类型
+    Mound = 6,      -- 土堆
+    Buff = 7,      --  buff类
+    Max = 8,        -- 最大物品类型
 }
 
 GameConfig.ItemTypeFolder = {
@@ -16,6 +18,8 @@ GameConfig.ItemTypeFolder = {
     [GameConfig.ItemType.Assistance] = "辅助",
     [GameConfig.ItemType.Collect] = "搜集",
     [GameConfig.ItemType.Chest] = "箱子",
+    [GameConfig.ItemType.Mound] = "土堆",
+    [GameConfig.ItemType.Buff] = "Buff",
 }
 
 GameConfig.NpcUIType = {
@@ -28,6 +32,13 @@ GameConfig.Difficulty = {
     Easy = 1,           -- 简单
     Difficulty = 2,     -- 困难
     HellDifficulty = 3, -- 地狱
+}
+
+GameConfig.AbilityType = {
+    WalkSpeed = 1, -- 移动
+    MaxHealth = 2, -- 最大生命值
+    Jump = 3, -- 跳跃
+    Attack = 4, -- 攻击
 }
 
 GameConfig.BackpackSlotCount = 6    -- 背包槽位数量

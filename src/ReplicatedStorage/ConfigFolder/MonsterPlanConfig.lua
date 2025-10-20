@@ -12,6 +12,11 @@ MonsterPlanConfig.Data = {
         MonsterId = 30002,
         Probability = 4500,
     },
+    [3] = {
+        MonsterPlanId = 31003,
+        MonsterId = 30003,
+        Probability = 6000,
+    },
 }
 
 -- 辅助函数

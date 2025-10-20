@@ -29,6 +29,47 @@ function Interface.formatTimeMMSS(seconds)
 	return string.format("%02d:%02d", minutes, secs)
 end
 
+--[[
+    格式化金币数字显示 - 将大数字转换为简洁格式
+    @param amount number 金币数量
+    @return string 格式化后的字符串 (如: 10000 -> "10K", 1500000 -> "1.5M")
+]]
+function Interface.formatCurrency(amount)
+    if type(amount) ~= "number" then
+        return "0"
+    end
+    
+    amount = math.floor(amount)
+    
+    if amount < 1000 then
+        return tostring(amount)
+    elseif amount < 1000000 then
+        -- 千位显示 (K)
+        local thousands = amount / 1000
+        if thousands == math.floor(thousands) then
+            return string.format("%.0fK", thousands)
+        else
+            return string.format("%.1fK", thousands)
+        end
+    elseif amount < 1000000000 then
+        -- 百万位显示 (M)
+        local millions = amount / 1000000
+        if millions == math.floor(millions) then
+            return string.format("%.0fM", millions)
+        else
+            return string.format("%.1fM", millions)
+        end
+    else
+        -- 十亿位显示 (B)
+        local billions = amount / 1000000000
+        if billions == math.floor(billions) then
+            return string.format("%.0fB", billions)
+        else
+            return string.format("%.1fB", billions)
+        end
+    end
+end
+
 -- 使用多层射线检测获取真正的地面位置
 -- @param startPosition Vector3 起始位置
 -- @param ignoreList table 忽略的实例列表
