@@ -4,6 +4,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local AbilityConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("AbilityConfig"))
+local EffectFolder = game:GetService("ServerStorage"):FindFirstChild("Effect")
 
 local AbilityService = Knit.CreateService {
 	Name = "AbilityService",
@@ -208,6 +209,21 @@ function AbilityService:Upgrade(player, abilityId)
         abilityData.Gold = 0
         Knit.GetService("DBService"):Set(player.UserId, "AbilityData", self.AbilityData[player.UserId])
         self.Client.UpdateAbilityData:Fire(player, self.AbilityData[player.UserId])
+
+        if player.Character then
+            local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                local effect = EffectFolder:FindFirstChild("LevelUp")
+                if effect then
+                    local cloneEffect = effect:Clone()
+                    cloneEffect.Position = humanoidRootPart.Position
+                    cloneEffect.Parent = humanoidRootPart
+                    
+                    -- 使用Debris服务在3秒后自动销毁特效
+                    game:GetService("Debris"):AddItem(cloneEffect, 3)
+                end
+            end
+        end
         return true
     end
     return false

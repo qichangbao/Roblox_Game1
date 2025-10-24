@@ -6,10 +6,11 @@ local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitFo
 local UIController = Knit.CreateController {
     Name = "UIController",
     
+    ShowTip = Signal.new(),
+    ShowMessageBoxUI = Signal.new(),
     ShowStoreUI = Signal.new(),
     ShowSellUI = Signal.new(),
     ShowAbilityUI = Signal.new(),
-    ShowTip = Signal.new(),
 	ShowAdminUI = Signal.new(),
     ShowAdminButton = Signal.new(),
 	ShowBackpackUI = Signal.new(),
@@ -27,6 +28,7 @@ local UIController = Knit.CreateController {
     UpdateBackpack = Signal.new(),
 	UpdateToolData = Signal.new(),
     UpdateAbilityData = Signal.new(),
+    ShowItemAttributeUI = Signal.new(),
 }
 
 function UIController:KnitInit()

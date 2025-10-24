@@ -59,38 +59,40 @@ function InventoryService:playerAdd(player, inventory, toolData)
         end
     end
 
-    player.Chatted:Connect(function(message)
-        local lowerMessage = string.lower(message)
-        
-        -- 解析 "add item [itemId]" 命令
-        local addMatch = string.match(lowerMessage, "^add item (%d+)$")
-        if addMatch then
-            local itemId = tonumber(addMatch)
-            if itemId then
-                self:AddItem(player, {
-                    ItemId = itemId,
-                    Attribute = GameConfig.GetItemAttribute(),
-                })
-                print("已为玩家 " .. player.Name .. " 添加物品 ID: " .. itemId)
-                return true
-            end
-        end
-        
-        -- 解析 "remove item [itemId]" 或 "dec item [itemId]" 命令
-        local removeMatch = string.match(lowerMessage, "^remove item (%d+)$") or string.match(lowerMessage, "^dec item (%d+)$")
-        if removeMatch then
-            local itemId = tonumber(removeMatch)
-            if itemId then
-				local items = {}
-				items[itemId] = 1
-                self:RemoveItemsByNum(player, items)
-                print("已为玩家 " .. player.Name .. " 移除物品 ID: " .. itemId)
-                return true
-            end
-        end
-        
-        return false
-    end)
+    if game:GetService("RunService"):IsStudio() then
+		player.Chatted:Connect(function(message)
+			local lowerMessage = string.lower(message)
+			
+			-- 解析 "add item [itemId]" 命令
+			local addMatch = string.match(lowerMessage, "^add item (%d+)$")
+			if addMatch then
+				local itemId = tonumber(addMatch)
+				if itemId then
+					self:AddItem(player, {
+						ItemId = itemId,
+						Attribute = GameConfig.GetItemAttribute(),
+					})
+					print("已为玩家 " .. player.Name .. " 添加物品 ID: " .. itemId)
+					return true
+				end
+			end
+			
+			-- 解析 "remove item [itemId]" 或 "dec item [itemId]" 命令
+			local removeMatch = string.match(lowerMessage, "^remove item (%d+)$") or string.match(lowerMessage, "^dec item (%d+)$")
+			if removeMatch then
+				local itemId = tonumber(removeMatch)
+				if itemId then
+					local items = {}
+					items[itemId] = 1
+					self:RemoveItemsByNum(player, items)
+					print("已为玩家 " .. player.Name .. " 移除物品 ID: " .. itemId)
+					return true
+				end
+			end
+			
+			return false
+		end)
+	end
 end
 
 function InventoryService:playerRemoved(player)
@@ -432,10 +434,12 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
 	end
 
     -- 直接设置Tool的Grip属性来控制握持方向
-    if itemInfo.Index ~= 4 then
-        tool.Grip = CFrame.Angles(0, 0, math.rad(90))  -- 只旋转，不偏移位置
+    if itemInfo.Index == 4 then
+        tool.Grip = CFrame.Angles(0, math.rad(180), 0)  -- 只旋转，不偏移位置
+    elseif itemInfo.Index == 8 then
+        tool.Grip = CFrame.new(0, -0.6, 0) * CFrame.Angles(0, math.rad(90), 0)  -- y轴偏移0.6并旋转
     else
-        tool.Grip = CFrame.Angles(0, 0, math.rad(180))  -- 只旋转，不偏移位置
+        tool.Grip = CFrame.Angles(0, 0, math.rad(90))  -- 只旋转，不偏移位置
     end
 
 	-- 连接工具装备事件，重置状态
@@ -512,12 +516,12 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
 			end
 
 			if itemInfo.Type == GameConfig.ItemType.Weapon then    -- 进攻类
-				-- 通知客户端播放动画
-                local PlayerAnimationHnadler = require(ReplicatedStorage:WaitForChild("Animation"):WaitForChild("PlayerAnimationHnadler"))
                 if itemInfo.Index == 4 then
-                    PlayerAnimationHnadler.playDigAnimation(character)
+					Knit.GetService("PlayerService"):playAnimation(player, "dig", "Attack2", itemInfo.CD)
+                elseif itemInfo.Index == 8 then
+					Knit.GetService("PlayerService"):playAnimation(player, "swing", "Attack2", itemInfo.CD)
                 else
-                    PlayerAnimationHnadler.playSwingAnimation(character)
+					Knit.GetService("PlayerService"):playAnimation(player, "swing", "Attack1", itemInfo.CD)
                 end
 			end
 		end

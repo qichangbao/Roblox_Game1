@@ -14,65 +14,69 @@ AbilityConfig.Data = {
         DisplayName = "Haste",
         Description = "Increase Movement Speed",
         Value = {
-            0.15,
-            0.3,
-            0.45,
-            0.7
+            15,
+            30,
+            45,
+            70
         },
         Icon = "rbxassetid://132844373362963",
-        NeedItem1 = {
-            1001,
-            1002,
-            1014,
-            1012
-        },
-        NeedNum1 = {
-            2,
-            4,
-            6,
-            8
-        },
-        NeedItem2 = {
-            1010,
-            1025,
-            1020,
-            1018
-        },
-        NeedNum2 = {
-            2,
-            4,
-            6,
-            8
-        },
-        NeedItem3 = {
-            1015,
-            1030,
-            1031,
-            1026
-        },
-        NeedNum3 = {
-            1,
-            4,
-            6,
-            8
-        },
-        NeedItem4 = {
-            1022,
-            1033,
-            1034,
-            1035
-        },
-        NeedNum4 = {
-            1,
-            2,
-            3,
-            4
-        },
         Gold = {
             2000,
             10000,
             50000,
             250000
+        },
+        NeedItemList = {
+            {
+                1001,
+                1002,
+                1014,
+                1012
+            },
+            {
+                1010,
+                1025,
+                1020,
+                1018
+            },
+            {
+                1015,
+                1030,
+                1031,
+                1026
+            },
+            {
+                1022,
+                1033,
+                1034,
+                1035
+            }
+        },
+        NeedNumList = {
+            {
+                2,
+                4,
+                6,
+                8
+            },
+            {
+                2,
+                4,
+                6,
+                8
+            },
+            {
+                1,
+                4,
+                6,
+                8
+            },
+            {
+                1,
+                2,
+                3,
+                4
+            }
         },
     },
     [2] = {
@@ -87,21 +91,70 @@ AbilityConfig.Data = {
         DisplayName = "Health",
         Description = "Increase Maximum Health",
         Value = {
-            0.15,
-            0.3,
-            0.45,
-            0.7
+            15,
+            30,
+            45,
+            70
         },
         Icon = "rbxassetid://129227373111985",
-        NeedItem1 = nil,
-        NeedNum1 = nil,
-        NeedItem2 = nil,
-        NeedNum2 = nil,
-        NeedItem3 = nil,
-        NeedNum3 = nil,
-        NeedItem4 = nil,
-        NeedNum4 = nil,
-        Gold = nil,
+        Gold = {
+            2000,
+            10000,
+            50000,
+            250000
+        },
+        NeedItemList = {
+            {
+                1001,
+                1002,
+                1014,
+                1012
+            },
+            {
+                1010,
+                1025,
+                1020,
+                1018
+            },
+            {
+                1015,
+                1030,
+                1031,
+                1026
+            },
+            {
+                1022,
+                1033,
+                1034,
+                1035
+            }
+        },
+        NeedNumList = {
+            {
+                2,
+                4,
+                6,
+                8
+            },
+            {
+                2,
+                4,
+                6,
+                8
+            },
+            {
+                1,
+                4,
+                6,
+                8
+            },
+            {
+                1,
+                2,
+                3,
+                4
+            }
+        },
     },
     [3] = {
         AbilityId = 3,
@@ -115,21 +168,70 @@ AbilityConfig.Data = {
         DisplayName = "Bounce",
         Description = "Increase Jump Height",
         Value = {
-            0.15,
-            0.3,
-            0.45,
-            0.7
+            15,
+            30,
+            45,
+            70
         },
         Icon = "rbxassetid://129701418773918",
-        NeedItem1 = nil,
-        NeedNum1 = nil,
-        NeedItem2 = nil,
-        NeedNum2 = nil,
-        NeedItem3 = nil,
-        NeedNum3 = nil,
-        NeedItem4 = nil,
-        NeedNum4 = nil,
-        Gold = nil,
+        Gold = {
+            2000,
+            10000,
+            50000,
+            250000
+        },
+        NeedItemList = {
+            {
+                1001,
+                1002,
+                1014,
+                1012
+            },
+            {
+                1010,
+                1025,
+                1020,
+                1018
+            },
+            {
+                1015,
+                1030,
+                1031,
+                1026
+            },
+            {
+                1022,
+                1033,
+                1034,
+                1035
+            }
+        },
+        NeedNumList = {
+            {
+                2,
+                4,
+                6,
+                8
+            },
+            {
+                2,
+                4,
+                6,
+                8
+            },
+            {
+                1,
+                4,
+                6,
+                8
+            },
+            {
+                1,
+                2,
+                3,
+                4
+            }
+        },
     },
     [4] = {
         AbilityId = 4,
@@ -143,21 +245,70 @@ AbilityConfig.Data = {
         DisplayName = "Damage",
         Description = "Increase Damage",
         Value = {
-            0.15,
-            0.3,
-            0.45,
-            0.7
+            15,
+            30,
+            45,
+            70
         },
         Icon = "rbxassetid://136616641805670",
-        NeedItem1 = nil,
-        NeedNum1 = nil,
-        NeedItem2 = nil,
-        NeedNum2 = nil,
-        NeedItem3 = nil,
-        NeedNum3 = nil,
-        NeedItem4 = nil,
-        NeedNum4 = nil,
-        Gold = nil,
+        Gold = {
+            2000,
+            10000,
+            50000,
+            250000
+        },
+        NeedItemList = {
+            {
+                1001,
+                1002,
+                1014,
+                1012
+            },
+            {
+                1010,
+                1025,
+                1020,
+                1018
+            },
+            {
+                1015,
+                1030,
+                1031,
+                1026
+            },
+            {
+                1022,
+                1033,
+                1034,
+                1035
+            }
+        },
+        NeedNumList = {
+            {
+                2,
+                4,
+                6,
+                8
+            },
+            {
+                2,
+                4,
+                6,
+                8
+            },
+            {
+                1,
+                4,
+                6,
+                8
+            },
+            {
+                1,
+                2,
+                3,
+                4
+            }
+        },
     },
 }
 
@@ -234,81 +385,27 @@ function AbilityConfig:GetByIcon(value)
     return nil
 end
 
-function AbilityConfig:GetByNeedItem1(value)
-    for i, item in pairs(self.Data) do
-        if item.NeedItem1 == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function AbilityConfig:GetByNeedNum1(value)
-    for i, item in pairs(self.Data) do
-        if item.NeedNum1 == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function AbilityConfig:GetByNeedItem2(value)
-    for i, item in pairs(self.Data) do
-        if item.NeedItem2 == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function AbilityConfig:GetByNeedNum2(value)
-    for i, item in pairs(self.Data) do
-        if item.NeedNum2 == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function AbilityConfig:GetByNeedItem3(value)
-    for i, item in pairs(self.Data) do
-        if item.NeedItem3 == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function AbilityConfig:GetByNeedNum3(value)
-    for i, item in pairs(self.Data) do
-        if item.NeedNum3 == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function AbilityConfig:GetByNeedItem4(value)
-    for i, item in pairs(self.Data) do
-        if item.NeedItem4 == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function AbilityConfig:GetByNeedNum4(value)
-    for i, item in pairs(self.Data) do
-        if item.NeedNum4 == value then
-            return item
-        end
-    end
-    return nil
-end
-
 function AbilityConfig:GetByGold(value)
     for i, item in pairs(self.Data) do
         if item.Gold == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function AbilityConfig:GetByNeedItemList(value)
+    for i, item in pairs(self.Data) do
+        if item.NeedItemList == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function AbilityConfig:GetByNeedNumList(value)
+    for i, item in pairs(self.Data) do
+        if item.NeedNumList == value then
             return item
         end
     end

@@ -95,8 +95,8 @@ GameConfig.DuanWeiType = {
         levelNum = 2,           -- 当前段位里有几个级别
         levelStarNum = 3,       -- 每级别有多少星级
         icons = {
-            "rbxassetid://104558666500181",
-            "rbxassetid://131806429541712",
+            "rbxassetid://107675934692852",
+            "rbxassetid://140101764905074",
         },
         allowDeduction = false,
     },

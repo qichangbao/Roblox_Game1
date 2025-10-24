@@ -6,6 +6,7 @@ local Players = game:GetService("Players")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local AbilityConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("AbilityConfig"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
+local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
 
 local PlayerService = Knit.CreateService {
 	Name = "PlayerService",
@@ -13,6 +14,7 @@ local PlayerService = Knit.CreateService {
 	},
 
     AbilityData = {},
+    AnimationTracks = {},
 }
 
 function PlayerService:KnitInit()
@@ -39,7 +41,53 @@ function PlayerService:KnitStart()
                 end
             end
             Knit.GetService("LevelService"):CreatePlayerBillboard(player)
+
+            self.AnimationTracks[player.UserId] = {}
+            local animator = humanoid:FindFirstChildOfClass("Animator")
+            if animator then
+                -- 定义动画映射表
+                local animationMap = {
+                    swing = {"rbxassetid://107273238071706", "rbxassetid://90203983110020"},
+                    dig = {"rbxassetid://96906531402562", "rbxassetid://82370673878002"},
+                }
+                
+                -- 预加载所有动画
+                for animName, animInfo in pairs(animationMap) do
+                    local animation = Instance.new("Animation")
+                    if humanoid.RigType == Enum.HumanoidRigType.R6 then
+                        animation.AnimationId = animInfo[1]
+                    else
+                        animation.AnimationId = animInfo[2]
+                    end
+                    
+                    local success, track = pcall(function()
+                        return animator:LoadAnimation(animation)
+                    end)
+                    
+                    if success and track then
+                        track.Priority = Enum.AnimationPriority.Action
+                        track.Looped = false
+                        self.AnimationTracks[player.UserId][animName] = track
+                    end
+                end
+
+                local gameSound = Interface.safeWaitPart(game:GetService("SoundService"), "GAME")
+                local music1 = Interface.safeWaitPart(gameSound, "Attack1")
+                music1.Name = "Attack1"
+                if not music1.IsLoaded then
+                    music1.Loaded:Wait()
+                end
+                music1.Parent = character
+
+                local music2 = Interface.safeWaitPart(gameSound, "Attack2")
+                music2.Name = "Attack2"
+                if not music2.IsLoaded then
+                    music2.Loaded:Wait()
+                end
+                music2.Parent = character
+            end
         end
+
         if player.Character then
             characterAdd(player.Character)
         else
@@ -50,6 +98,9 @@ function PlayerService:KnitStart()
     end
 
     local function playerRemoved(player)
+        self.AnimationTracks[player.UserId] = nil
+        self.AbilityData[player.UserId] = nil
+
         local DBService = Knit.GetService("DBService")
         DBService:PlayerRemoving(player)
         Knit.GetService("InventoryService"):playerRemoved(player)
@@ -102,7 +153,8 @@ function PlayerService:GetInitData(player)
                 IsSuccess = teleportData.IsSuccess,
             })
         end
-
+        
+        Knit.GetService("DBService"):Set(player.UserId, "IsFirstLoginFuben", 1)
         -- 更新等级数据
         Knit.GetService("LevelService"):Updata(player, teleportData.IsSuccess)
     end
@@ -216,6 +268,64 @@ function PlayerService:ChangePlayerAttribute(player, attributeName, attributeVal
         elseif attributeName == "Attack" then
             humanoid:SetAttribute("Attack", player:GetAttribute("InitAttack"))
         end
+    end
+end
+
+-- 播放挥舞动画
+-- @param player Player 玩家对象
+-- @param cd number 冷却时间，用于调整动画播放速度 (cd越小动画越快，cd越大动画越慢)
+function PlayerService:PlaySwingAnimation(player, cd)
+    if not self.AnimationTracks[player.UserId] or not self.AnimationTracks[player.UserId]["swing"] then
+        return
+    end
+    
+    local animationTrack = self.AnimationTracks[player.UserId]["swing"]
+    
+    -- 获取动画的总时长
+    local animationLength = animationTrack.Length
+    
+    -- 根据cd参数和动画时长计算播放速度
+    -- 目标：让动画在cd秒内播放完成
+    local playbackSpeed = cd / animationLength
+    animationTrack:AdjustSpeed(playbackSpeed)
+    animationTrack:Play()
+end
+
+-- 播放挖掘动画函数（从下往上）
+-- @param player Player 玩家对象
+-- @param cd number 冷却时间，用于调整动画播放速度 (cd越小动画越快，cd越大动画越慢)
+function PlayerService:PlayDigAnimation(player, cd)
+    if not self.AnimationTracks[player.UserId] or not self.AnimationTracks[player.UserId]["dig"] then
+        return
+    end
+    
+    local animationTrack = self.AnimationTracks[player.UserId]["dig"]
+    
+    -- 获取动画的总时长
+    local animationLength = animationTrack.Length
+    
+    -- 根据cd参数和动画时长计算播放速度
+    -- 目标：让动画在cd秒内播放完成
+    local playbackSpeed = cd / animationLength
+    animationTrack:AdjustSpeed(playbackSpeed)
+    animationTrack:Play()
+end
+
+function PlayerService:playAnimation(player, animationName, soundName, cd)
+    local character = player.Character
+    if not character then return end
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if not humanoid then return end
+
+    if animationName == "dig" then
+        self:PlayDigAnimation(player, cd)
+    else
+        self:PlaySwingAnimation(player, cd)
+    end
+
+    local music = character:FindFirstChild(soundName)
+    if music then
+        music:Play()
     end
 end
 

@@ -17,9 +17,6 @@
         },
         "ToolFolder": {
             "$path": "src/ReplicatedStorage/ToolFolder"
-        },
-        "Animation": {
-            "$path": "src/ReplicatedStorage/Animation"
         }
     },
 

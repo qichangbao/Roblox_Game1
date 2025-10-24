@@ -295,6 +295,8 @@ function TeleportServiceModule:teleportToReserveServer(players)
 				Level = v.Level or 0,
 			})
 		end
+		playerData[player.UserId].IsFirstLoginFuben = Knit.GetService("DBService"):Get(player.UserId, "IsFirstLoginFuben")
+		playerData[player.UserId].Gold = Knit.GetService("GoldService"):GetGoldData(player)
 	end
 	
 	logMessage("INFO", string.format("成功创建预留服务器，访问码: %s", accessCode))
@@ -302,8 +304,9 @@ function TeleportServiceModule:teleportToReserveServer(players)
 	-- 准备传送数据
 	local teleportData = {}
 	teleportData.PlayerData = playerData
-	teleportData.EscapeTime = 10 * 60		-- 逃生时间
+	teleportData.EscapeTime = 15 * 60		-- 逃生时间
 	teleportData.Difficulty = GameConfig.Difficulty.Easy			-- 难度等级
+
 	if playerCount == 1 then
 		teleportData.EscapeTask = 2000			-- 逃生目标金钱
 	elseif playerCount == 2 then

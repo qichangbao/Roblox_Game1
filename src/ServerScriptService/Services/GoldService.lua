@@ -23,7 +23,7 @@ function GoldService:KnitStart()
 end
 
 function GoldService:playerAdd(player, gold)
-    self.Gold[player.UserId] = gold
+    self.Gold[player.UserId] = tonumber(gold)
 end
 
 function GoldService:playerRemoved(player)
@@ -35,13 +35,13 @@ function GoldService:GetGoldData(player)
 end
 
 function GoldService:SetGold(player, gold)
-    self.Gold[player.UserId] = gold
+    self.Gold[player.UserId] = tonumber(gold)
     self.Client.ChangeGold:Fire(player, self.Gold[player.UserId])
     Knit.GetService("DBService"):Set(player.UserId, "Gold", self.Gold[player.UserId])
 end
 
 function GoldService:ChangeGold(player, gold)
-    self.Gold[player.UserId] = self.Gold[player.UserId] + gold
+    self.Gold[player.UserId] = self.Gold[player.UserId] + tonumber(gold)
     self.Client.ChangeGold:Fire(player, self.Gold[player.UserId])
     Knit.GetService("DBService"):Set(player.UserId, "Gold", self.Gold[player.UserId])
 end

@@ -18,7 +18,6 @@ local PurchaseService = Knit.CreateService({
 
 -- 存储待处理的购买请求
 local PendingPurchases = {}
-local targetPlayerUserId = nil
 
 -- 处理开发者产品购买回调
 -- @param receiptInfo table 购买收据信息
@@ -29,36 +28,60 @@ local function processReceipt(receiptInfo)
         return Enum.ProductPurchaseDecision.NotProcessedYet
     end
     
-    -- 发放船只
+    -- 检查是否有待处理的购买请求
+    local pendingPurchase = PendingPurchases[receiptInfo.PlayerId]
+    if not pendingPurchase then
+        -- 如果没有待处理的购买请求，可能是重复处理或异常情况
+        warn("No pending purchase found for player:", receiptInfo.PlayerId)
+        return Enum.ProductPurchaseDecision.NotProcessedYet
+    end
+    
+    -- 验证产品ID是否匹配
+    if pendingPurchase.productId ~= receiptInfo.ProductId then
+        warn("Product ID mismatch for player:", receiptInfo.PlayerId)
+        return Enum.ProductPurchaseDecision.NotProcessedYet
+    end
+    
+    -- 发放物品
     local shopInfo = Shop1Config:GetByAssetID(receiptInfo.ProductId)
     if not shopInfo then
         return Enum.ProductPurchaseDecision.NotProcessedYet
     end
 
-    if targetPlayerUserId then
-        local targetPlayer = Players:GetPlayerByUserId(targetPlayerUserId)
+    -- 根据待处理购买请求中的目标用户ID发放物品
+    if pendingPurchase.targetUserId then
+        local targetPlayer = Players:GetPlayerByUserId(pendingPurchase.targetUserId)
         if targetPlayer then
             Knit.GetService('InventoryService'):AddItem(targetPlayer, {ItemId = shopInfo.Index})
+        else
+            -- 目标玩家不在线，发放给购买者
+            Knit.GetService('InventoryService'):AddItem(player, {ItemId = shopInfo.Index})
         end
-        targetPlayerUserId = nil
     else
+        -- 发放给购买者
         Knit.GetService('InventoryService'):AddItem(player, {ItemId = shopInfo.Index})
     end
+    
+    -- 清理已处理的购买请求
+    PendingPurchases[receiptInfo.PlayerId] = nil
+    
     return Enum.ProductPurchaseDecision.PurchaseGranted
 end
 
 -- 客户端接口：购买物品
 -- @param player Player 玩家对象
--- @param productId string 物品商品ID
+-- @param itemId number 物品ID
+-- @param productId number 产品ID
+-- @param targetUserId number 目标用户ID（可选，用于赠送）
 -- @return boolean 是否成功发起购买
 function PurchaseService:BuyItem(player, itemId, productId, targetUserId)
     -- 存储待处理的购买请求
     PendingPurchases[player.UserId] = {
         itemId = itemId,
         productId = productId,
+        targetUserId = targetUserId,
         timestamp = tick(),
     }
-    targetPlayerUserId = targetUserId
     
     -- 发起购买
     local success, errorMessage = pcall(function()

@@ -30,6 +30,7 @@ local _dataTemplate = {
 		star = 0				-- 当前级别的星级
 	},
 	AbilityData = {},			-- 能力列表
+	IsFirstLoginFuben = 0,		-- 是否第一次进入副本
 }
 
 local ProfileStore = ProfileService.GetProfileStore(
