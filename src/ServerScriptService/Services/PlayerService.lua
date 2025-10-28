@@ -23,7 +23,7 @@ end
 -- 服务启动时的初始化
 -- @return void
 function PlayerService:KnitStart()
-    local function playerAdd(player)
+    local function PlayerAdded(player)
         local function characterAdd(character)
             local humanoid = character:FindFirstChildOfClass("Humanoid")
             if humanoid then
@@ -97,31 +97,32 @@ function PlayerService:KnitStart()
         end
     end
 
-    local function playerRemoved(player)
+    local function PlayerRemoved(player)
         self.AnimationTracks[player.UserId] = nil
         self.AbilityData[player.UserId] = nil
 
         local DBService = Knit.GetService("DBService")
         DBService:PlayerRemoving(player)
-        Knit.GetService("InventoryService"):playerRemoved(player)
-        Knit.GetService("GoldService"):playerRemoved(player)
-        Knit.GetService("RankService"):playerRemoved(player)
-        Knit.GetService("LevelService"):playerRemoved(player)
-        Knit.GetService("AbilityService"):playerRemoved(player)
+        Knit.GetService("InventoryService"):PlayerRemoved(player)
+        Knit.GetService("GoldService"):PlayerRemoved(player)
+        Knit.GetService("RankService"):PlayerRemoved(player)
+        Knit.GetService("LevelService"):PlayerRemoved(player)
+        Knit.GetService("AbilityService"):PlayerRemoved(player)
+        Knit.GetService("GMService"):PlayerRemoved(player)
     end
 
     for _, player in pairs(Players:GetPlayers()) do
-        playerAdd(player)
+        PlayerAdded(player)
     end
 	
 	-- 监听玩家加入事件
 	Players.PlayerAdded:Connect(function(player)
-        playerAdd(player)
+        PlayerAdded(player)
 	end)
 
 	-- 监听玩家离开事件
 	Players.PlayerRemoving:Connect(function(player)
-        playerRemoved(player)
+        PlayerRemoved(player)
 	end)
 end
 
@@ -134,12 +135,14 @@ function PlayerService:GetInitData(player)
     local tool = DBService:Get(player.UserId, "PlayerToolData")
     local duanWei = DBService:Get(player.UserId, "DuanWeiData")
     local ability = DBService:Get(player.UserId, "AbilityData")
-    Knit.GetService("GoldService"):playerAdd(player, gold)
-    Knit.GetService("InventoryService"):playerAdd(player, inventory, tool)
-    Knit.GetService("RankService"):playerAdd(player)
-    Knit.GetService("LevelService"):playerAdd(player, duanWei)
-    Knit.GetService("AbilityService"):playerAdd(player, ability)
+    Knit.GetService("GoldService"):PlayerAdded(player, gold)
+    Knit.GetService("InventoryService"):PlayerAdded(player, inventory, tool)
+    Knit.GetService("RankService"):PlayerAdded(player)
+    Knit.GetService("LevelService"):PlayerAdded(player, duanWei)
+    Knit.GetService("AbilityService"):PlayerAdded(player, ability)
+    Knit.GetService("GMService"):PlayerAdded(player)
     
+    local isFromFuben = false
     -- 获取传送数据
     local joinData = player:GetJoinData()
     if joinData and joinData.TeleportData then
@@ -157,6 +160,7 @@ function PlayerService:GetInitData(player)
         Knit.GetService("DBService"):Set(player.UserId, "IsFirstLoginFuben", 1)
         -- 更新等级数据
         Knit.GetService("LevelService"):Updata(player, teleportData.IsSuccess)
+        isFromFuben = true
     end
 
     local inventoryData = Knit.GetService("InventoryService"):GetInventoryData(player)
@@ -165,20 +169,18 @@ function PlayerService:GetInitData(player)
     local rankData = Knit.GetService("RankService"):GetLeaderboard()
     local abilityData = Knit.GetService("AbilityService"):GetAbilityData(player)
     local isAdmin = Knit.GetService("DBService"):IsAdmin(player)
-
-    if ability then
-        self.AbilityData[player.UserId] = ability
-        self:InitPlayerAbility(player, ability)
-    end
+    self.AbilityData[player.UserId] = abilityData
+    self:InitPlayerAbility(player, self.AbilityData[player.UserId])
 
     return {
         Gold = gold,
         Inventory = inventoryData,
         ToolData = toolData,
-        AbilityData = abilityData,
+        AbilityData = self.AbilityData[player.UserId],
         RankPersonalData = rankPersonalData,
         RankData = rankData,
         IsAdmin = isAdmin,
+        IsFromFuben = isFromFuben,
     }
 end
 

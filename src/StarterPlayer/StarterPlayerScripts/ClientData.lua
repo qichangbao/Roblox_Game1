@@ -11,6 +11,7 @@ ClientData.AbilityData = {}
 ClientData.RankPersonalData = {}
 ClientData.RankData = {}
 ClientData.IsAdmin = false
+ClientData.IsFromFuben = false
 
 local function setInitData(data)
     -- 安全地设置数据
@@ -21,6 +22,7 @@ local function setInitData(data)
     ClientData.RankPersonalData = data.RankPersonalData or {}
     ClientData.RankData = data.RankData or {}
     ClientData.IsAdmin = data.IsAdmin or false
+    ClientData.IsFromFuben = data.IsFromFuben or false
     -- local playerGui = Interface.safeWaitPart(game.Players.LocalPlayer, "PlayerGui")
 	-- local loadingUI = Interface.safeWaitPart(playerGui, "LoadingUI")
 	-- loadingUI.Enabled = false
@@ -30,7 +32,9 @@ local function setInitData(data)
     Knit.GetController("UIController").ShowAdminButton:Fire(ClientData.IsAdmin)
     Knit.GetController("UIController").UpdateRankPersonalData:Fire(ClientData.RankPersonalData)
     Knit.GetController("UIController").UpdateAbilityData:Fire(ClientData.AbilityData)
+    Knit.GetController("UIController").UpdateRankData:Fire(ClientData.RankData)
 
+    require(script.Parent:WaitForChild("PlayerGuide")):ShowGuide()
     require(script.Parent:WaitForChild("Sound"))
 end
 
@@ -110,6 +114,10 @@ local function init()
         Knit.GetService("AbilityService").UpdateAbilityData:Connect(function(abilityData)
             ClientData.AbilityData = abilityData or {}
             Knit.GetController("UIController").UpdateAbilityData:Fire(ClientData.AbilityData)
+        end)
+
+        Knit.GetService("ClientUIService").ShowTip:Connect(function(tip)
+            Knit.GetController("UIController").ShowTip:Fire(tip)
         end)
     end)
 end

@@ -34,11 +34,12 @@ local RankService = Knit.CreateService({
     lastCacheUpdate = 0, -- 上次缓存更新时间
     pendingUpdates = {}, -- 待更新的数据队列
     playerNameCache = {}, -- 玩家名称缓存
+    escapeActionsLeaderboard = nil, -- 跨服务器总航行距离排行榜
 })
 
 -- 配置参数
 local CACHE_UPDATE_INTERVAL = 3600 -- 缓存更新间隔（秒）
-local LEADERBOARD_SIZE = 15 -- 排行榜显示数量
+local LEADERBOARD_SIZE = 100 -- 排行榜显示数量
 local BATCH_UPDATE_INTERVAL = 30 -- 批量更新间隔（秒）
 
 -- 数据编码配置（用于OrderedDataStore存储多个数值）
@@ -116,7 +117,7 @@ end
 
 -- 初始化玩家航行数据
 -- @param player Player 玩家对象
-function RankService:playerAdd(player)
+function RankService:PlayerAdded(player)
     local userId = player.UserId
     
     -- 从数据库获取玩家航行数据
@@ -143,7 +144,7 @@ function RankService:playerAdd(player)
     end
 end
 
-function RankService:playerRemoved(player)
+function RankService:PlayerRemoved(player)
     local userId = player.UserId
     if self.playerEscapeActions[userId] then
         -- 清理数据
@@ -177,11 +178,10 @@ end
 
 -- 获取全服排行榜数据
 -- @param leaderboardType string 排行榜类型 ("totalDis"、"maxDis"、"totalTime"、"maxTime")
--- @param limit number 获取数量限制
 -- @return table 排行榜数据
-function RankService:GetGlobalLeaderboardData(leaderboardType, limit)
+function RankService:GetGlobalLeaderboardData(leaderboardType)
     local success, pages = pcall(function()
-        return EscapeActionsDataStore:GetSortedAsync(false, limit)
+        return EscapeActionsDataStore:GetSortedAsync(false, LEADERBOARD_SIZE)
     end)
     
     if not success then
@@ -221,12 +221,12 @@ function RankService:GetGlobalLeaderboardData(leaderboardType, limit)
             
             rank = rank + 1
             
-            if rank > limit then
+            if rank > LEADERBOARD_SIZE then
                 break
             end
         end
         
-        if rank > limit then
+        if rank > LEADERBOARD_SIZE then
             break
         end
         
@@ -259,18 +259,22 @@ function RankService:UpdateLeaderboardCache()
     self.lastCacheUpdate = currentTime
     
     -- 获取排行榜数据
-    task.spawn(function()
-        local escapeActionsLeaderboard = self:GetGlobalLeaderboardData("escapeActions", LEADERBOARD_SIZE)
-        
-        -- 更新缓存
-        self.leaderboardCache = {
-            escapeActions = escapeActionsLeaderboard,
-            lastUpdate = currentTime
-        }
-        
-        -- 通知所有客户端更新排行榜
-        self.Client.UpdateLeaderboard:FireAll(escapeActionsLeaderboard)
-    end)
+    self.escapeActionsLeaderboard = self:GetGlobalLeaderboardData("escapeActions")
+    
+    -- 更新缓存
+    self.leaderboardCache = {
+        escapeActions = self.escapeActionsLeaderboard,
+        lastUpdate = currentTime
+    }
+    
+    -- 通知所有客户端更新排行榜
+    self.Client.UpdateLeaderboard:FireAll(self.escapeActionsLeaderboard)
+    
+    -- 通知所有客户端更新个人数据
+    for _, player in pairs(game.Players:GetPlayers()) do
+        local playerData = self:GetPersonalDataWithRank(player)
+        self.Client.UpdateRankPersonalData:FireAll(playerData)
+    end
 end
 
 -- 获取玩家个人数据和排名
@@ -280,50 +284,19 @@ function RankService:GetPersonalDataWithRank(player)
     local userId = player.UserId
     local data = self.playerEscapeActions[userId]
     
-    if not data then
+    if not data or not self.escapeActionsLeaderboard then
         return
     end
-    
+
     -- 获取排名（同步等待）
     local escapeActionsRank = 0
-    
-    -- 获取总距离排名
-    local success, totalActionsData = pcall(function()
-        return EscapeActionsDataStore:GetSortedAsync(false, 100)
-    end)
-    
-    if success and totalActionsData then
-        local rank = 1
-        while true do
-            local success2, data2 = pcall(function()
-                return totalActionsData:GetCurrentPage()
-            end)
-            
-            if not success2 or not data2 then
-                break
-            end
-            
-            for _, entry in pairs(data2) do
-                if tonumber(entry.key) == userId then
-                    escapeActionsRank = rank
-                    break
-                end
-                rank = rank + 1
-            end
-            
-            if totalActionsData.IsFinished then
-                break
-            end
-            
-            local success3 = pcall(function()
-                totalActionsData:AdvanceToNextPageAsync()
-            end)
-            
-            if not success3 then
-                break
-            end
+    for i, v in ipairs(self.escapeActionsLeaderboard) do
+        if tonumber(v.userId) == userId then
+            escapeActionsRank = i
+            break
         end
     end
+    
     
     return {
         escapeActions = data.escapeActions,
@@ -386,13 +359,15 @@ function RankService:GetLeaderboard(player)
         return cache.escapeActions
     else
         self.lastCacheUpdate = tick()
-        local escapeActionsLeaderboard = self:GetGlobalLeaderboardData("escapeActions", LEADERBOARD_SIZE)
+        if not self.escapeActionsLeaderboard then
+            return {}
+        end
         -- 更新缓存
         self.leaderboardCache = {
-            escapeActions = escapeActionsLeaderboard,
+            escapeActions = self.escapeActionsLeaderboard,
             lastUpdate = self.lastCacheUpdate
         }
-        return escapeActionsLeaderboard
+        return self.escapeActionsLeaderboard
     end
 end
 

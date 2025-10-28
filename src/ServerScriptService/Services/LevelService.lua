@@ -30,7 +30,7 @@ end
 function LevelService:KnitStart()
 end
 
-function LevelService:playerAdd(player, levelData)
+function LevelService:PlayerAdded(player, levelData)
     self.DuanWeiData[player.UserId] = {}
     self.DuanWeiData[player.UserId].duanWei = levelData.duanWei or 1
     self.DuanWeiData[player.UserId].level = levelData.level or 1
@@ -38,25 +38,9 @@ function LevelService:playerAdd(player, levelData)
     self.DuanWeiData[player.UserId].duanWei = tonumber(self.DuanWeiData[player.UserId].duanWei)
     self.DuanWeiData[player.UserId].level = tonumber(self.DuanWeiData[player.UserId].level)
     self.DuanWeiData[player.UserId].star = tonumber(self.DuanWeiData[player.UserId].star)
-
-    if game:GetService("RunService"):IsStudio() then
-		player.Chatted:Connect(function(message)
-			local lowerMessage = string.lower(message)
-			
-			if lowerMessage == "add star" then
-				Knit.GetService("LevelService"):Updata(player, true)
-				return true
-			elseif lowerMessage == "dec star" then
-				Knit.GetService("LevelService"):Updata(player, false)
-				return true
-			end
-			
-			return false
-		end)
-	end
 end
 
-function LevelService:playerRemoved(player)
+function LevelService:PlayerRemoved(player)
     self.DuanWeiData[player.UserId] = nil
 end
 

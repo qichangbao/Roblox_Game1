@@ -1,7 +1,6 @@
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local Signal = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Signal"))
-local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 
 local UIController = Knit.CreateController {
     Name = "UIController",
@@ -29,6 +28,7 @@ local UIController = Knit.CreateController {
 	UpdateToolData = Signal.new(),
     UpdateAbilityData = Signal.new(),
     ShowItemAttributeUI = Signal.new(),
+    ShowFlyItemUI = Signal.new(),
 }
 
 function UIController:KnitInit()

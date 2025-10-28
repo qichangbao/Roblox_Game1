@@ -29,8 +29,8 @@ local COUNTDOWN_DURATION = 15 -- 倒计时持续时间（秒）
 local CREATE_COUNTDOWN_DURATION = 15 -- 创建倒计时持续时间（秒）
 
 -- ReserveServer配置
---local TARGET_PLACE_ID = 76972960957805  -- 目标传送场景ID（TestBoat_Fuben）
-local TARGET_PLACE_ID = 101522977890308
+--local TARGET_PLACE_ID = 76972960957805   	-- 目标传送场景ID（正式服）
+local TARGET_PLACE_ID = 101522977890308     -- 目标传送场景ID（测试服）
 
 -- 检查是否在Studio环境中
 -- @return boolean 是否在Studio环境
@@ -304,19 +304,20 @@ function TeleportServiceModule:teleportToReserveServer(players)
 	-- 准备传送数据
 	local teleportData = {}
 	teleportData.PlayerData = playerData
-	teleportData.EscapeTime = 15 * 60		-- 逃生时间
+	teleportData.IslandName = "恐龙岛"
+	teleportData.EscapeTime = 15 * 60 + 20		-- 逃生时间
 	teleportData.Difficulty = GameConfig.Difficulty.Easy			-- 难度等级
 
 	if playerCount == 1 then
-		teleportData.EscapeTask = 2000			-- 逃生目标金钱
+		teleportData.EscapeTask = 5000			-- 逃生目标金钱
 	elseif playerCount == 2 then
-		teleportData.EscapeTask = 6000			-- 逃生目标金钱
+		teleportData.EscapeTask = 8000			-- 逃生目标金钱
 	elseif playerCount == 3 then
-		teleportData.EscapeTask = 10000			-- 逃生目标金钱
+		teleportData.EscapeTask = 12000			-- 逃生目标金钱
 	elseif playerCount == 4 then
-		teleportData.EscapeTask = 14000			-- 逃生目标金钱
+		teleportData.EscapeTask = 17000			-- 逃生目标金钱
 	elseif playerCount == 5 then
-		teleportData.EscapeTask = 18000			-- 逃生目标金钱
+		teleportData.EscapeTask = 23000			-- 逃生目标金钱
 	end
 
 	local function teleportPlayersToReserveServer(data)

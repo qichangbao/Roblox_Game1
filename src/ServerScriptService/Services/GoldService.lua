@@ -22,11 +22,11 @@ end
 function GoldService:KnitStart()
 end
 
-function GoldService:playerAdd(player, gold)
+function GoldService:PlayerAdded(player, gold)
     self.Gold[player.UserId] = tonumber(gold)
 end
 
-function GoldService:playerRemoved(player)
+function GoldService:PlayerRemoved(player)
     self.Gold[player.UserId] = nil
 end
 

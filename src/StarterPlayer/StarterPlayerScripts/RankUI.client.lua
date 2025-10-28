@@ -76,6 +76,9 @@ end
 
 -- 更新玩家自己的数据
 local function UpdatePlayerInfo(playerInfo)
+	if not playerInfo or not playerInfo.escapeActionsRank or not playerInfo.escapeActions then
+		return
+	end
 	MeFrame.Visible = true
 	MeName.Text = Players.LocalPlayer.Name
 	if playerInfo.escapeActionsRank > 0 then

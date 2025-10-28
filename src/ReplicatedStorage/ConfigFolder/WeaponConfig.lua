@@ -4,19 +4,19 @@ local WeaponConfig = {}
 WeaponConfig.Coordinates = {
     [1] = {
         Index = 1,
-        Position = Vector3.new(3, 3, 3),
+        Position = Vector3.new(3, 3, 5),
         ItemId = 1,
         Damage = 20,
     },
     [2] = {
         Index = 2,
-        Position = Vector3.new(3, 3, 3),
+        Position = Vector3.new(3, 3, 5),
         ItemId = 4,
         Damage = 10,
     },
     [3] = {
         Index = 3,
-        Position = Vector3.new(3, 3, 3),
+        Position = Vector3.new(3, 3, 5),
         ItemId = 8,
         Damage = 10,
     },

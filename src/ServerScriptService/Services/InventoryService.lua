@@ -28,7 +28,7 @@ end
 function InventoryService:KnitStart()
 end
 
-function InventoryService:playerAdd(player, inventory, toolData)
+function InventoryService:PlayerAdded(player, inventory, toolData)
 	self.Inventory[player.UserId] = {}
 	for _, v in pairs(inventory) do
         local attribute = GameConfig.GetItemAttribute()
@@ -58,44 +58,9 @@ function InventoryService:playerAdd(player, inventory, toolData)
             })
         end
     end
-
-    if game:GetService("RunService"):IsStudio() then
-		player.Chatted:Connect(function(message)
-			local lowerMessage = string.lower(message)
-			
-			-- 解析 "add item [itemId]" 命令
-			local addMatch = string.match(lowerMessage, "^add item (%d+)$")
-			if addMatch then
-				local itemId = tonumber(addMatch)
-				if itemId then
-					self:AddItem(player, {
-						ItemId = itemId,
-						Attribute = GameConfig.GetItemAttribute(),
-					})
-					print("已为玩家 " .. player.Name .. " 添加物品 ID: " .. itemId)
-					return true
-				end
-			end
-			
-			-- 解析 "remove item [itemId]" 或 "dec item [itemId]" 命令
-			local removeMatch = string.match(lowerMessage, "^remove item (%d+)$") or string.match(lowerMessage, "^dec item (%d+)$")
-			if removeMatch then
-				local itemId = tonumber(removeMatch)
-				if itemId then
-					local items = {}
-					items[itemId] = 1
-					self:RemoveItemsByNum(player, items)
-					print("已为玩家 " .. player.Name .. " 移除物品 ID: " .. itemId)
-					return true
-				end
-			end
-			
-			return false
-		end)
-	end
 end
 
-function InventoryService:playerRemoved(player)
+function InventoryService:PlayerRemoved(player)
 	self.Inventory[player.UserId] = nil
 	self.ToolData[player.UserId] = nil
 end

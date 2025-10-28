@@ -23,7 +23,7 @@ end
 function AbilityService:KnitStart()
 end
 
-function AbilityService:playerAdd(player, abilityData)
+function AbilityService:PlayerAdded(player, abilityData)
     self.AbilityData[player.UserId] = {}
     for id, ability in pairs(abilityData) do
         self.AbilityData[player.UserId][id] = {}
@@ -36,7 +36,7 @@ function AbilityService:playerAdd(player, abilityData)
     end
 end
 
-function AbilityService:playerRemoved(player)
+function AbilityService:PlayerRemoved(player)
     self.AbilityData[player.UserId] = nil
 end
 
@@ -100,16 +100,18 @@ function AbilityService:SubmitItem(player, abilityId)
 		end
 	end
 
-    local level = abilityData.Level
+    local level = abilityData.Level + 1
+    local needItemList = abilityInfo.NeedItemList
+    local needNumList = abilityInfo.NeedNumList
     local needItemInfo = {}
     for i = 1, 4 do
-        local itemId = abilityInfo["NeedItem" .. i]
+		local itemId = needItemList[i][level]
 		if itemId and itemId > 0 then
 			if not abilityData.ItemNum[itemId] then
 				abilityData.ItemNum[itemId] = 0
 			end
             local curNum = abilityData.ItemNum[itemId]
-            local maxNum = abilityInfo["NeedNum" .. i]
+			local maxNum = needNumList[i][level]
             if type(maxNum) == "table" then
                 maxNum = maxNum[level] or 0
             end
@@ -134,7 +136,7 @@ function AbilityService:SubmitItem(player, abilityId)
         end
     end
 
-	local needGold = abilityInfo.Gold - abilityData.Gold
+	local needGold = abilityInfo.Gold[level] - abilityData.Gold
     if needGold > 0 then
         local curGold = Knit.GetService("GoldService"):GetGoldData(player)
         if curGold < needGold then
@@ -158,10 +160,7 @@ function AbilityService.Client:SubmitItem(player, abilityId)
 end
 
 function AbilityService:Upgrade(player, abilityId)
-    if not self:SubmitItem(player, abilityId) then
-        return false
-    end
-    
+	self:SubmitItem(player, abilityId)
     local ability = self.AbilityData[player.UserId]
     if not ability then
         return false
@@ -172,20 +171,19 @@ function AbilityService:Upgrade(player, abilityId)
         return false
 	end
     
-    local abilityData = ability[abilityId]
-    if not abilityData then
-        return false
-    end
+	local abilityData = ability[abilityId]
 
     local isUpgraded = true
     local level = abilityData.Level
     if not level or level == 0 then
         level = 1
     end
+    local needItemList = abilityInfo.NeedItemList
+    local needNumList = abilityInfo.NeedNumList
     for i = 1, 4 do
-        local itemId = abilityInfo["NeedItem" .. i]
+        local itemId = needItemList[i][level]
         if itemId and itemId > 0 then
-            local maxNum = abilityInfo["NeedNum" .. i]
+			local maxNum = needNumList[i][level]
             if type(maxNum) == "table" then
                 maxNum = maxNum[level] or 0
             end
@@ -198,7 +196,7 @@ function AbilityService:Upgrade(player, abilityId)
     end
 
     if isUpgraded then
-        if abilityData.Gold < abilityInfo.Gold then
+        if abilityData.Gold < abilityInfo.Gold[level] then
             isUpgraded = false
         end
     end
@@ -215,8 +213,8 @@ function AbilityService:Upgrade(player, abilityId)
             if humanoidRootPart then
                 local effect = EffectFolder:FindFirstChild("LevelUp")
                 if effect then
-                    local cloneEffect = effect:Clone()
-                    cloneEffect.Position = humanoidRootPart.Position
+					local cloneEffect = effect:Clone()
+					cloneEffect:PivotTo(CFrame.new(humanoidRootPart.Position))
                     cloneEffect.Parent = humanoidRootPart
                     
                     -- 使用Debris服务在3秒后自动销毁特效

@@ -5,17 +5,17 @@ MonsterPlanConfig.Data = {
     [1] = {
         MonsterPlanId = 31001,
         MonsterId = 30001,
-        Probability = 5000,
+        Probability = 7500,
     },
     [2] = {
         MonsterPlanId = 31002,
         MonsterId = 30002,
-        Probability = 4500,
+        Probability = 7500,
     },
     [3] = {
         MonsterPlanId = 31003,
         MonsterId = 30003,
-        Probability = 6000,
+        Probability = 7000,
     },
 }
 
