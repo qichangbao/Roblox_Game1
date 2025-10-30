@@ -24,7 +24,7 @@ local triggerZoneStates = {}
 local playerTriggered = {}
 
 -- 在Part上方多少单位触发传送
-local TRIGGER_HEIGHT_OFFSET = 5
+local TRIGGER_HEIGHT_OFFSET = 20
 local COUNTDOWN_DURATION = 15 -- 倒计时持续时间（秒）
 local CREATE_COUNTDOWN_DURATION = 15 -- 创建倒计时持续时间（秒）
 

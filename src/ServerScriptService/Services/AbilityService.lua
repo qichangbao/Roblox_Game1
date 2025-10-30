@@ -174,10 +174,11 @@ function AbilityService:Upgrade(player, abilityId)
 	local abilityData = ability[abilityId]
 
     local isUpgraded = true
-    local level = abilityData.Level
-    if not level or level == 0 then
-        level = 1
+    local level = 0
+    if abilityData and abilityData.Level then
+        level = abilityData.Level
     end
+    level = math.min(level + 1, #abilityInfo.Level)
     local needItemList = abilityInfo.NeedItemList
     local needNumList = abilityInfo.NeedNumList
     for i = 1, 4 do

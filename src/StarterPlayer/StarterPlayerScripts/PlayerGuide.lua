@@ -33,7 +33,7 @@ function Module:ShowGuide()
         if abilityData[abilityId] then
             level = abilityData[abilityId].Level or 0
         end
-        level += 1
+        level = math.min(level + 1, #abilityInfo.Level)
         
         local needItemList = abilityInfo.NeedItemList
         local needNumList = abilityInfo.NeedNumList
