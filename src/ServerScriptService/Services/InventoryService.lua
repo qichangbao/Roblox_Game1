@@ -7,6 +7,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local ItemConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("ItemConfig"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
+local Debris = game:GetService("Debris")
 
 local InventoryService = Knit.CreateService {
 	Name = "InventoryService",
@@ -544,18 +545,20 @@ function InventoryService:EquipToolByKey(player, slot)
 		-- 如果是同一个工具，则取下工具
 		if isEquippingSameTool then
 			if currentTool then
+                character.Humanoid:UnequipTools()
 				for i, v in pairs(toolData) do
 					if v.ItemId == currentItemId and v.Attribute.CreateTime == attribute.CreateTime then
 						v.Attribute.IsEquipped = 0
 						break
 					end
 				end
-				GameConfig.UpdateItemAttribute(currentTool, "IsEquipped", 0)
-				currentTool:Destroy()
+                GameConfig.UpdateItemAttribute(currentTool, "IsEquipped", 0)
+        		Debris:AddItem(currentTool, 0.05)
 			end
 			return 1, toolData
 		end
 		
+		character.Humanoid:UnequipTools()
 		-- 否则，卸下当前工具并装备新工具
 		for i, v in pairs(toolData) do
 			if v.ItemId == currentItemId and v.Attribute.CreateTime == attribute.CreateTime then
@@ -564,7 +567,7 @@ function InventoryService:EquipToolByKey(player, slot)
 			end
 		end
 		GameConfig.UpdateItemAttribute(currentTool, "IsEquipped", 0)
-		currentTool:Destroy()
+        Debris:AddItem(currentTool, 0.05)
     end
     
     -- 按需创建新工具
@@ -574,7 +577,6 @@ function InventoryService:EquipToolByKey(player, slot)
         
         -- 确保工具被正确装备
         if character:FindFirstChild("Humanoid") then
-            character.Humanoid:EquipTool(newTool)
         	itemData.Attribute.IsEquipped = 1
 			GameConfig.UpdateItemAttribute(newTool, "IsEquipped", 1)
         end

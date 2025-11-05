@@ -2,6 +2,7 @@ local Interface = {}
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 
 --[[
@@ -229,6 +230,85 @@ function Interface.calculateDuanWei(duanWeiData, escapeSucc)
     end
 
     return tempData
+end
+
+-- 存储每个TextLabel的动画状态，避免重复动画冲突
+local animationStates = {}
+
+--[[
+    数字递增动画接口
+    @param labelOrFrom TextLabel|number 如果是TextLabel则自动更新文本，如果是数字则作为起始值
+    @param to number 目标值
+    @return NumberValue 可监听Changed事件的数值容器
+    @return Tween 动画对象（可用于控制暂停/取消）
+]]
+function Interface.AnimateNumberIncrease(labelOrFrom, to)
+    local label = nil
+    local from = 0
+    local target = 0
+
+    if typeof(labelOrFrom) == "Instance" and labelOrFrom:IsA("TextLabel") then
+        label = labelOrFrom
+        from = tonumber(label.Text) or 0
+        target = tonumber(to) or from
+        
+        -- 如果该TextLabel已有动画在运行，先取消旧动画
+        if animationStates[label] then
+            local oldState = animationStates[label]
+            if oldState.tween then
+                oldState.tween:Cancel()
+            end
+            if oldState.num then
+                oldState.num:Destroy()
+            end
+            -- 从当前动画值开始新动画，保持连贯性
+            from = oldState.num and oldState.num.Value or from
+        end
+    else
+        from = tonumber(labelOrFrom) or 0
+        target = tonumber(to) or from
+    end
+
+    -- 使用NumberValue承载动画数值，便于外部监听数值变化
+    local num = Instance.new("NumberValue")
+    num.Name = "Interface_AnimateNumber"
+    num.Value = from
+
+    -- 根据数值差计算时长：保持统一速度，限定上下限
+    local delta = math.abs(target - from)
+    local duration = math.clamp(delta / 100, 0.3, 1)
+
+    local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+    local tween = TweenService:Create(num, tweenInfo, { Value = target })
+
+    -- 如果传入了TextLabel，则自动更新文本显示（取整）
+    if label then
+        -- 记录当前动画状态
+        animationStates[label] = {
+            num = num,
+            tween = tween
+        }
+        
+        num.Changed:Connect(function(v)
+            label.Text = tostring(math.floor(v))
+        end)
+    end
+
+    tween:Play()
+    
+    -- 动画完成时的清理工作
+    tween.Completed:Connect(function()
+        num.Value = target
+        if label then
+            label.Text = tostring(math.floor(target))
+            -- 清理动画状态记录
+            animationStates[label] = nil
+        end
+        -- 清理NumberValue对象
+        num:Destroy()
+    end)
+    
+    return num, tween
 end
 
 return Interface
