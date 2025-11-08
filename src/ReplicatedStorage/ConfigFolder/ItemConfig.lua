@@ -3,7 +3,7 @@ local ItemConfig = {}
 
 ItemConfig.Data = {
     [1] = {
-        Index = 1,
+        Index = 201,
         Item = "刺刀",
         DisplayName = "Bayonet",
         Icon = "rbxassetid://94897262399463",
@@ -19,9 +19,10 @@ ItemConfig.Data = {
         CD = 0.8,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 3,
     },
     [2] = {
-        Index = 2,
+        Index = 101,
         Item = "手电",
         DisplayName = "Flashlight",
         Icon = "rbxassetid://80944253490783",
@@ -37,9 +38,10 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 300,
         TimeUsed = 0,
+        Weight = 1,
     },
     [3] = {
-        Index = 3,
+        Index = 102,
         Item = "荧光棒-红色",
         DisplayName = "Glow Stick - Red",
         Icon = "rbxassetid://117206965019901",
@@ -55,9 +57,10 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 100,
         TimeUsed = 0,
+        Weight = 0.3,
     },
     [4] = {
-        Index = 4,
+        Index = 202,
         Item = "铲子",
         DisplayName = "Shovel",
         Icon = "rbxassetid://117763824854828",
@@ -73,9 +76,10 @@ ItemConfig.Data = {
         CD = 1.5,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 4.5,
     },
     [5] = {
-        Index = 5,
+        Index = 301,
         Item = "急救包",
         DisplayName = "First Aid Kit",
         Icon = "rbxassetid://116019405232413",
@@ -91,9 +95,10 @@ ItemConfig.Data = {
         CD = 1.5,
         Duration = 0,
         TimeUsed = 3,
+        Weight = 2.5,
     },
     [6] = {
-        Index = 6,
+        Index = 302,
         Item = "额外的背包",
         DisplayName = "Extra Backpack",
         Icon = "rbxassetid://98954413940819",
@@ -109,9 +114,10 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 5,
     },
     [7] = {
-        Index = 7,
+        Index = 303,
         Item = "传送装置",
         DisplayName = "Teleport Device",
         Icon = "rbxassetid://86586160503774",
@@ -127,9 +133,10 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 1,
+        Weight = 3.5,
     },
     [8] = {
-        Index = 8,
+        Index = 203,
         Item = "镐子",
         DisplayName = "Pickaxe",
         Icon = "rbxassetid://92138284892917",
@@ -145,8 +152,28 @@ ItemConfig.Data = {
         CD = 1.5,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 4,
     },
     [9] = {
+        Index = 304,
+        Item = "宝库钥匙",
+        DisplayName = "Chest Key",
+        Icon = "rbxassetid://116356552356986",
+        Model = "宝库钥匙",
+        Description = nil,
+        DropSources = "Dino Island Clue Sources",
+        Type = 3,
+        RobloxPrice = 0,
+        Price = 0,
+        SellPrice = 0,
+        Gift = 0,
+        PickTime = 0,
+        CD = 0,
+        Duration = 0,
+        TimeUsed = 0,
+        Weight = 0.3,
+    },
+    [10] = {
         Index = 501,
         Item = "普通宝箱",
         DisplayName = "Common Chest",
@@ -163,8 +190,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0,
     },
-    [10] = {
+    [11] = {
         Index = 502,
         Item = "黄金宝箱",
         DisplayName = "Golden Chest",
@@ -181,8 +209,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0,
     },
-    [11] = {
+    [12] = {
         Index = 503,
         Item = "炫彩宝箱",
         DisplayName = "Shiny Chest",
@@ -199,8 +228,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0,
     },
-    [12] = {
+    [13] = {
         Index = 601,
         Item = "土堆",
         DisplayName = "Dirt Mound",
@@ -217,8 +247,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0,
     },
-    [13] = {
+    [14] = {
         Index = 602,
         Item = "散落的土堆",
         DisplayName = "Scattered Dirt Mounds",
@@ -235,8 +266,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0,
     },
-    [14] = {
+    [15] = {
         Index = 603,
         Item = "矿石",
         DisplayName = "Ore",
@@ -253,8 +285,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 5,
+        Weight = 0,
     },
-    [15] = {
+    [16] = {
         Index = 701,
         Item = "蘑菇",
         DisplayName = "Mushroom（65% +30HP）",
@@ -271,8 +304,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0,
     },
-    [16] = {
+    [17] = {
         Index = 1001,
         Item = "破碎陶片",
         DisplayName = "Broken Pottery Shard",
@@ -289,8 +323,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.3,
     },
-    [17] = {
+    [18] = {
         Index = 1002,
         Item = "生锈铁钉",
         DisplayName = "Rusty Nail",
@@ -307,8 +342,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.2,
     },
-    [18] = {
+    [19] = {
         Index = 1003,
         Item = "海玻璃碎片",
         DisplayName = "Sea Glass Fragment",
@@ -325,8 +361,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.3,
     },
-    [19] = {
+    [20] = {
         Index = 1004,
         Item = "石化木片",
         DisplayName = "Petrified Wood Chip",
@@ -343,8 +380,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.5,
     },
-    [20] = {
+    [21] = {
         Index = 1005,
         Item = "旧布条",
         DisplayName = "Old Cloth Strip",
@@ -361,8 +399,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.2,
     },
-    [21] = {
+    [22] = {
         Index = 1006,
         Item = "破旧绳索",
         DisplayName = "Worn Rope",
@@ -379,8 +418,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 1,
     },
-    [22] = {
+    [23] = {
         Index = 1007,
         Item = "骨头碎片",
         DisplayName = "Bone Fragment",
@@ -397,8 +437,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.5,
     },
-    [23] = {
+    [24] = {
         Index = 1008,
         Item = "旧报纸残页",
         DisplayName = "Old Newspaper Scrap",
@@ -415,8 +456,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.1,
     },
-    [24] = {
+    [25] = {
         Index = 1009,
         Item = "信封",
         DisplayName = "Envelope",
@@ -433,8 +475,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.1,
     },
-    [25] = {
+    [26] = {
         Index = 1010,
         Item = "陶罐",
         DisplayName = "Clay Pot",
@@ -451,8 +494,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 2,
     },
-    [26] = {
+    [27] = {
         Index = 1011,
         Item = "海盗帽",
         DisplayName = "Pirate Hat",
@@ -469,8 +513,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.8,
     },
-    [27] = {
+    [28] = {
         Index = 1012,
         Item = "提灯",
         DisplayName = "Lantern",
@@ -487,8 +532,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 2.5,
     },
-    [28] = {
+    [29] = {
         Index = 1013,
         Item = "大葱",
         DisplayName = "Green Onion",
@@ -505,8 +551,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.3,
     },
-    [29] = {
+    [30] = {
         Index = 1014,
         Item = "扇子",
         DisplayName = "Fan",
@@ -523,8 +570,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.2,
     },
-    [30] = {
+    [31] = {
         Index = 1015,
         Item = "木桶",
         DisplayName = "Wooden Barrel",
@@ -541,8 +589,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 4,
     },
-    [31] = {
+    [32] = {
         Index = 1016,
         Item = "水壶",
         DisplayName = "Water Kettle",
@@ -559,8 +608,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 1.8,
     },
-    [32] = {
+    [33] = {
         Index = 1017,
         Item = "木条",
         DisplayName = "Wooden Plank",
@@ -577,8 +627,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 3,
     },
-    [33] = {
+    [34] = {
         Index = 1018,
         Item = "钱袋",
         DisplayName = "Money Bag",
@@ -595,8 +646,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 1.5,
     },
-    [34] = {
+    [35] = {
         Index = 1019,
         Item = "面具",
         DisplayName = "Mask",
@@ -613,8 +665,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.6,
     },
-    [35] = {
+    [36] = {
         Index = 1020,
         Item = "鬼脸娃娃",
         DisplayName = "Grimace Doll",
@@ -631,8 +684,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 1,
     },
-    [36] = {
+    [37] = {
         Index = 1021,
         Item = "靴子",
         DisplayName = "Boots",
@@ -649,8 +703,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 1.5,
     },
-    [37] = {
+    [38] = {
         Index = 1022,
         Item = "魔法帽",
         DisplayName = "Wizard Hat",
@@ -667,8 +722,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.8,
     },
-    [38] = {
+    [39] = {
         Index = 1023,
         Item = "手套",
         DisplayName = "Gloves",
@@ -685,8 +741,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.3,
     },
-    [39] = {
+    [40] = {
         Index = 1024,
         Item = "生锈的齿轮",
         DisplayName = "Rusty Gear",
@@ -703,8 +760,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 1.2,
     },
-    [40] = {
+    [41] = {
         Index = 1025,
         Item = "兽角",
         DisplayName = "Beast Horn",
@@ -721,8 +779,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.9,
     },
-    [41] = {
+    [42] = {
         Index = 1026,
         Item = "野兽骸骨",
         DisplayName = "Beast Skeleton",
@@ -739,8 +798,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 3.5,
     },
-    [42] = {
+    [43] = {
         Index = 1027,
         Item = "粘液",
         DisplayName = "Slime",
@@ -757,8 +817,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 1,
     },
-    [43] = {
+    [44] = {
         Index = 1028,
         Item = "一瓶粘液",
         DisplayName = "Vial of Slime",
@@ -775,8 +836,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 1.2,
     },
-    [44] = {
+    [45] = {
         Index = 1029,
         Item = "潜水头盔",
         DisplayName = "Diving Helmet",
@@ -793,8 +855,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 5,
     },
-    [45] = {
+    [46] = {
         Index = 1030,
         Item = "船锚",
         DisplayName = "Anchor",
@@ -811,8 +874,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 8,
     },
-    [46] = {
+    [47] = {
         Index = 1031,
         Item = "船舵",
         DisplayName = "Ship's Wheel",
@@ -829,8 +893,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 6,
     },
-    [47] = {
+    [48] = {
         Index = 1032,
         Item = "发霉书页",
         DisplayName = "Moldy Book Page",
@@ -847,8 +912,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.1,
     },
-    [48] = {
+    [49] = {
         Index = 1033,
         Item = "枪",
         DisplayName = "Gun",
@@ -865,8 +931,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 4,
     },
-    [49] = {
+    [50] = {
         Index = 1034,
         Item = "刀",
         DisplayName = "Knife",
@@ -883,8 +950,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 4,
     },
-    [50] = {
+    [51] = {
         Index = 1035,
         Item = "龙珠",
         DisplayName = "Dragon Orb",
@@ -901,8 +969,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 1.5,
     },
-    [51] = {
+    [52] = {
         Index = 1036,
         Item = "红宝石",
         DisplayName = "Ruby Gem",
@@ -919,8 +988,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.8,
     },
-    [52] = {
+    [53] = {
         Index = 1037,
         Item = "蓝宝石",
         DisplayName = "Sapphire Gem",
@@ -937,8 +1007,9 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
+        Weight = 0.8,
     },
-    [53] = {
+    [54] = {
         Index = 1038,
         Item = "心形宝石",
         DisplayName = "Heart Gem",
@@ -955,24 +1026,7 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
-    },
-    [54] = {
-        Index = 1039,
-        Item = "宝库钥匙",
-        DisplayName = "Chest Key",
-        Icon = "rbxassetid://116356552356986",
-        Model = "宝库钥匙",
-        Description = nil,
-        DropSources = "Dino Island Clue Sources",
-        Type = 4,
-        RobloxPrice = 0,
-        Price = 0,
-        SellPrice = 0,
-        Gift = 0,
-        PickTime = 0,
-        CD = 0,
-        Duration = 0,
-        TimeUsed = 0,
+        Weight = 0.9,
     },
 }
 
@@ -1115,6 +1169,15 @@ end
 function ItemConfig:GetByTimeUsed(value)
     for i, item in pairs(self.Data) do
         if item.TimeUsed == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function ItemConfig:GetByWeight(value)
+    for i, item in pairs(self.Data) do
+        if item.Weight == value then
             return item
         end
     end

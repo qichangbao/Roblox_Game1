@@ -297,6 +297,7 @@ function TeleportServiceModule:teleportToReserveServer(players)
 		end
 		playerData[player.UserId].IsFirstLoginFuben = Knit.GetService("DBService"):Get(player.UserId, "IsFirstLoginFuben")
 		playerData[player.UserId].Gold = Knit.GetService("GoldService"):GetGoldData(player)
+		playerData[player.UserId].Overwhelmed = Knit.GetService("PlayerService"):GetOverwhelmed(player)
 	end
 	
 	logMessage("INFO", string.format("成功创建预留服务器，访问码: %s", accessCode))

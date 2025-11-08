@@ -1,0 +1,299 @@
+
+local QuestConfig = {}
+
+QuestConfig.Data = {
+    [1] = {
+        QuestId = 40001,
+        QuestName = "Monster Elimination Objective",
+        NPC = "Captain",
+        QuestDescription = "Eliminate specified monsters (Monster 30001 and Monster 30002) to complete this objective.",
+        Type = 1,
+        Value = {
+            {
+                MonsterId = 30001,
+                Num = 1
+            },
+            {
+                MonsterId = 30002,
+                Num = 1
+            }
+        },
+        RewardItem = {
+            {
+                ItemId = 1011,
+                Num = 1
+            },
+            {
+                ItemId = 1029,
+                Num = 1
+            }
+        },
+    },
+    [2] = {
+        QuestId = 40002,
+        QuestName = "Resource Gathering Objective",
+        NPC = "Captain",
+        QuestDescription = "Collect required items (Item 1001 and Item 1004) from the environment.",
+        Type = 2,
+        Value = {
+            {
+                ItemId = 1001,
+                Num = 1
+            },
+            {
+                ItemId = 1004,
+                Num = 1
+            }
+        },
+        RewardItem = {
+            {
+                ItemId = 1011,
+                Num = 1
+            },
+            {
+                ItemId = 1029,
+                Num = 1
+            }
+        },
+    },
+    [3] = {
+        QuestId = 40003,
+        QuestName = "Secure Item Retrieval",
+        NPC = "Captain",
+        QuestDescription = "Retrieve specific item (Item 1001) from the designated location (X:50, Y:30, Z:100) within 10 units range.",
+        Type = 3,
+        Value = {
+            ItemId = 1001,
+            Pos = {
+                X = 50,
+                Y = 30,
+                Z = 100
+            },
+            Range = 10,
+            ChildType = 1
+        },
+        RewardItem = {
+            {
+                ItemId = 1011,
+                Num = 1
+            },
+            {
+                ItemId = 1029,
+                Num = 1
+            }
+        },
+    },
+    [4] = {
+        QuestId = 40004,
+        QuestName = "Strategic Item Placement",
+        NPC = "Captain",
+        QuestDescription = "Place or interact with item (Item 1001) at the specified coordinates (X:50, Y:30, Z:100).",
+        Type = 4,
+        Value = {
+            ItemId = 1001,
+            Pos = {
+                X = 50,
+                Y = 30,
+                Z = 100
+            },
+            ChildType = 2
+        },
+        RewardItem = {
+            {
+                ItemId = 1011,
+                Num = 1
+            },
+            {
+                ItemId = 1029,
+                Num = 1
+            }
+        },
+    },
+    [5] = {
+        QuestId = 40005,
+        QuestName = "Reconnaissance Zone",
+        NPC = "Captain",
+        QuestDescription = "Reach and secure the designated area around coordinates (X:50, Y:30, Z:100) within 10 units radius.",
+        Type = 5,
+        Value = {
+            Pos = {
+                X = 50,
+                Y = 30,
+                Z = 100
+            },
+            Range = 10
+        },
+        RewardItem = {
+            {
+                ItemId = 1011,
+                Num = 1
+            },
+            {
+                ItemId = 1029,
+                Num = 1
+            }
+        },
+    },
+    [6] = {
+        QuestId = 40006,
+        QuestName = "Specialized Equipment Use",
+        NPC = "Captain",
+        QuestDescription = "Use specific item (Item 202) on target monster (Monster 30001) to complete the objective.",
+        Type = 6,
+        Value = {
+            ItemId = 202,
+            MonsterId = 30001,
+            Num = 1
+        },
+        RewardItem = {
+            {
+                ItemId = 1011,
+                Num = 1
+            },
+            {
+                ItemId = 1029,
+                Num = 1
+            }
+        },
+    },
+    [7] = {
+        QuestId = 40007,
+        QuestName = "Combined Operations Mission",
+        NPC = "Captain",
+        QuestDescription = "Complete multiple objectives: eliminate monsters (30001, 30002) and retrieve items from specified locations.",
+        Type = 7,
+        Value = {
+            {
+                ["_data"] = {
+                    {
+                        MonsterId = 30001,
+                        Num = 1
+                    },
+                    {
+                        MonsterId = 30002,
+                        Num = 1
+                    }
+                },
+                Type = 1
+            },
+            {
+                ItemId = 1001,
+                Num = 1,
+                Pos = {
+                    X = 50,
+                    Y = 30,
+                    Z = 100
+                },
+                Range = 10,
+                Type = 3
+            }
+        },
+        RewardItem = {
+            {
+                ItemId = 1011,
+                Num = 1
+            },
+            {
+                ItemId = 1029,
+                Num = 1
+            }
+        },
+    },
+}
+
+-- 辅助函数
+function QuestConfig:GetByIndex(index)
+    for i, item in pairs(self.Data) do
+        if item.Index == index then
+            return item
+        end
+    end
+    return nil
+end
+
+function QuestConfig:GetByQuestId(value)
+    for i, item in pairs(self.Data) do
+        if item.QuestId == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function QuestConfig:GetByQuestName(value)
+    for i, item in pairs(self.Data) do
+        if item.QuestName == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function QuestConfig:GetByNPC(value)
+    for i, item in pairs(self.Data) do
+        if item.NPC == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function QuestConfig:GetByQuestDescription(value)
+    for i, item in pairs(self.Data) do
+        if item.QuestDescription == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function QuestConfig:GetByType(value)
+    for i, item in pairs(self.Data) do
+        if item.Type == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function QuestConfig:GetByValue(value)
+    for i, item in pairs(self.Data) do
+        if item.Value == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function QuestConfig:GetByRewardItem(value)
+    for i, item in pairs(self.Data) do
+        if item.RewardItem == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function QuestConfig:GetAll()
+    return self.Data
+end
+
+function QuestConfig:GetCount()
+    local count = 0
+    for _ in pairs(self.Data) do
+        count = count + 1
+    end
+    return count
+end
+
+function QuestConfig:GetAllByType(itemType)
+    local result = {}
+    for i, item in pairs(self.Data) do
+        if item.Type == itemType then
+            table.insert(result, item)
+        end
+    end
+    return result
+end
+
+return QuestConfig

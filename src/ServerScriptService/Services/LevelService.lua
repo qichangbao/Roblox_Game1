@@ -30,7 +30,9 @@ end
 function LevelService:KnitStart()
 end
 
-function LevelService:PlayerAdded(player, levelData)
+function LevelService:PlayerAdded(player)
+    local DBService = Knit.GetService("DBService")
+    local levelData = DBService:Get(player.UserId, "DuanWeiData")
     self.DuanWeiData[player.UserId] = {}
     self.DuanWeiData[player.UserId].duanWei = levelData.duanWei or 1
     self.DuanWeiData[player.UserId].level = levelData.level or 1

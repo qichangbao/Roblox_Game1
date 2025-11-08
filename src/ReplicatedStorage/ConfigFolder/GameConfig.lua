@@ -26,6 +26,7 @@ GameConfig.NpcUIType = {
     Store = 1, -- 商店
     Sell = 2, -- 出售
     Ability = 3, -- 能力
+    Task = 4,    -- 任务
 }
 
 GameConfig.Difficulty = {
@@ -39,6 +40,18 @@ GameConfig.AbilityType = {
     MaxHealth = 2, -- 最大生命值
     Jump = 3, -- 跳跃
     Attack = 4, -- 攻击
+}
+
+-- 任务类型枚举（与 QuestConfig.Type 对应）
+GameConfig.TaskType = {
+    KillMonster = 1,          -- 击杀指定怪物（或玩家）
+    CollectItem = 2,          -- 收集/拾取指定物品（环境物品）
+    RetrieveAtLocation = 3,   -- 在指定位置拾取某物
+    PlaceAtLocation = 4,      -- 将物品放置到指定位置
+    ScoutArea = 5,            -- 到达某区域（侦查）
+    UseSpecificItemOnTarget = 6, -- 使用特定物品（或装备）击杀指定目标
+    Composite = 7,            -- 复合型任务
+    Exfil = 8,                -- 撤离任务（支持不使用复活）
 }
 
 GameConfig.BackpackSlotCount = 6    -- 背包槽位数量

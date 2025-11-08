@@ -3,31 +3,31 @@ local Shop1Config = {}
 
 Shop1Config.Data = {
     [1] = {
-        Index = 1,
+        Index = 201,
         AssetId = 3386566874,
     },
     [2] = {
-        Index = 2,
+        Index = 101,
         AssetId = 3386568397,
     },
     [3] = {
-        Index = 4,
+        Index = 202,
         AssetId = 3386569943,
     },
     [4] = {
-        Index = 5,
+        Index = 301,
         AssetId = 3386571239,
     },
     [5] = {
-        Index = 6,
+        Index = 302,
         AssetId = 3386571871,
     },
     [6] = {
-        Index = 7,
+        Index = 303,
         AssetId = 3386572591,
     },
     [7] = {
-        Index = 8,
+        Index = 203,
         AssetId = 3435990708,
     },
 }

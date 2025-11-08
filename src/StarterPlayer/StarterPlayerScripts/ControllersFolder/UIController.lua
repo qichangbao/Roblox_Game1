@@ -29,6 +29,8 @@ local UIController = Knit.CreateController {
     UpdateAbilityData = Signal.new(),
     ShowItemAttributeUI = Signal.new(),
     ShowFlyItemUI = Signal.new(),
+    ShowTaskUI = Signal.new(),
+    UpdateTaskData = Signal.new(),
 }
 
 function UIController:KnitInit()

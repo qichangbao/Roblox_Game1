@@ -88,7 +88,7 @@ NPCQuestConfig.Data = {
         QuestDescription = "No adventurer is complete without proper footwear and headwear.",
         NeedItem = 1011,
         NeedNum = 1,
-        RewardItem = 4,
+        RewardItem = 202,
     },
     [12] = {
         QuestId = 12,
@@ -120,7 +120,7 @@ NPCQuestConfig.Data = {
         QuestDescription = "Legends point to a captain's helmet and anchor from a famous shipwreck.",
         NeedItem = 1015,
         NeedNum = 1,
-        RewardItem = 5,
+        RewardItem = 301,
     },
     [16] = {
         QuestId = 16,
@@ -176,7 +176,7 @@ NPCQuestConfig.Data = {
         QuestDescription = "A large order of common materials for various potions.",
         NeedItem = 1022,
         NeedNum = 1,
-        RewardItem = 8,
+        RewardItem = 203,
     },
     [23] = {
         QuestId = 23,
@@ -208,7 +208,7 @@ NPCQuestConfig.Data = {
         QuestDescription = "A collection of fine goods from the Eastern lands.",
         NeedItem = 1026,
         NeedNum = 1,
-        RewardItem = 1,
+        RewardItem = 201,
     },
     [27] = {
         QuestId = 27,
@@ -224,7 +224,7 @@ NPCQuestConfig.Data = {
         QuestDescription = "A map is useless without the tools to dig and a light to see.",
         NeedItem = 1028,
         NeedNum = 1,
-        RewardItem = 3,
+        RewardItem = 102,
     },
     [29] = {
         QuestId = 29,
@@ -232,7 +232,7 @@ NPCQuestConfig.Data = {
         QuestDescription = "These core components are needed to repair a complex clockwork device.",
         NeedItem = 1029,
         NeedNum = 1,
-        RewardItem = 5,
+        RewardItem = 301,
     },
     [30] = {
         QuestId = 30,
@@ -240,7 +240,7 @@ NPCQuestConfig.Data = {
         QuestDescription = "Assemble the remains of a mythical creature for study.",
         NeedItem = 1030,
         NeedNum = 1,
-        RewardItem = 5,
+        RewardItem = 301,
     },
 }
 

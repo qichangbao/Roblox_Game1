@@ -8,12 +8,12 @@ local _dataTemplate = {
 	PlayerInventory = {},		-- 背包数据
 	PlayerToolData = {
 		[1] = {
-			ItemId = 1,
+			ItemId = 201,
 			UsedTime = 0,
 			UsedNum = 0,
 		},
 		[2] = {
-			ItemId = 5,
+			ItemId = 301,
 			UsedTime = 0,
 			UsedNum = 0,
 		},
@@ -30,7 +30,9 @@ local _dataTemplate = {
 		star = 0				-- 当前级别的星级
 	},
 	AbilityData = {},			-- 能力列表
+	Overwhelmed = 15,			-- 负重
 	IsFirstLoginFuben = 0,		-- 是否第一次进入副本
+	QuestData = {},				-- 任务数据（TaskService 持久化使用）
 }
 
 local ProfileStore = ProfileService.GetProfileStore(

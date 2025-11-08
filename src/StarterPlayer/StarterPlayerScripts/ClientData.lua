@@ -8,6 +8,7 @@ ClientData.Gold = 0
 ClientData.Inventory = {}
 ClientData.ToolData = {}
 ClientData.AbilityData = {}
+ClientData.TaskData = {}
 ClientData.RankPersonalData = {}
 ClientData.RankData = {}
 ClientData.IsAdmin = false
@@ -23,6 +24,7 @@ local function setInitData(data)
     ClientData.RankData = data.RankData or {}
     ClientData.IsAdmin = data.IsAdmin or false
     ClientData.IsFromFuben = data.IsFromFuben or false
+    ClientData.TaskData = data.TaskData or {}
     -- local playerGui = Interface.safeWaitPart(game.Players.LocalPlayer, "PlayerGui")
 	-- local loadingUI = Interface.safeWaitPart(playerGui, "LoadingUI")
 	-- loadingUI.Enabled = false
@@ -33,6 +35,7 @@ local function setInitData(data)
     Knit.GetController("UIController").UpdateRankPersonalData:Fire(ClientData.RankPersonalData)
     Knit.GetController("UIController").UpdateAbilityData:Fire(ClientData.AbilityData)
     Knit.GetController("UIController").UpdateRankData:Fire(ClientData.RankData)
+    Knit.GetController("UIController").UpdateTaskData:Fire(ClientData.TaskData)
 
     require(script.Parent:WaitForChild("PlayerGuide")):ShowGuide()
     require(script.Parent:WaitForChild("Sound"))
@@ -107,6 +110,8 @@ local function init()
                 Knit.GetController("UIController").ShowSellUI:Fire()
             elseif npcType == GameConfig.NpcUIType.Ability then
                 Knit.GetController("UIController").ShowAbilityUI:Fire()
+            elseif npcType == GameConfig.NpcUIType.Task then
+                Knit.GetController("UIController").ShowTaskUI:Fire()
             end
         end)
 
@@ -114,6 +119,12 @@ local function init()
         Knit.GetService("AbilityService").UpdateAbilityData:Connect(function(abilityData)
             ClientData.AbilityData = abilityData or {}
             Knit.GetController("UIController").UpdateAbilityData:Fire(ClientData.AbilityData)
+        end)
+
+        -- 监听服务器的任务数据请求
+        Knit.GetService("TaskService").QuestUpdated:Connect(function(taskData)
+            ClientData.TaskData = taskData or {}
+            Knit.GetController("UIController").UpdateTaskData:Fire(ClientData.TaskData)
         end)
 
         Knit.GetService("ClientUIService").ShowTip:Connect(function(tip)

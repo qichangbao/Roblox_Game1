@@ -13,7 +13,8 @@ local PlayerService = Knit.CreateService {
 	Client = {
 	},
 
-    AbilityData = {},
+    AbilityData = {},       -- 能力列表
+    Overwhelmed = {},       -- 负重
     AnimationTracks = {},
 }
 
@@ -109,6 +110,7 @@ function PlayerService:KnitStart()
         Knit.GetService("LevelService"):PlayerRemoved(player)
         Knit.GetService("AbilityService"):PlayerRemoved(player)
         Knit.GetService("GMService"):PlayerRemoved(player)
+        Knit.GetService("TaskService"):PlayerRemoved(player)
     end
 
     for _, player in pairs(Players:GetPlayers()) do
@@ -130,17 +132,13 @@ function PlayerService:GetInitData(player)
     local DBService = Knit.GetService("DBService")
     DBService:PlayerAdded(player)
 
-    local gold = DBService:Get(player.UserId, "Gold")
-    local inventory = DBService:Get(player.UserId, "PlayerInventory")
-    local tool = DBService:Get(player.UserId, "PlayerToolData")
-    local duanWei = DBService:Get(player.UserId, "DuanWeiData")
-    local ability = DBService:Get(player.UserId, "AbilityData")
-    Knit.GetService("GoldService"):PlayerAdded(player, gold)
-    Knit.GetService("InventoryService"):PlayerAdded(player, inventory, tool)
+    Knit.GetService("GoldService"):PlayerAdded(player)
+    Knit.GetService("InventoryService"):PlayerAdded(player)
     Knit.GetService("RankService"):PlayerAdded(player)
-    Knit.GetService("LevelService"):PlayerAdded(player, duanWei)
-    Knit.GetService("AbilityService"):PlayerAdded(player, ability)
+    Knit.GetService("LevelService"):PlayerAdded(player)
+    Knit.GetService("AbilityService"):PlayerAdded(player)
     Knit.GetService("GMService"):PlayerAdded(player)
+    Knit.GetService("TaskService"):PlayerAdded(player)
     
     local isFromFuben = false
     -- 获取传送数据
@@ -163,14 +161,18 @@ function PlayerService:GetInitData(player)
         isFromFuben = true
     end
 
+    local gold = Knit.GetService("GoldService"):GetGoldData(player)
     local inventoryData = Knit.GetService("InventoryService"):GetInventoryData(player)
     local toolData = Knit.GetService("InventoryService"):GetToolData(player)
     local rankPersonalData = Knit.GetService("RankService"):GetPersonalDataWithRank(player)
     local rankData = Knit.GetService("RankService"):GetLeaderboard()
     local abilityData = Knit.GetService("AbilityService"):GetAbilityData(player)
+    local taskData = Knit.GetService("TaskService"):GetPlayerTasks(player)
     local isAdmin = Knit.GetService("DBService"):IsAdmin(player)
+    local overwhelmed = DBService:Get(player.UserId, "Overwhelmed")
     self.AbilityData[player.UserId] = abilityData
     self:InitPlayerAbility(player, self.AbilityData[player.UserId])
+    self.Overwhelmed[player.UserId] = overwhelmed
 
     return {
         Gold = gold,
@@ -181,6 +183,8 @@ function PlayerService:GetInitData(player)
         RankData = rankData,
         IsAdmin = isAdmin,
         IsFromFuben = isFromFuben,
+        Overwhelmed = overwhelmed,
+        TaskData = taskData,
     }
 end
 
@@ -189,6 +193,13 @@ end
 -- @return table 玩家数据
 function PlayerService.Client:GetInitData(player)
     return self.Server:GetInitData(player)
+end
+
+-- 获取玩家负重
+-- @param player Player 请求数据的玩家
+-- @return number 玩家负重
+function PlayerService:GetOverwhelmed(player)
+    return self.Overwhelmed[player.UserId]
 end
 
 -- 初始化玩家能力

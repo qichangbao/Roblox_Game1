@@ -5,19 +5,19 @@ WeaponConfig.Coordinates = {
     [1] = {
         Index = 1,
         Position = Vector3.new(3, 3, 5),
-        ItemId = 1,
+        ItemId = 201,
         Damage = 20,
     },
     [2] = {
         Index = 2,
         Position = Vector3.new(3, 3, 5),
-        ItemId = 4,
+        ItemId = 202,
         Damage = 10,
     },
     [3] = {
         Index = 3,
         Position = Vector3.new(3, 3, 5),
-        ItemId = 8,
+        ItemId = 203,
         Damage = 10,
     },
 }

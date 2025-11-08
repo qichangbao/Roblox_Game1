@@ -23,7 +23,9 @@ end
 function AbilityService:KnitStart()
 end
 
-function AbilityService:PlayerAdded(player, abilityData)
+function AbilityService:PlayerAdded(player)
+    local DBService = Knit.GetService("DBService")
+    local abilityData = DBService:Get(player.UserId, "AbilityData")
     self.AbilityData[player.UserId] = {}
     for id, ability in pairs(abilityData) do
         self.AbilityData[player.UserId][id] = {}

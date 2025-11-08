@@ -29,7 +29,10 @@ end
 function InventoryService:KnitStart()
 end
 
-function InventoryService:PlayerAdded(player, inventory, toolData)
+function InventoryService:PlayerAdded(player)
+    local DBService = Knit.GetService("DBService")
+    local inventory = DBService:Get(player.UserId, "PlayerInventory")
+    local tool = DBService:Get(player.UserId, "PlayerToolData")
 	self.Inventory[player.UserId] = {}
 	for _, v in pairs(inventory) do
         local attribute = GameConfig.GetItemAttribute()
@@ -43,7 +46,7 @@ function InventoryService:PlayerAdded(player, inventory, toolData)
 
 	self.ToolData[player.UserId] = {}
     for i = 1, GameConfig.SLOT_NUM do
-        local data = toolData[i]
+        local data = tool[i]
         local attribute = GameConfig.GetItemAttribute()
         if data then
             attribute.UsedTime = data.UsedTime
@@ -400,9 +403,9 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
 	end
 
     -- 直接设置Tool的Grip属性来控制握持方向
-    if itemInfo.Index == 4 then
+    if itemInfo.Index == 202 then
         tool.Grip = CFrame.Angles(0, math.rad(180), 0)  -- 只旋转，不偏移位置
-    elseif itemInfo.Index == 8 then
+    elseif itemInfo.Index == 203 then
         tool.Grip = CFrame.new(0, -0.6, 0) * CFrame.Angles(0, math.rad(90), 0)  -- y轴偏移0.6并旋转
     else
         tool.Grip = CFrame.Angles(0, 0, math.rad(90))  -- 只旋转，不偏移位置
@@ -482,10 +485,10 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
 			end
 
 			if itemInfo.Type == GameConfig.ItemType.Weapon then    -- 进攻类
-                if itemInfo.Index == 4 then
+                if itemInfo.Index == 202 then
 					Knit.GetService("PlayerService"):playAnimation(player, "dig", "Attack2", itemInfo.CD)
-                elseif itemInfo.Index == 8 then
-					Knit.GetService("PlayerService"):playAnimation(player, "swing", "Attack2", itemInfo.CD)
+                elseif itemInfo.Index == 203 then
+					Knit.GetService("PlayerService"):playAnimation(player, "swing", "Attack1", itemInfo.CD)
                 else
 					Knit.GetService("PlayerService"):playAnimation(player, "swing", "Attack1", itemInfo.CD)
                 end
