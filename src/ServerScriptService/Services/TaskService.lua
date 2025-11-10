@@ -25,7 +25,6 @@ local TaskService = Knit.CreateService {
     Name = "TaskService",
     Client = {
         QuestUpdated = Knit.CreateSignal(),   -- 客户端监听任务进度更新
-        QuestCompleted = Knit.CreateSignal(), -- 客户端监听任务完成
 
         -- 远程：开始任务
         StartQuest = function(self, player, questId)
@@ -42,6 +41,10 @@ local TaskService = Knit.CreateService {
         -- 远程：提交任务所需物品（指定提交）
         SubmitItems = function(self, player, questId)
             return self.Server:SubmitItems(player, questId)
+        end,
+        -- 远程：提交任务（完成任务）
+        SubmitTask = function(self, player, questId)
+            return self.Server:SubmitTask(player, questId)
         end,
     },
 
@@ -102,17 +105,17 @@ local function initTaskProgress(taskDef)
         -- v: 数组 { {MonsterId, Num}, ... }
         tp.Counts = {}
         for _, item in ipairs(v or {}) do
-            tp.Counts[item.MonsterId] = 0
+            tp.Counts[tostring(item.MonsterId)] = 0
             tp.TargetCounts = tp.TargetCounts or {}
-            tp.TargetCounts[item.MonsterId] = item.Num or 1
+            tp.TargetCounts[tostring(item.MonsterId)] = item.Num or 1
         end
     elseif taskDef.Type == GameConfig.TaskType.CollectItem then
         -- v: 数组 { {ItemId, Num}, ... }
         tp.Counts = {}
         for _, item in ipairs(v or {}) do
-            tp.Counts[item.ItemId] = 0
+            tp.Counts[tostring(item.ItemId)] = 0
             tp.TargetCounts = tp.TargetCounts or {}
-            tp.TargetCounts[item.ItemId] = item.Num or 1
+            tp.TargetCounts[tostring(item.ItemId)] = item.Num or 1
         end
     elseif taskDef.Type == GameConfig.TaskType.RetrieveAtLocation then
         -- v: {ItemId, Pos={X,Y,Z}, Range, ChildType}
@@ -185,12 +188,14 @@ end
 -- @param questId number 任务ID（对应 QuestConfig.Data[*].QuestId）或数组索引
 -- @return boolean 是否成功
 function TaskService:StartQuest(player, questId)
+    print("StartQuest:", player, questId)
+    questId = tonumber(questId)
     if not player then return false end
     local userId = player.UserId
     self.PlayerQuests[userId] = self.PlayerQuests[userId] or {}
 
     -- QuestConfig 支持通过 QuestId 查询
-    local quest = QuestConfig:GetByQuestId(questId) or QuestConfig.Data[questId]
+    local quest = QuestConfig:GetByQuestId(questId)
     if not quest then
         warn("StartQuest: 未找到任务配置:", questId)
         return false
@@ -199,7 +204,7 @@ function TaskService:StartQuest(player, questId)
     -- 规范化任务数组并初始化进度
     local tasks = normalizeQuestTasks(quest)
     local progress = {
-        QuestId = quest.QuestId or questId,
+        QuestId = quest.QuestId,
         QuestName = quest.QuestName,
         RewardItem = quest.RewardItem,
         Tasks = {},
@@ -209,9 +214,9 @@ function TaskService:StartQuest(player, questId)
         table.insert(progress.Tasks, initTaskProgress(t))
     end
 
-    self.PlayerQuests[userId][progress.QuestId] = progress
+    self.PlayerQuests[userId][tostring(progress.QuestId)] = progress
     -- 通知客户端
-    self.Client.QuestUpdated:Fire(player, progress)
+    self.Client.QuestUpdated:Fire(player, self.PlayerQuests[userId])
     -- 持久化到数据库
     self:SavePlayerQuests(player)
     return true
@@ -224,9 +229,10 @@ end
 function TaskService:AbandonQuest(player, questId)
     if not player then return false end
     local userId = player.UserId
+    questId = tostring(questId)
     if self.PlayerQuests[userId] and self.PlayerQuests[userId][questId] then
         self.PlayerQuests[userId][questId] = nil
-        self.Client.QuestUpdated:Fire(player, {QuestId = questId, Abandoned = true})
+        self.Client.QuestUpdated:Fire(player, self.PlayerQuests[userId])
         -- 持久化到数据库
         self:SavePlayerQuests(player)
         return true
@@ -254,30 +260,28 @@ function TaskService:_checkAndComplete(player, progress)
     end
 
     progress.Completed = true
-    -- 发放奖励（物品）
-    if InventoryService and progress.RewardItem then
+    -- 发放奖励（物品）：使用 Knit.GetService 调用 AddItem
+    -- RewardItem 支持两种格式：
+    -- 1) 数组内元素为 number（直接代表 ItemId）
+    -- 2) 数组内元素为 table，且包含字段 ItemId
+    if progress.RewardItem then
         for _, reward in ipairs(progress.RewardItem) do
-            local itemData = { ItemId = reward.ItemId, Attribute = {} }
-            pcall(function()
-                InventoryService:AddItem(player, itemData)
-            end)
+            local rewardId = (type(reward) == "table" and reward.ItemId) or reward
+            if rewardId then
+                pcall(function()
+                    Knit.GetService("InventoryService"):AddItem(player, { ItemId = rewardId })
+                end)
+            end
         end
     end
-
-    -- 通知客户端完成
-    self.Client.QuestCompleted:Fire(player, progress)
-    -- 持久化到数据库（保存全部任务数据）
-    self:SavePlayerQuests(player)
 end
 
 -- 进度更新后统一通知客户端
 -- @param player Player 玩家对象
--- @param progress table 任务进度对象
 -- @return void
-function TaskService:_notify(player, progress)
-    self.Client.QuestUpdated:Fire(player, progress)
-    self:_checkAndComplete(player, progress)
-    -- 每次进度变动都进行持久化保存
+function TaskService:_notify(player)
+    self.Client.QuestUpdated:Fire(player, self.PlayerQuests[player.UserId])
+    -- 持久化到数据库（保存全部任务数据）
     self:SavePlayerQuests(player)
 end
 
@@ -334,7 +338,7 @@ function TaskService:OnItemPicked(player, itemId, worldPos)
                 -- 放置类的拾取事件一般不触发进度，这里忽略
             end
         end
-        self:_notify(player, progress)
+        self:_notify(player)
     end
 end
 
@@ -359,7 +363,7 @@ function TaskService:OnPlaceItem(player, itemId, worldPos)
                 end
             end
         end
-        self:_notify(player, progress)
+        self:_notify(player)
     end
 end
 
@@ -381,7 +385,7 @@ function TaskService:OnEnterArea(player, worldPos)
                 tp.Done = true
             end
         end
-        self:_notify(player, progress)
+        self:_notify(player)
     end
 end
 
@@ -397,11 +401,14 @@ function TaskService:OnNPCKilled(killer, monsterId, info)
 
     for _, progress in pairs(quests) do
         if progress.Completed then continue end
+        local progressChanged = false -- 仅当子任务进度发生变化时才通知客户端
         for _, tp in ipairs(progress.Tasks) do
             if tp.Done then continue end
             if tp.Type == GameConfig.TaskType.KillMonster then
                 if tp.TargetCounts and tp.TargetCounts[monsterId] then
-                    tp.Counts[monsterId] = math.min((tp.Counts[monsterId] or 0) + 1, tp.TargetCounts[monsterId])
+                    local beforeCount = tp.Counts[monsterId] or 0
+                    local beforeDone = tp.Done
+                    tp.Counts[monsterId] = math.min(beforeCount + 1, tp.TargetCounts[monsterId])
                     local allReached = true
                     for id, target in pairs(tp.TargetCounts) do
                         if (tp.Counts[id] or 0) < target then
@@ -410,15 +417,25 @@ function TaskService:OnNPCKilled(killer, monsterId, info)
                         end
                     end
                     tp.Done = allReached
+                    if tp.Counts[monsterId] ~= beforeCount or tp.Done ~= beforeDone then
+                        progressChanged = true
+                    end
                 end
             elseif tp.Type == GameConfig.TaskType.UseSpecificItemOnTarget then
                 if monsterId == tp.MonsterId and info and info.ItemId == tp.ItemId then
-                    tp.Current = math.min((tp.Current or 0) + 1, tp.TargetNum)
+                    local beforeCurrent = tp.Current or 0
+                    local beforeDone = tp.Done
+                    tp.Current = math.min(beforeCurrent + 1, tp.TargetNum)
                     tp.Done = (tp.Current >= tp.TargetNum)
+                    if tp.Current ~= beforeCurrent or tp.Done ~= beforeDone then
+                        progressChanged = true
+                    end
                 end
             end
         end
-        self:_notify(killer, progress)
+        if progressChanged then
+            self:_notify(killer)
+        end
     end
 end
 
@@ -447,7 +464,7 @@ function TaskService:OnExfil(player, mapId, exitId, usedRevive)
                 end
             end
         end
-        self:_notify(player, progress)
+        self:_notify(player)
     end
 end
 
@@ -456,43 +473,141 @@ end
 -- @param questId number 任务ID
 -- @return boolean 是否提交成功
 function TaskService:SubmitItems(player, questId)
+    questId = tostring(questId)
     if not player then return false end
     local quests = self.PlayerQuests[player.UserId]
     if not quests then return false end
     local progress = quests[questId]
     if not progress then return false end
 
-    local hasSubmitTask = false
-    local itemsToRemove = {}
+    -- 阶段性提交（仅对可完整满足的 CollectItem 子任务做扣除并标记完成）
+    -- 步骤：
+    -- 1) 统计玩家背包各 ItemId 的数量；
+    -- 2) 按子任务逐项检查是否可满足 tp.TargetCounts；
+    -- 3) 仅对可满足的子任务调用 RemoveItemsByNum 扣除对应物品；
+    -- 4) 扣除成功且数量满足后，标记该子任务完成，其它子任务不变；
+    -- 5) 不触发整条任务奖励，除非全部子任务均完成（由 _checkAndComplete 控制）。
+
+    if not InventoryService then return false end
+    local inventory = InventoryService:GetInventoryData(player)
+    if not inventory then return false end
+
+    -- 统计当前库存数量
+    local invCounts = {}
+    for _, itemData in ipairs(inventory) do
+        local id = itemData.ItemId
+        invCounts[id] = (invCounts[id] or 0) + 1
+    end
+
+    local anySubmitted = false
+
     for _, tp in ipairs(progress.Tasks) do
-        if tp.Type == GameConfig.TaskType.CollectItem and tp.TargetCounts then
-            hasSubmitTask = true
+        if tp.Type == GameConfig.TaskType.CollectItem and not tp.Done and tp.TargetCounts then
+            -- 检查该子任务是否可被完全满足
+            local canFulfill = true
             for itemId, needNum in pairs(tp.TargetCounts) do
-                itemsToRemove[itemId] = needNum
+                if (invCounts[itemId] or 0) < needNum then
+                    canFulfill = false
+                    break
+                end
+            end
+
+            if canFulfill then
+                -- 针对该子任务执行扣除
+                local itemsToRemove = {}
+                for itemId, needNum in pairs(tp.TargetCounts) do
+                    itemsToRemove[itemId] = needNum
+                end
+
+                local ok, removedOk, removedMap = pcall(function()
+                    local suc, removed = InventoryService:RemoveItemsByNum(player, itemsToRemove)
+                    return suc, removed
+                end)
+
+                if ok and removedOk then
+                    -- 验证移除数量是否满足该子任务需求
+                    local allSatisfied = true
+                    for itemId, needNum in pairs(itemsToRemove) do
+                        local got = (removedMap and removedMap[itemId]) or 0
+                        if got < needNum then
+                            allSatisfied = false
+                            break
+                        end
+                    end
+
+                    if allSatisfied then
+                        tp.Done = true
+                        -- 维护显示用的计数（若存在 Counts 字段）
+                        if tp.Counts then
+                            for itemId, needNum in pairs(tp.TargetCounts) do
+                                tp.Counts[itemId] = needNum
+                            end
+                        end
+                        -- 同步本地库存计数，避免后续子任务重复扣除过量
+                        for itemId, needNum in pairs(itemsToRemove) do
+                            invCounts[itemId] = math.max((invCounts[itemId] or 0) - needNum, 0)
+                        end
+                        anySubmitted = true
+                    end
+                end
             end
         end
     end
 
-    if not hasSubmitTask then
+    if anySubmitted then
+        self:_notify(player)
+        return true
+    end
+    return false
+end
+
+-- 提交任务（完成任务）
+-- 逻辑（混合任务更精细）：
+-- 1) 若存在未完成的 CollectItem 子任务，先尝试调用 SubmitItems 进行扣物；
+-- 2) 无论是否存在 CollectItem，统一在扣物后检查所有子任务是否完成；
+-- 3) 仅当所有子任务都完成时，标记整条任务完成并返回 true，否则返回 false。
+-- @param player Player 玩家对象
+-- @param questId number 任务ID
+-- @return boolean 是否提交成功
+function TaskService:SubmitTask(player, questId)
+    questId = tostring(questId)
+    if not player then return false end
+    local quests = self.PlayerQuests[player.UserId]
+    if not quests then return false end
+    local progress = quests[questId]
+    if not progress then return false end
+
+    -- 若存在未完成 CollectItem 子任务，尝试扣物
+    local hasPendingCollectItem = false
+    for _, tp in ipairs(progress.Tasks) do
+        if tp.Type == GameConfig.TaskType.CollectItem and not tp.Done then
+            hasPendingCollectItem = true
+            break
+        end
+    end
+    if hasPendingCollectItem then
+        -- 尝试扣物；不直接返回，以便统一完成性检查
+        self:SubmitItems(player, questId)
+    end
+
+    -- 扣物后统一检查是否全部完成
+    local allDone = true
+    for _, tp in ipairs(progress.Tasks) do
+        if not tp.Done then
+            allDone = false
+            break
+        end
+    end
+
+    if not allDone then
         return false
     end
 
-    if InventoryService and InventoryService.RemoveItemsByNum then
-        local ok, removed = pcall(function()
-            return InventoryService:RemoveItemsByNum(player, itemsToRemove)
-        end)
-        if ok and removed then
-            -- 标记 CollectItem 任务完成
-            for _, tp in ipairs(progress.Tasks) do
-                if tp.Type == GameConfig.TaskType.CollectItem then
-                    tp.Done = true
-                end
-            end
-            self:_notify(player, progress)
-            return true
-        end
-    end
-    return false
+    -- 所有子任务已完成，提交并标记任务完成
+    progress.Completed = true
+    self:_notify(player)
+    self:_checkAndComplete(player, progress)
+    return true
 end
 
 -- 将玩家的任务进度保存到数据库
@@ -514,10 +629,12 @@ function TaskService:LoadPlayerQuests(player, questData)
     if not player or not DBService then return end
     local userId = player.UserId
     self.PlayerQuests[userId] = questData
-    -- 将已有进度同步给客户端（UI 可刷新显示）
-    for _, progress in pairs(questData) do
-        self.Client.QuestUpdated:Fire(player, progress)
-    end
+    self.Client.QuestUpdated:Fire(player, self.PlayerQuests[userId])
+end
+
+function TaskService:GetQuestFromDBService(userId, questData)
+	local player = game.Players:GetPlayerByUserId(userId)
+	self:LoadPlayerQuests(player, questData)
 end
 
 function TaskService:TriggerTask(player)

@@ -181,6 +181,8 @@ function DBService:SetToAllStore(userId, key, value)
 		Knit.GetService("LevelService"):GetLevelFromDBService(userId, value)
 	elseif key == "AbilityData" then
 		Knit.GetService("AbilityService"):GetAbilityFromDBService(userId, value)
+	elseif key == "QuestData" then
+		Knit.GetService("TaskService"):GetQuestFromDBService(userId, value)
 	end
 	-- 初始化用户数据，确保用户数据存在，并且可以设置value
 	self:InitDataFromUserId(userId)

@@ -161,6 +161,16 @@ function GMService:GMCommand(player)
                 Knit.GetService("ClientUIService"):ShowTip(player, tip)
                 return true
             end
+
+			local killMonsterMatch = string.match(lowerMessage, "^kill monster (%d+)$")
+            if killMonsterMatch then
+                local monsterId = tonumber(killMonsterMatch)
+                if monsterId then
+                    Knit.GetService("TaskService"):OnNPCKilled(player, tostring(monsterId))
+                    Knit.GetService("ClientUIService"):ShowTip(player, "已击杀怪物 ID: " .. monsterId)
+                    return true
+                end
+            end
             
             -- 解析 "help" 命令 - 显示帮助信息
             if lowerMessage == "help" or lowerMessage == "debug help" then
@@ -177,6 +187,7 @@ function GMService:GMCommand(player)
                 print("add star - 为玩家添加一颗星")
                 print("dec star - 为玩家移除一颗星")
                 print("show tip [tip] - 显示指定提示信息")
+                print("kill monster [monsterId] - 击杀指定怪物")
                 print("help - 显示此帮助信息")
                 return true
             end
