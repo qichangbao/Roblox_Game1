@@ -166,7 +166,7 @@ function GMService:GMCommand(player)
             if killMonsterMatch then
                 local monsterId = tonumber(killMonsterMatch)
                 if monsterId then
-                    Knit.GetService("TaskService"):OnNPCKilled(player, tostring(monsterId))
+                    Knit.GetService("QuestService"):OnNPCKilled(player, tostring(monsterId))
                     Knit.GetService("ClientUIService"):ShowTip(player, "已击杀怪物 ID: " .. monsterId)
                     return true
                 end

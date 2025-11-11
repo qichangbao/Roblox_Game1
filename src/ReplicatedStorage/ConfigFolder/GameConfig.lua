@@ -26,7 +26,7 @@ GameConfig.NpcUIType = {
     Store = 1, -- 商店
     Sell = 2, -- 出售
     Ability = 3, -- 能力
-    Task = 4,    -- 任务
+    Quest = 4,    -- 任务
 }
 
 GameConfig.Difficulty = {
@@ -51,7 +51,6 @@ GameConfig.TaskType = {
     ScoutArea = 5,            -- 到达某区域（侦查）
     UseSpecificItemOnTarget = 6, -- 使用特定物品（或装备）击杀指定目标
     Composite = 7,            -- 复合型任务
-    Exfil = 8,                -- 撤离任务（支持不使用复活）
 }
 
 GameConfig.BackpackSlotCount = 6    -- 背包槽位数量

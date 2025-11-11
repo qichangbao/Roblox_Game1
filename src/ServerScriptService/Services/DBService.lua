@@ -32,7 +32,7 @@ local _dataTemplate = {
 	AbilityData = {},			-- 能力列表
 	Overwhelmed = 15,			-- 负重
 	IsFirstLoginFuben = 0,		-- 是否第一次进入副本
-	QuestData = {},				-- 任务数据（TaskService 持久化使用）
+	QuestData = {},				-- 任务数据（QuestService 持久化使用）
 }
 
 local ProfileStore = ProfileService.GetProfileStore(
@@ -182,7 +182,7 @@ function DBService:SetToAllStore(userId, key, value)
 	elseif key == "AbilityData" then
 		Knit.GetService("AbilityService"):GetAbilityFromDBService(userId, value)
 	elseif key == "QuestData" then
-		Knit.GetService("TaskService"):GetQuestFromDBService(userId, value)
+		Knit.GetService("QuestService"):GetQuestFromDBService(userId, value)
 	end
 	-- 初始化用户数据，确保用户数据存在，并且可以设置value
 	self:InitDataFromUserId(userId)

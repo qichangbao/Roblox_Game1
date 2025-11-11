@@ -110,7 +110,7 @@ function PlayerService:KnitStart()
         Knit.GetService("LevelService"):PlayerRemoved(player)
         Knit.GetService("AbilityService"):PlayerRemoved(player)
         Knit.GetService("GMService"):PlayerRemoved(player)
-        Knit.GetService("TaskService"):PlayerRemoved(player)
+        Knit.GetService("QuestService"):PlayerRemoved(player)
     end
 
     for _, player in pairs(Players:GetPlayers()) do
@@ -138,7 +138,7 @@ function PlayerService:GetInitData(player)
     Knit.GetService("LevelService"):PlayerAdded(player)
     Knit.GetService("AbilityService"):PlayerAdded(player)
     Knit.GetService("GMService"):PlayerAdded(player)
-    Knit.GetService("TaskService"):PlayerAdded(player)
+    Knit.GetService("QuestService"):PlayerAdded(player)
     
     local isFromFuben = false
     -- 获取传送数据
@@ -167,7 +167,7 @@ function PlayerService:GetInitData(player)
     local rankPersonalData = Knit.GetService("RankService"):GetPersonalDataWithRank(player)
     local rankData = Knit.GetService("RankService"):GetLeaderboard()
     local abilityData = Knit.GetService("AbilityService"):GetAbilityData(player)
-    local taskData = Knit.GetService("TaskService"):GetPlayerTasks(player)
+    local questData = Knit.GetService("QuestService"):GetPlayerQuests(player)
     local isAdmin = Knit.GetService("DBService"):IsAdmin(player)
     local overwhelmed = DBService:Get(player.UserId, "Overwhelmed")
     self.AbilityData[player.UserId] = abilityData
@@ -184,7 +184,7 @@ function PlayerService:GetInitData(player)
         IsAdmin = isAdmin,
         IsFromFuben = isFromFuben,
         Overwhelmed = overwhelmed,
-        TaskData = taskData,
+        QuestData = questData,
     }
 end
 
