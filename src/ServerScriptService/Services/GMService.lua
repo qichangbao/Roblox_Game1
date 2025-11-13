@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
+local ItemConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("ItemConfig"))
 
 local GMService = Knit.CreateService({
     Name = 'GMService',
@@ -124,10 +125,18 @@ function GMService:GMCommand(player)
 				local ids = self:ParseItemIds(addMultiMatch)
 				if #ids > 0 then
 					for _, itemId in ipairs(ids) do
-						Knit.GetService("InventoryService"):AddItem(player, {
-							ItemId = itemId,
-							Attribute = GameConfig.GetItemAttribute(),
-						})
+                        if GameConfig.LandName == "出生岛" then
+                            Knit.GetService("InventoryService"):AddItem(player, {
+                                ItemId = itemId,
+                                Attribute = GameConfig.GetItemAttribute(),
+                            })
+                        else
+                            local itemInfo = ItemConfig:GetByIndex(itemId)
+                            Knit.GetService("InventoryService"):CreateItemToFloor(player, itemInfo, {
+                                ItemId = itemId,
+                                Attribute = GameConfig.GetItemAttribute(),
+                            })
+                        end
 					end
 					print(string.format("已为玩家 %s 添加物品 IDs: %s", player.Name, table.concat(ids, ", ")))
 					return true

@@ -23,8 +23,7 @@ function GoldService:KnitStart()
 end
 
 function GoldService:PlayerAdded(player)
-    local DBService = Knit.GetService("DBService")
-    local gold = DBService:Get(player.UserId, "Gold")
+    local gold = Knit.GetService("DBService"):Get(player.UserId, "Gold")
     self.Gold[player.UserId] = tonumber(gold)
 end
 

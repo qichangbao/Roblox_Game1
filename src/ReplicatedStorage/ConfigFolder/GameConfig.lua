@@ -23,10 +23,10 @@ GameConfig.ItemTypeFolder = {
 }
 
 GameConfig.NpcUIType = {
-    Store = 1, -- 商店
-    Sell = 2, -- 出售
-    Ability = 3, -- 能力
-    Quest = 4,    -- 任务
+    Store = 1,      -- 商店
+    Sell = 2,       -- 出售
+    Ability = 3,    -- 能力
+    Quest = 4,      -- 任务
 }
 
 GameConfig.Difficulty = {

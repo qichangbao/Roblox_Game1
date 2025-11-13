@@ -111,7 +111,7 @@ local function init()
             elseif npcType == GameConfig.NpcUIType.Ability then
                 Knit.GetController("UIController").ShowAbilityUI:Fire()
             elseif npcType == GameConfig.NpcUIType.Quest then
-                Knit.GetController("UIController").ShowQuestUI:Fire()
+                Knit.GetController("UIController").ShowQuestUI:Fire(1)
             end
         end)
 

@@ -268,43 +268,14 @@ function TeleportServiceModule:teleportToReserveServer(players)
 		return
 	end
 	
-	local playerData = {}
 	for _, player in ipairs(players) do
 		self.Client.SendStartTeleport:Fire(player)
-		playerData[player.UserId] = {InventoryData = {}, ToolData = {}, AbilityData = {}}
-		local inventory = Knit.GetService("InventoryService"):GetInventoryData(player) or {}
-		for _, v in pairs(inventory) do
-			table.insert(playerData[player.UserId].InventoryData, {
-				ItemId = v.ItemId,
-				UsedTime = v.Attribute.UsedTime or 0,
-				UsedNum = v.Attribute.UsedNum or 0,
-			})
-		end
-		local toolData = Knit.GetService("InventoryService"):GetToolData(player) or {}
-		for _, v in pairs(toolData) do
-			table.insert(playerData[player.UserId].ToolData, {
-				ItemId = v.ItemId,
-				UsedTime = v.Attribute.UsedTime or 0,
-				UsedNum = v.Attribute.UsedNum or 0,
-			})
-		end
-		local abilityData = Knit.GetService("AbilityService"):GetAbilityData(player) or {}
-		for _, v in pairs(abilityData) do
-			table.insert(playerData[player.UserId].AbilityData, {
-				AbilityId = v.AbilityId,
-				Level = v.Level or 0,
-			})
-		end
-		playerData[player.UserId].IsFirstLoginFuben = Knit.GetService("DBService"):Get(player.UserId, "IsFirstLoginFuben")
-		playerData[player.UserId].Gold = Knit.GetService("GoldService"):GetGoldData(player)
-		playerData[player.UserId].Overwhelmed = Knit.GetService("PlayerService"):GetOverwhelmed(player)
 	end
 	
 	logMessage("INFO", string.format("成功创建预留服务器，访问码: %s", accessCode))
 	local playerCount = #players
 	-- 准备传送数据
 	local teleportData = {}
-	teleportData.PlayerData = playerData
 	teleportData.IslandName = "恐龙岛"
 	teleportData.EscapeTime = 15 * 60 + 20		-- 逃生时间
 	teleportData.Difficulty = GameConfig.Difficulty.Easy			-- 难度等级

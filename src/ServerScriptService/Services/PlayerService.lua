@@ -183,7 +183,6 @@ function PlayerService:GetInitData(player)
         RankData = rankData,
         IsAdmin = isAdmin,
         IsFromFuben = isFromFuben,
-        Overwhelmed = overwhelmed,
         QuestData = questData,
     }
 end
