@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 local ItemConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("ItemConfig"))
+local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
 
 local GMService = Knit.CreateService({
     Name = 'GMService',
@@ -48,7 +49,7 @@ function GMService:GMCommand(player)
             if healMatch then
                 local amount = tonumber(healMatch)
                 if amount and humanoid then
-                    self:addHp(player, amount)
+                    Interface.addHp(player.Character, amount)
                     print(string.format("玩家 %s 恢复了 %d 点生命值，当前生命值: %d/%d", 
                         player.Name, amount, humanoid.Health, humanoid.MaxHealth))
                     return true

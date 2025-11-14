@@ -38,7 +38,6 @@ local function setInitData(data)
     Knit.GetController("UIController").UpdateQuestData:Fire(ClientData.QuestData)
 
     require(script.Parent:WaitForChild("PlayerGuide")):ShowGuide()
-    require(script.Parent:WaitForChild("Sound"))
 end
 
 local function init()
