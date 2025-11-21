@@ -24,12 +24,7 @@ WeaponConfig.Coordinates = {
 
 -- 辅助函数
 function WeaponConfig:GetByIndex(index)
-    for i, item in pairs(self.Coordinates) do
-        if item.Index == index then
-            return item
-        end
-    end
-    return nil
+    return self.Coordinates[index]
 end
 
 function WeaponConfig:GetByItemId(value)

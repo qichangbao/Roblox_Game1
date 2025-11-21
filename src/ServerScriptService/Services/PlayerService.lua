@@ -4,7 +4,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
-local AbilityConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("AbilityConfig"))
+local TalentTreeConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("TalentTreeConfig"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
 
@@ -13,8 +13,10 @@ local PlayerService = Knit.CreateService {
 	Client = {
 	},
 
-    AbilityData = {},       -- 能力列表
+    TalentData = {},       -- 能力列表
     Overwhelmed = {},       -- 负重
+    CollectSpeed = {},       -- 搜集速度
+    Lucky = {},              -- 幸运
     AnimationTracks = {},
 }
 
@@ -31,17 +33,18 @@ function PlayerService:KnitStart()
                 humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
                 humanoid.AutoJumpEnabled = false
                 humanoid.UseJumpPower = true
-                player:SetAttribute("InitHealth", humanoid.Health)
-                player:SetAttribute("InitWalkSpeed", humanoid.WalkSpeed)
-                player:SetAttribute("InitJumpPower", humanoid.JumpPower)
-                player:SetAttribute("InitMaxHealth", humanoid.MaxHealth)
-                player:SetAttribute("InitAttack", 1)
+                humanoid:SetAttribute("InitHealth", humanoid.Health)
+                humanoid:SetAttribute("InitWalkSpeed", humanoid.WalkSpeed)
+                humanoid:SetAttribute("InitJumpPower", humanoid.JumpPower)
+                humanoid:SetAttribute("InitMaxHealth", humanoid.MaxHealth)
                 
-                if self.AbilityData[player.UserId] then
-                    self:InitPlayerAbility(player, self.AbilityData[player.UserId])
+                if self.TalentData[player.UserId] then
+                    self:InitPlayerTalent(player, self.TalentData[player.UserId])
                 end
             end
             Knit.GetService("LevelService"):CreatePlayerBillboard(player)
+
+            Knit.GetService("EquipmentService"):EquipHat(player, game:GetService("ServerStorage"):WaitForChild("Equipment"):WaitForChild("Hat"):WaitForChild("1"))
 
             self.AnimationTracks[player.UserId] = {}
             local animator = humanoid:FindFirstChildOfClass("Animator")
@@ -100,7 +103,10 @@ function PlayerService:KnitStart()
 
     local function PlayerRemoved(player)
         self.AnimationTracks[player.UserId] = nil
-        self.AbilityData[player.UserId] = nil
+        self.TalentData[player.UserId] = nil
+        self.Overwhelmed[player.UserId] = nil
+        self.CollectSpeed[player.UserId] = nil
+        self.Lucky[player.UserId] = nil
 
         local DBService = Knit.GetService("DBService")
         DBService:PlayerRemoving(player)
@@ -108,9 +114,10 @@ function PlayerService:KnitStart()
         Knit.GetService("GoldService"):PlayerRemoved(player)
         Knit.GetService("RankService"):PlayerRemoved(player)
         Knit.GetService("LevelService"):PlayerRemoved(player)
-        Knit.GetService("AbilityService"):PlayerRemoved(player)
+        Knit.GetService("TalentService"):PlayerRemoved(player)
         Knit.GetService("GMService"):PlayerRemoved(player)
         Knit.GetService("QuestService"):PlayerRemoved(player)
+        Knit.GetService("EquipmentService"):PlayerRemoved(player)
     end
 
     for _, player in pairs(Players:GetPlayers()) do
@@ -132,11 +139,12 @@ function PlayerService:GetInitData(player)
     local DBService = Knit.GetService("DBService")
     DBService:PlayerAdded(player)
 
+    Knit.GetService("EquipmentService"):PlayerAdded(player)
     Knit.GetService("GoldService"):PlayerAdded(player)
     Knit.GetService("InventoryService"):PlayerAdded(player)
     Knit.GetService("RankService"):PlayerAdded(player)
     Knit.GetService("LevelService"):PlayerAdded(player)
-    Knit.GetService("AbilityService"):PlayerAdded(player)
+    Knit.GetService("TalentService"):PlayerAdded(player)
     Knit.GetService("GMService"):PlayerAdded(player)
     Knit.GetService("QuestService"):PlayerAdded(player)
     
@@ -166,24 +174,43 @@ function PlayerService:GetInitData(player)
     local toolData = Knit.GetService("InventoryService"):GetToolData(player)
     local rankPersonalData = Knit.GetService("RankService"):GetPersonalDataWithRank(player)
     local rankData = Knit.GetService("RankService"):GetLeaderboard()
-    local abilityData = Knit.GetService("AbilityService"):GetAbilityData(player)
+    local talentData = Knit.GetService("TalentService"):GetTalentData(player)
     local questData = Knit.GetService("QuestService"):GetPlayerQuests(player)
     local isAdmin = Knit.GetService("DBService"):IsAdmin(player)
-    local overwhelmed = DBService:Get(player.UserId, "Overwhelmed")
-    self.AbilityData[player.UserId] = abilityData
-    self:InitPlayerAbility(player, self.AbilityData[player.UserId])
-    self.Overwhelmed[player.UserId] = overwhelmed
+    self.TalentData[player.UserId] = talentData
+    self.Overwhelmed[player.UserId] = GameConfig.Overwhelmed
+    self.CollectSpeed[player.UserId] = GameConfig.CollectSpeed
+    self.Lucky[player.UserId] = GameConfig.Lucky
+    local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
+    if humanoid then
+        humanoid:SetAttribute("Weight", self.Overwhelmed[player.UserId])
+        humanoid:SetAttribute("CollectSpeed", self.CollectSpeed[player.UserId])
+        humanoid:SetAttribute("Lucky", self.Lucky[player.UserId])
+    end
+    self:InitPlayerTalent(player, self.TalentData[player.UserId])
+
+    local weight = self.Overwhelmed[player.UserId]
+    local collectSpeed = self.CollectSpeed[player.UserId]
+    local lucky = self.Lucky[player.UserId]
+    if humanoid then
+        weight = humanoid:GetAttribute("Weight")
+        collectSpeed = humanoid:GetAttribute("CollectSpeed")
+        lucky = humanoid:GetAttribute("Lucky")
+    end
 
     return {
         Gold = gold,
         Inventory = inventoryData,
         ToolData = toolData,
-        AbilityData = self.AbilityData[player.UserId],
+        TalentData = self.TalentData[player.UserId],
         RankPersonalData = rankPersonalData,
         RankData = rankData,
         IsAdmin = isAdmin,
         IsFromFuben = isFromFuben,
         QuestData = questData,
+        Weight = weight,
+        CollectSpeed = collectSpeed,
+        Lucky = lucky,
     }
 end
 
@@ -201,46 +228,85 @@ function PlayerService:GetOverwhelmed(player)
     return self.Overwhelmed[player.UserId]
 end
 
+-- 获取玩家搜集速度
+-- @param player Player 请求数据的玩家
+-- @return number 玩家搜集速度
+function PlayerService:GetCollectSpeed(player)
+    return self.CollectSpeed[player.UserId]
+end
+
+-- 获取玩家幸运值
+-- @param player Player 请求数据的玩家
+-- @return number 玩家幸运值
+function PlayerService:GetLucky(player)
+    return self.Lucky[player.UserId]
+end
+
 -- 初始化玩家能力
 -- @param player Player 玩家
--- @param ability table 能力数据
-function PlayerService:InitPlayerAbility(player, ability)
-    if not ability then
+-- @param talent table 能力数据
+function PlayerService:InitPlayerTalent(player, talent)
+    if not talent then
         return
     end
-    for abilityId, abilityData in pairs(ability) do
-        local level = abilityData.Level
-        if not level or level <= 0 then
-            continue
-        end
-        local abilityInfo = AbilityConfig:GetByAbilityId(abilityId)
-        if abilityInfo then
-            local value = 1
-            if type(abilityInfo.Value) == "table" then
-                value = (1 + abilityInfo.Value[level] / 100)
-            else
-                value = (1 + abilityInfo.Value * level / 100)
-            end
-            if abilityInfo.Type == GameConfig.AbilityType.WalkSpeed then
+    for talentId, talentData in pairs(talent) do
+        local talentInfo = TalentTreeConfig:GetByTalentTreeId(tonumber(talentId))
+        if talentInfo then
+            if talentInfo.Type == GameConfig.TalentType.WalkSpeed then
                 local initWalkSpeed = player:GetAttribute("InitWalkSpeed")
                 if initWalkSpeed then
-                    self:ChangePlayerAttribute(player, "WalkSpeed", initWalkSpeed * value)
+                    if talentInfo.ChildType == 1 then
+                        self:ChangePlayerAttribute(player, "WalkSpeed", initWalkSpeed *  (1 + talentInfo.Value / 100))
+                    else
+                        self:ChangePlayerAttribute(player, "WalkSpeed", initWalkSpeed +  talentInfo.Value)
+                    end
                 end
-            elseif abilityInfo.Type == GameConfig.AbilityType.MaxHealth then
+            elseif talentInfo.Type == GameConfig.TalentType.MaxHealth then
                 local initMaxHealth = player:GetAttribute("InitMaxHealth")
                 if initMaxHealth then
-                    self:ChangePlayerAttribute(player, "MaxHealth", initMaxHealth * value)
-                    self:ChangePlayerAttribute(player, "Health", initMaxHealth * value)
+                    if talentInfo.ChildType == 1 then
+                        self:ChangePlayerAttribute(player, "MaxHealth", initMaxHealth * (1 + talentInfo.Value / 100))
+                        self:ChangePlayerAttribute(player, "Health", initMaxHealth * (1 + talentInfo.Value / 100))
+                    else
+                        self:ChangePlayerAttribute(player, "MaxHealth", initMaxHealth + talentInfo.Value)
+                        self:ChangePlayerAttribute(player, "Health", initMaxHealth + talentInfo.Value)
+                    end
                 end
-            elseif abilityInfo.Type == GameConfig.AbilityType.Jump then
+            elseif talentInfo.Type == GameConfig.TalentType.Jump then
                 local initJumpPower = player:GetAttribute("InitJumpPower")
                 if initJumpPower then
-                    self:ChangePlayerAttribute(player, "JumpPower", initJumpPower * value)
+                    if talentInfo.ChildType == 1 then
+                        self:ChangePlayerAttribute(player, "JumpPower", initJumpPower * (1 + talentInfo.Value / 100))
+                    else
+                        self:ChangePlayerAttribute(player, "JumpPower", initJumpPower + talentInfo.Value)
+                    end
                 end
-            elseif abilityInfo.Type == GameConfig.AbilityType.Attack then
-                local initAttack = player:GetAttribute("InitAttack")
-                if initAttack then
-                    self:ChangePlayerAttribute(player, "Attack", initAttack * value)
+            elseif talentInfo.Type == GameConfig.TalentType.Weight then
+                local initWeight = self:GetOverwhelmed(player)
+                if initWeight then
+                    if talentInfo.ChildType == 1 then
+                        self:ChangePlayerAttribute(player, "Weight", initWeight * (1 + talentInfo.Value / 100))
+                    else
+                        self:ChangePlayerAttribute(player, "Weight", initWeight + talentInfo.Value)
+                    end
+                end
+            elseif talentInfo.Type == GameConfig.TalentType.CollectSpeed then
+                local initCollectSpeed = self:GetCollectSpeed(player)
+                if initCollectSpeed then
+                    if talentInfo.ChildType == 1 then
+                        self:ChangePlayerAttribute(player, "CollectSpeed", initCollectSpeed * (1 + talentInfo.Value / 100))
+                    else
+                        self:ChangePlayerAttribute(player, "CollectSpeed", initCollectSpeed + talentInfo.Value)
+                    end
+                end
+            elseif talentInfo.Type == GameConfig.TalentType.Lucky then
+                local initLucky = self:GetLucky(player)
+                if initLucky then
+                    if talentInfo.ChildType == 1 then
+                        self:ChangePlayerAttribute(player, "Lucky", initLucky * (1 + talentInfo.Value / 100))
+                    else
+                        self:ChangePlayerAttribute(player, "Lucky", initLucky + talentInfo.Value)
+                    end
                 end
             end
         end
@@ -265,20 +331,28 @@ function PlayerService:ChangePlayerAttribute(player, attributeName, attributeVal
             humanoid.MaxHealth = attributeValue
         elseif attributeName == "JumpPower" then
             humanoid.JumpPower = attributeValue
-        elseif attributeName == "Attack" then
-            humanoid:SetAttribute("Attack", attributeValue)
+        elseif attributeName == "Weight" then
+            humanoid:SetAttribute("Weight", attributeValue)
+        elseif attributeName == "CollectSpeed" then
+            humanoid:SetAttribute("CollectSpeed", attributeValue)
+        elseif attributeName == "Lucky" then
+            humanoid:SetAttribute("Lucky", attributeValue)
         end
     else
         if attributeName == "Health" then
-            humanoid.Health = player:GetAttribute("InitHealth")
+            humanoid.Health = humanoid:GetAttribute("InitHealth")
         elseif attributeName == "WalkSpeed" then
-            humanoid.WalkSpeed = player:GetAttribute("InitWalkSpeed")
+            humanoid.WalkSpeed = humanoid:GetAttribute("InitWalkSpeed")
         elseif attributeName == "MaxHealth" then
-            humanoid.MaxHealth = player:GetAttribute("InitMaxHealth")
+            humanoid.MaxHealth = humanoid:GetAttribute("InitMaxHealth")
         elseif attributeName == "JumpPower" then
-            humanoid.JumpPower = player:GetAttribute("InitJumpPower")
-        elseif attributeName == "Attack" then
-            humanoid:SetAttribute("Attack", player:GetAttribute("InitAttack"))
+            humanoid.JumpPower = humanoid:GetAttribute("InitJumpPower")
+        elseif attributeName == "Weight" then
+            humanoid:SetAttribute("Weight", self:GetOverwhelmed(player))
+        elseif attributeName == "CollectSpeed" then
+            humanoid:SetAttribute("CollectSpeed", self:GetCollectSpeed(player))
+        elseif attributeName == "Lucky" then
+            humanoid:SetAttribute("Lucky", self:GetLucky(player))
         end
     end
 end

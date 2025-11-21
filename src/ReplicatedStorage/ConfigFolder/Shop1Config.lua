@@ -34,12 +34,7 @@ Shop1Config.Data = {
 
 -- 辅助函数
 function Shop1Config:GetByIndex(index)
-    for i, item in pairs(self.Data) do
-        if item.Index == index then
-            return item
-        end
-    end
-    return nil
+    return self.Data[index]
 end
 
 function Shop1Config:GetByAssetId(value)

@@ -22,7 +22,7 @@ function StoreService:KnitStart()
 end
 
 function StoreService.Client:GoldBuyItem(player, itemId)
-    local itemInfo = ItemConfig:GetByIndex(itemId)
+    local itemInfo = ItemConfig:GetByItemId(itemId)
     if not itemInfo then
         return "Item not found"
     end
@@ -41,10 +41,10 @@ function StoreService.Client:RobBuyItem(player, itemId, assetID, targetUserId)
 end
 
 function StoreService.Client:Sell(player, itemData)
-    if not itemData then
+    if not itemData or itemData.Attribute.IsLocked == 1 then
         return
     end
-    local itemInfo = ItemConfig:GetByIndex(itemData.ItemId)
+    local itemInfo = ItemConfig:GetByItemId(itemData.ItemId)
     if not itemInfo then
         return
     end
@@ -59,9 +59,9 @@ function StoreService.Client:SellAll(player)
     local gold = 0
     local inventory = Knit.GetService("InventoryService"):GetInventoryData(player)
     for _, itemData in ipairs(inventory) do
-        local itemInfo = ItemConfig:GetByIndex(itemData.ItemId)
+        local itemInfo = ItemConfig:GetByItemId(itemData.ItemId)
         -- 收集类物品可以一键全部出售
-        if itemInfo and itemInfo.Type == GameConfig.ItemType.Collect then
+        if itemInfo and itemInfo.Type == GameConfig.ItemType.Collect and itemData.Attribute.IsLocked == 0 then
             gold += itemInfo.SellPrice
             table.insert(sellItems, itemData)
         end

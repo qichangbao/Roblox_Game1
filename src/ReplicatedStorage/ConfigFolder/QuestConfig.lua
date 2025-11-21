@@ -260,12 +260,7 @@ QuestConfig.Data = {
 
 -- 辅助函数
 function QuestConfig:GetByIndex(index)
-    for i, item in pairs(self.Data) do
-        if item.Index == index then
-            return item
-        end
-    end
-    return nil
+    return self.Data[index]
 end
 
 function QuestConfig:GetByQuestId(value)

@@ -18,7 +18,6 @@ local InventoryService = Knit.CreateService {
 
 	Inventory = {},     -- 背包数据
 	ToolData = {},      -- 工具栏数据
-	ToolCooldowns = {}, -- 工具冷却时间记录
 }
 
 function InventoryService:KnitInit()
@@ -38,7 +37,8 @@ function InventoryService:PlayerAdded(player)
         local attribute = GameConfig.GetItemAttribute()
         attribute.UsedTime = v.UsedTime
         attribute.UsedNum = v.UsedNum
-		table.insert(self.Inventory[player.UserId], {
+		attribute.IsLocked = v.IsLocked
+        table.insert(self.Inventory[player.UserId], {
             ItemId = v.ItemId,
             Attribute = attribute,
         })
@@ -84,6 +84,7 @@ function InventoryService:InventoryToDB(player)
             ItemId = v.ItemId,
             UsedTime = v.Attribute.UsedTime,
             UsedNum = v.Attribute.UsedNum,
+			IsLocked = v.Attribute.IsLocked,
         })
     end
 	DBService:Set(player.UserId, "PlayerInventory", data)
@@ -284,7 +285,7 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
 	if itemData.ItemId == 0 then
 		return
 	end
-	local itemInfo = ItemConfig:GetByIndex(tonumber(itemData.ItemId))
+	local itemInfo = ItemConfig:GetByItemId(tonumber(itemData.ItemId))
 	if not itemInfo then
 		warn("找不到物品ID: " .. tostring(itemData.ItemId))
 		return
@@ -403,9 +404,9 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
 	end
 
     -- 直接设置Tool的Grip属性来控制握持方向
-    if itemInfo.Index == 202 then
+    if itemInfo.ItemId == 202 then
         tool.Grip = CFrame.Angles(0, math.rad(180), 0)  -- 只旋转，不偏移位置
-    elseif itemInfo.Index == 203 then
+    elseif itemInfo.ItemId == 203 then
         tool.Grip = CFrame.new(0, -0.6, 0) * CFrame.Angles(0, math.rad(90), 0)  -- y轴偏移0.6并旋转
     else
         tool.Grip = CFrame.Angles(0, 0, math.rad(90))  -- 只旋转，不偏移位置
@@ -485,9 +486,9 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
 			end
 
 			if itemInfo.Type == GameConfig.ItemType.Weapon then    -- 进攻类
-                if itemInfo.Index == 202 then
+                if itemInfo.ItemId == 202 then
 					Knit.GetService("PlayerService"):playAnimation(player, "dig", "Attack2", itemInfo.CD)
-                elseif itemInfo.Index == 203 then
+                elseif itemInfo.ItemId == 203 then
 					Knit.GetService("PlayerService"):playAnimation(player, "swing", "Attack1", itemInfo.CD)
                 else
 					Knit.GetService("PlayerService"):playAnimation(player, "swing", "Attack1", itemInfo.CD)
@@ -588,6 +589,38 @@ function InventoryService:EquipToolByKey(player, slot)
     end
     
     return 0
+end
+
+function InventoryService:GetAllItemNum(player)
+	local items = {}
+	for _, itemData in pairs(self.Inventory[player.UserId]) do
+		if not items[itemData.ItemId] then
+			items[itemData.ItemId] = 1
+		else
+			items[itemData.ItemId] += 1
+		end
+	end
+	for _, itemData in pairs(self.ToolData[player.UserId]) do
+		if itemData.ItemId == 0 then continue end
+		if not items[itemData.ItemId] then
+			items[itemData.ItemId] = 1
+		else
+			items[itemData.ItemId] += 1
+		end
+	end
+	return items
+end
+
+function InventoryService:LockItem(player, slot, isLocked)
+	if not self.Inventory[player.UserId] or not self.Inventory[player.UserId][slot] then return false end
+	self.Inventory[player.UserId][slot].Attribute.IsLocked = isLocked
+	self.Client.SendBackpack:Fire(player, self.Inventory[player.UserId])
+	self:InventoryToDB(player)
+	return true
+end
+
+function InventoryService.Client:LockItem(player, slot, isLocked)
+	return self.Server:LockItem(player, slot, isLocked)
 end
 
 return InventoryService

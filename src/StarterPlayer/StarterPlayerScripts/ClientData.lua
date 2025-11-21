@@ -7,24 +7,30 @@ local ClientData = {}
 ClientData.Gold = 0
 ClientData.Inventory = {}
 ClientData.ToolData = {}
-ClientData.AbilityData = {}
+ClientData.TalentData = {}
 ClientData.QuestData = {}
 ClientData.RankPersonalData = {}
 ClientData.RankData = {}
 ClientData.IsAdmin = false
 ClientData.IsFromFuben = false
+ClientData.Weight = 0
+ClientData.CollectSpeed = 0
+ClientData.Lucky = 0
 
 local function setInitData(data)
     -- 安全地设置数据
     ClientData.Gold = data.Gold or 0
     ClientData.Inventory = data.Inventory or {}
     ClientData.ToolData = data.ToolData or {}
-    ClientData.AbilityData = data.AbilityData or {}
+    ClientData.TalentData = data.TalentData or {}
     ClientData.RankPersonalData = data.RankPersonalData or {}
     ClientData.RankData = data.RankData or {}
     ClientData.IsAdmin = data.IsAdmin or false
     ClientData.IsFromFuben = data.IsFromFuben or false
     ClientData.QuestData = data.QuestData or {}
+    ClientData.Weight = data.Weight or 0
+    ClientData.CollectSpeed = data.CollectSpeed or 0
+    ClientData.Lucky = data.Lucky or 0
     -- local playerGui = Interface.safeWaitPart(game.Players.LocalPlayer, "PlayerGui")
 	-- local loadingUI = Interface.safeWaitPart(playerGui, "LoadingUI")
 	-- loadingUI.Enabled = false
@@ -33,7 +39,7 @@ local function setInitData(data)
     Knit.GetController("UIController").UpdateToolUI:Fire(ClientData.ToolData)
     Knit.GetController("UIController").ShowAdminButton:Fire(ClientData.IsAdmin)
     Knit.GetController("UIController").UpdateRankPersonalData:Fire(ClientData.RankPersonalData)
-    Knit.GetController("UIController").UpdateAbilityData:Fire(ClientData.AbilityData)
+    Knit.GetController("UIController").UpdateTalentData:Fire(ClientData.TalentData)
     Knit.GetController("UIController").UpdateRankData:Fire(ClientData.RankData)
     Knit.GetController("UIController").UpdateQuestData:Fire(ClientData.QuestData)
 
@@ -107,17 +113,17 @@ local function init()
                 Knit.GetController("UIController").ShowStoreUI:Fire()
             elseif npcType == GameConfig.NpcUIType.Sell then
                 Knit.GetController("UIController").ShowSellUI:Fire()
-            elseif npcType == GameConfig.NpcUIType.Ability then
-                Knit.GetController("UIController").ShowAbilityUI:Fire()
+            elseif npcType == GameConfig.NpcUIType.Talent then
+                Knit.GetController("UIController").ShowTalentUI:Fire()
             elseif npcType == GameConfig.NpcUIType.Quest then
                 Knit.GetController("UIController").ShowQuestUI:Fire(1)
             end
         end)
 
         -- 监听服务器的更新能力数据请求
-        Knit.GetService("AbilityService").UpdateAbilityData:Connect(function(abilityData)
-            ClientData.AbilityData = abilityData or {}
-            Knit.GetController("UIController").UpdateAbilityData:Fire(ClientData.AbilityData)
+        Knit.GetService("TalentService").UpdateTalentData:Connect(function(talentData)
+            ClientData.TalentData = talentData or {}
+            Knit.GetController("UIController").UpdateTalentData:Fire(ClientData.TalentData)
         end)
 
         -- 监听服务器的任务数据请求

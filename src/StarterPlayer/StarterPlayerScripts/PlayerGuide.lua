@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local SimpleArrowNavigation = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("SimpleArrowNavigation"))
 local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
-local AbilityConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("AbilityConfig"))
+local TalentTreeConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("TalentTreeConfig"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 
 local Module = {}
@@ -25,31 +25,26 @@ function Module:ShowGuide()
 			inventoryData[itemData.ItemId] += 1
 		end
 	end
-	local abilityData = _G.ClientData.AbilityData
-    local ability = AbilityConfig:GetAll()
-    for _, abilityInfo in pairs(ability) do
-        local abilityId = abilityInfo.AbilityId
-        local level = 0
-        if abilityData[abilityId] then
-            level = abilityData[abilityId].Level or 0
-        end
-        level = math.min(level + 1, #abilityInfo.Level)
+	-- local talentData = _G.ClientData.TalentData
+    -- local talent = TalentTreeConfig:GetAll()
+    -- for _, talentInfo in pairs(talent) do
+    --     local talentId = talentInfo.TalentId
         
-        local needItemList = abilityInfo.NeedItemList
-        local needNumList = abilityInfo.NeedNumList
-        for i = 1, 4 do
-            local needItem = needItemList[i][level]
-            local needNum = needNumList[i][level]
-            if needNum > 0 and inventoryData[needItem] and inventoryData[needItem] > 0 then
-                local npcPosition = findNpc3()
-                if npcPosition then
-                    SimpleArrowNavigation.NavigateTo(npcPosition, nil, 10, true, 0.5)
-                    Knit.GetController("UIController").ShowTip:Fire({Type = 1, Text = "Items collected! Upgrade your abilities now"})
-                    return
-                end
-            end
-        end
-    end
+    --     local needItemList = talentInfo.NeedItemList
+    --     local needNumList = talentInfo.NeedNumList
+    --     for i = 1, 4 do
+    --         local needItem = needItemList[i][level]
+    --         local needNum = needNumList[i][level]
+    --         if needNum > 0 and inventoryData[needItem] and inventoryData[needItem] > 0 then
+    --             local npcPosition = findNpc3()
+    --             if npcPosition then
+    --                 SimpleArrowNavigation.NavigateTo(npcPosition, nil, 10, true, 0.5)
+    --                 Knit.GetController("UIController").ShowTip:Fire({Type = 1, Text = "Items collected! Upgrade your abilities now"})
+    --                 return
+    --             end
+    --         end
+    --     end
+    -- end
 end
 
 return Module

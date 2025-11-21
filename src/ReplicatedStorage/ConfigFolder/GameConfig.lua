@@ -25,7 +25,7 @@ GameConfig.ItemTypeFolder = {
 GameConfig.NpcUIType = {
     Store = 1,      -- 商店
     Sell = 2,       -- 出售
-    Ability = 3,    -- 能力
+    Talent = 3,     -- 天赋
     Quest = 4,      -- 任务
 }
 
@@ -35,11 +35,13 @@ GameConfig.Difficulty = {
     HellDifficulty = 3, -- 地狱
 }
 
-GameConfig.AbilityType = {
-    WalkSpeed = 1, -- 移动
-    MaxHealth = 2, -- 最大生命值
-    Jump = 3, -- 跳跃
-    Attack = 4, -- 攻击
+GameConfig.TalentType = {
+    WalkSpeed = 1,      -- 移动
+    MaxHealth = 2,      -- 最大生命值
+    Jump = 3,           -- 跳跃
+    Weight = 4,         -- 重量
+    CollectSpeed = 5,   -- 搜集速度
+    Lucky = 6,          -- 幸运
 }
 
 -- 任务类型枚举（与 QuestConfig.Type 对应）
@@ -52,54 +54,6 @@ GameConfig.TaskType = {
     UseSpecificItemOnTarget = 6, -- 使用特定物品（或装备）击杀指定目标
     Composite = 7,            -- 复合型任务
 }
-
-GameConfig.BackpackSlotCount = 6    -- 背包槽位数量
-GameConfig.InitItemNums = 30        -- 初始物品数量
-GameConfig.LandName = "出生岛"
-GameConfig.TeleportPartNames = {"go1", "go2", "go3"}-- 触发传送的Part名称
-
--- 为了向后兼容，保留原有的FontFace属性
-GameConfig.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json")
-GameConfig.SLOT_NUM = 3
-GameConfig.Item_DragTime = 0.3       -- 物品拖拽响应事件
-
--- 物品的扩展属性，用于服务器客户端同步一些动态数据
-GameConfig.GetItemAttribute = function(item)
-    if not item then
-        return {
-            CreateTime = tick(),        -- 创建时间
-            IsEquipped = 0,         -- 是否装备
-            CDElapsedTime = 0,          -- CD截止时间
-            UsedTime = 0,               -- 已使用时间
-            UsedNum = 0,                -- 已使用次数
-        }
-    end
-    return {
-        CreateTime = item:GetAttribute("CreateTime"),
-        IsEquipped = item:GetAttribute("IsEquipped"),
-        CDElapsedTime = item:GetAttribute("CDElapsedTime"),
-        UsedTime = item:GetAttribute("UsedTime"),
-        UsedNum = item:GetAttribute("UsedNum"),
-    }
-end
-
-GameConfig.SetItemAttribute = function(item, attribute)
-    if not attribute then
-        attribute = GameConfig.GetItemAttribute()
-    end
-    item:SetAttribute("CreateTime", attribute.CreateTime)
-    item:SetAttribute("IsEquipped", attribute.IsEquipped)
-    item:SetAttribute("CDElapsedTime", attribute.CDElapsedTime)
-    item:SetAttribute("UsedTime", attribute.UsedTime)
-    item:SetAttribute("UsedNum", attribute.UsedNum)
-end
-
-GameConfig.UpdateItemAttribute = function(item, key, value)
-    local attribute = GameConfig.GetItemAttribute(item)
-    attribute[key] = value
-    GameConfig.SetItemAttribute(item, attribute)
-    return attribute
-end
 
 GameConfig.DuanWeiType = {
     [1] = {
@@ -180,5 +134,59 @@ GameConfig.DuanWeiType = {
         allowDeduction = true,
     },
 }
+
+GameConfig.BackpackSlotCount = 6    -- 背包槽位数量
+GameConfig.InitItemNums = 30        -- 初始物品数量
+GameConfig.LandName = "出生岛"
+GameConfig.TeleportPartNames = {"go1", "go2", "go3"}-- 触发传送的Part名称
+
+-- 为了向后兼容，保留原有的FontFace属性
+GameConfig.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+GameConfig.SLOT_NUM = 3
+GameConfig.Item_DragTime = 0.3       -- 物品拖拽响应事件
+GameConfig.Overwhelmed = 15         -- 负重
+GameConfig.CollectSpeed = 16        -- 搜集速度
+GameConfig.Lucky = 0                -- 幸运
+
+-- 物品的扩展属性，用于服务器客户端同步一些动态数据
+GameConfig.GetItemAttribute = function(item)
+    if not item then
+        return {
+            CreateTime = tick(),        -- 创建时间
+            IsEquipped = 0,             -- 是否装备
+            CDElapsedTime = 0,          -- CD截止时间
+            UsedTime = 0,               -- 已使用时间
+            UsedNum = 0,                -- 已使用次数
+            IsLocked = 0,               -- 是否锁定
+        }
+    end
+    return {
+        CreateTime = item:GetAttribute("CreateTime"),
+        IsEquipped = item:GetAttribute("IsEquipped"),
+        CDElapsedTime = item:GetAttribute("CDElapsedTime"),
+        UsedTime = item:GetAttribute("UsedTime"),
+        UsedNum = item:GetAttribute("UsedNum"),
+        IsLocked = item:GetAttribute("IsLocked"),
+    }
+end
+
+GameConfig.SetItemAttribute = function(item, attribute)
+    if not attribute then
+        attribute = GameConfig.GetItemAttribute()
+    end
+    item:SetAttribute("CreateTime", attribute.CreateTime)
+    item:SetAttribute("IsEquipped", attribute.IsEquipped)
+    item:SetAttribute("CDElapsedTime", attribute.CDElapsedTime)
+    item:SetAttribute("UsedTime", attribute.UsedTime)
+    item:SetAttribute("UsedNum", attribute.UsedNum)
+    item:SetAttribute("IsLocked", attribute.IsLocked)
+end
+
+GameConfig.UpdateItemAttribute = function(item, key, value)
+    local attribute = GameConfig.GetItemAttribute(item)
+    attribute[key] = value
+    GameConfig.SetItemAttribute(item, attribute)
+    return attribute
+end
 
 return GameConfig

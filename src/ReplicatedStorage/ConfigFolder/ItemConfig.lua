@@ -3,7 +3,7 @@ local ItemConfig = {}
 
 ItemConfig.Data = {
     [1] = {
-        Index = 201,
+        ItemId = 201,
         Item = "刺刀",
         DisplayName = "Bayonet",
         Icon = "rbxassetid://94897262399463",
@@ -22,7 +22,7 @@ ItemConfig.Data = {
         Weight = 3,
     },
     [2] = {
-        Index = 101,
+        ItemId = 101,
         Item = "手电",
         DisplayName = "Flashlight",
         Icon = "rbxassetid://80944253490783",
@@ -41,7 +41,7 @@ ItemConfig.Data = {
         Weight = 1,
     },
     [3] = {
-        Index = 102,
+        ItemId = 102,
         Item = "荧光棒-红色",
         DisplayName = "Glow Stick - Red",
         Icon = "rbxassetid://117206965019901",
@@ -60,7 +60,7 @@ ItemConfig.Data = {
         Weight = 0.3,
     },
     [4] = {
-        Index = 202,
+        ItemId = 202,
         Item = "铲子",
         DisplayName = "Shovel",
         Icon = "rbxassetid://117763824854828",
@@ -79,7 +79,7 @@ ItemConfig.Data = {
         Weight = 4.5,
     },
     [5] = {
-        Index = 301,
+        ItemId = 301,
         Item = "急救包",
         DisplayName = "First Aid Kit",
         Icon = "rbxassetid://116019405232413",
@@ -98,7 +98,7 @@ ItemConfig.Data = {
         Weight = 2.5,
     },
     [6] = {
-        Index = 302,
+        ItemId = 302,
         Item = "额外的背包",
         DisplayName = "Extra Backpack",
         Icon = "rbxassetid://98954413940819",
@@ -117,7 +117,7 @@ ItemConfig.Data = {
         Weight = 5,
     },
     [7] = {
-        Index = 303,
+        ItemId = 303,
         Item = "传送装置",
         DisplayName = "Teleport Device",
         Icon = "rbxassetid://86586160503774",
@@ -136,7 +136,7 @@ ItemConfig.Data = {
         Weight = 3.5,
     },
     [8] = {
-        Index = 203,
+        ItemId = 203,
         Item = "镐子",
         DisplayName = "Pickaxe",
         Icon = "rbxassetid://92138284892917",
@@ -155,7 +155,7 @@ ItemConfig.Data = {
         Weight = 4,
     },
     [9] = {
-        Index = 304,
+        ItemId = 304,
         Item = "宝库钥匙",
         DisplayName = "Chest Key",
         Icon = "rbxassetid://116356552356986",
@@ -174,7 +174,7 @@ ItemConfig.Data = {
         Weight = 0.3,
     },
     [10] = {
-        Index = 501,
+        ItemId = 501,
         Item = "普通宝箱",
         DisplayName = "Common Chest",
         Icon = nil,
@@ -193,7 +193,7 @@ ItemConfig.Data = {
         Weight = 0,
     },
     [11] = {
-        Index = 502,
+        ItemId = 502,
         Item = "黄金宝箱",
         DisplayName = "Golden Chest",
         Icon = nil,
@@ -212,7 +212,7 @@ ItemConfig.Data = {
         Weight = 0,
     },
     [12] = {
-        Index = 503,
+        ItemId = 503,
         Item = "炫彩宝箱",
         DisplayName = "Shiny Chest",
         Icon = nil,
@@ -231,7 +231,7 @@ ItemConfig.Data = {
         Weight = 0,
     },
     [13] = {
-        Index = 601,
+        ItemId = 601,
         Item = "土堆",
         DisplayName = "Dirt Mound",
         Icon = nil,
@@ -250,7 +250,7 @@ ItemConfig.Data = {
         Weight = 0,
     },
     [14] = {
-        Index = 602,
+        ItemId = 602,
         Item = "散落的土堆",
         DisplayName = "Scattered Dirt Mounds",
         Icon = nil,
@@ -269,7 +269,7 @@ ItemConfig.Data = {
         Weight = 0,
     },
     [15] = {
-        Index = 603,
+        ItemId = 603,
         Item = "矿石",
         DisplayName = "Ore",
         Icon = "rbxassetid://131450236273906",
@@ -288,7 +288,7 @@ ItemConfig.Data = {
         Weight = 0,
     },
     [16] = {
-        Index = 701,
+        ItemId = 701,
         Item = "蘑菇",
         DisplayName = "Mushroom（65% +30HP）",
         Icon = "rbxassetid://125683003473301",
@@ -307,7 +307,7 @@ ItemConfig.Data = {
         Weight = 0,
     },
     [17] = {
-        Index = 1001,
+        ItemId = 1001,
         Item = "破碎陶片",
         DisplayName = "Broken Pottery Shard",
         Icon = "rbxassetid://138603713864045",
@@ -326,7 +326,7 @@ ItemConfig.Data = {
         Weight = 0.3,
     },
     [18] = {
-        Index = 1002,
+        ItemId = 1002,
         Item = "生锈铁钉",
         DisplayName = "Rusty Nail",
         Icon = "rbxassetid://82277829138618",
@@ -345,7 +345,7 @@ ItemConfig.Data = {
         Weight = 0.2,
     },
     [19] = {
-        Index = 1003,
+        ItemId = 1003,
         Item = "海玻璃碎片",
         DisplayName = "Sea Glass Fragment",
         Icon = "rbxassetid://110975175622147",
@@ -364,7 +364,7 @@ ItemConfig.Data = {
         Weight = 0.3,
     },
     [20] = {
-        Index = 1004,
+        ItemId = 1004,
         Item = "石化木片",
         DisplayName = "Petrified Wood Chip",
         Icon = "rbxassetid://72739379270245",
@@ -383,7 +383,7 @@ ItemConfig.Data = {
         Weight = 0.5,
     },
     [21] = {
-        Index = 1005,
+        ItemId = 1005,
         Item = "旧布条",
         DisplayName = "Old Cloth Strip",
         Icon = "rbxassetid://89935448987523",
@@ -402,7 +402,7 @@ ItemConfig.Data = {
         Weight = 0.2,
     },
     [22] = {
-        Index = 1006,
+        ItemId = 1006,
         Item = "破旧绳索",
         DisplayName = "Worn Rope",
         Icon = "rbxassetid://122411307036488",
@@ -421,7 +421,7 @@ ItemConfig.Data = {
         Weight = 1,
     },
     [23] = {
-        Index = 1007,
+        ItemId = 1007,
         Item = "骨头碎片",
         DisplayName = "Bone Fragment",
         Icon = "rbxassetid://105576003572190",
@@ -440,7 +440,7 @@ ItemConfig.Data = {
         Weight = 0.5,
     },
     [24] = {
-        Index = 1008,
+        ItemId = 1008,
         Item = "旧报纸残页",
         DisplayName = "Old Newspaper Scrap",
         Icon = "rbxassetid://73093497229758",
@@ -459,7 +459,7 @@ ItemConfig.Data = {
         Weight = 0.1,
     },
     [25] = {
-        Index = 1009,
+        ItemId = 1009,
         Item = "信封",
         DisplayName = "Envelope",
         Icon = "rbxassetid://138713655406841",
@@ -478,7 +478,7 @@ ItemConfig.Data = {
         Weight = 0.1,
     },
     [26] = {
-        Index = 1010,
+        ItemId = 1010,
         Item = "陶罐",
         DisplayName = "Clay Pot",
         Icon = "rbxassetid://96684574627137",
@@ -497,7 +497,7 @@ ItemConfig.Data = {
         Weight = 2,
     },
     [27] = {
-        Index = 1011,
+        ItemId = 1011,
         Item = "海盗帽",
         DisplayName = "Pirate Hat",
         Icon = "rbxassetid://75979111313340",
@@ -516,7 +516,7 @@ ItemConfig.Data = {
         Weight = 0.8,
     },
     [28] = {
-        Index = 1012,
+        ItemId = 1012,
         Item = "提灯",
         DisplayName = "Lantern",
         Icon = "rbxassetid://86068885165137",
@@ -535,7 +535,7 @@ ItemConfig.Data = {
         Weight = 2.5,
     },
     [29] = {
-        Index = 1013,
+        ItemId = 1013,
         Item = "大葱",
         DisplayName = "Green Onion",
         Icon = "rbxassetid://120349324917743",
@@ -554,7 +554,7 @@ ItemConfig.Data = {
         Weight = 0.3,
     },
     [30] = {
-        Index = 1014,
+        ItemId = 1014,
         Item = "扇子",
         DisplayName = "Fan",
         Icon = "rbxassetid://100156804426081",
@@ -573,7 +573,7 @@ ItemConfig.Data = {
         Weight = 0.2,
     },
     [31] = {
-        Index = 1015,
+        ItemId = 1015,
         Item = "木桶",
         DisplayName = "Wooden Barrel",
         Icon = "rbxassetid://117483365334798",
@@ -592,7 +592,7 @@ ItemConfig.Data = {
         Weight = 4,
     },
     [32] = {
-        Index = 1016,
+        ItemId = 1016,
         Item = "水壶",
         DisplayName = "Water Kettle",
         Icon = "rbxassetid://107365993175298",
@@ -611,7 +611,7 @@ ItemConfig.Data = {
         Weight = 1.8,
     },
     [33] = {
-        Index = 1017,
+        ItemId = 1017,
         Item = "木条",
         DisplayName = "Wooden Plank",
         Icon = "rbxassetid://78896655282067",
@@ -630,7 +630,7 @@ ItemConfig.Data = {
         Weight = 3,
     },
     [34] = {
-        Index = 1018,
+        ItemId = 1018,
         Item = "钱袋",
         DisplayName = "Money Bag",
         Icon = "rbxassetid://85828547583727",
@@ -649,7 +649,7 @@ ItemConfig.Data = {
         Weight = 1.5,
     },
     [35] = {
-        Index = 1019,
+        ItemId = 1019,
         Item = "面具",
         DisplayName = "Mask",
         Icon = "rbxassetid://85922917375016",
@@ -668,7 +668,7 @@ ItemConfig.Data = {
         Weight = 0.6,
     },
     [36] = {
-        Index = 1020,
+        ItemId = 1020,
         Item = "鬼脸娃娃",
         DisplayName = "Grimace Doll",
         Icon = "rbxassetid://86205452605963",
@@ -687,7 +687,7 @@ ItemConfig.Data = {
         Weight = 1,
     },
     [37] = {
-        Index = 1021,
+        ItemId = 1021,
         Item = "靴子",
         DisplayName = "Boots",
         Icon = "rbxassetid://83774438054930",
@@ -706,7 +706,7 @@ ItemConfig.Data = {
         Weight = 1.5,
     },
     [38] = {
-        Index = 1022,
+        ItemId = 1022,
         Item = "魔法帽",
         DisplayName = "Wizard Hat",
         Icon = "rbxassetid://104600101847403",
@@ -725,7 +725,7 @@ ItemConfig.Data = {
         Weight = 0.8,
     },
     [39] = {
-        Index = 1023,
+        ItemId = 1023,
         Item = "手套",
         DisplayName = "Gloves",
         Icon = "rbxassetid://135724777590724",
@@ -744,7 +744,7 @@ ItemConfig.Data = {
         Weight = 0.3,
     },
     [40] = {
-        Index = 1024,
+        ItemId = 1024,
         Item = "生锈的齿轮",
         DisplayName = "Rusty Gear",
         Icon = "rbxassetid://90347812810054",
@@ -763,7 +763,7 @@ ItemConfig.Data = {
         Weight = 1.2,
     },
     [41] = {
-        Index = 1025,
+        ItemId = 1025,
         Item = "兽角",
         DisplayName = "Beast Horn",
         Icon = "rbxassetid://120912130598306",
@@ -782,7 +782,7 @@ ItemConfig.Data = {
         Weight = 0.9,
     },
     [42] = {
-        Index = 1026,
+        ItemId = 1026,
         Item = "野兽骸骨",
         DisplayName = "Beast Skeleton",
         Icon = "rbxassetid://100485402089375",
@@ -801,7 +801,7 @@ ItemConfig.Data = {
         Weight = 3.5,
     },
     [43] = {
-        Index = 1027,
+        ItemId = 1027,
         Item = "粘液",
         DisplayName = "Slime",
         Icon = "rbxassetid://94723848723446",
@@ -820,7 +820,7 @@ ItemConfig.Data = {
         Weight = 1,
     },
     [44] = {
-        Index = 1028,
+        ItemId = 1028,
         Item = "一瓶粘液",
         DisplayName = "Vial of Slime",
         Icon = "rbxassetid://88068426664096",
@@ -839,7 +839,7 @@ ItemConfig.Data = {
         Weight = 1.2,
     },
     [45] = {
-        Index = 1029,
+        ItemId = 1029,
         Item = "潜水头盔",
         DisplayName = "Diving Helmet",
         Icon = "rbxassetid://123592447775167",
@@ -858,7 +858,7 @@ ItemConfig.Data = {
         Weight = 5,
     },
     [46] = {
-        Index = 1030,
+        ItemId = 1030,
         Item = "船锚",
         DisplayName = "Anchor",
         Icon = "rbxassetid://86963789369428",
@@ -877,7 +877,7 @@ ItemConfig.Data = {
         Weight = 8,
     },
     [47] = {
-        Index = 1031,
+        ItemId = 1031,
         Item = "船舵",
         DisplayName = "Ship's Wheel",
         Icon = "rbxassetid://91850687518910",
@@ -896,7 +896,7 @@ ItemConfig.Data = {
         Weight = 6,
     },
     [48] = {
-        Index = 1032,
+        ItemId = 1032,
         Item = "发霉书页",
         DisplayName = "Moldy Book Page",
         Icon = "rbxassetid://81176096156968",
@@ -915,7 +915,7 @@ ItemConfig.Data = {
         Weight = 0.1,
     },
     [49] = {
-        Index = 1033,
+        ItemId = 1033,
         Item = "枪",
         DisplayName = "Gun",
         Icon = "rbxassetid://122810694378500",
@@ -934,7 +934,7 @@ ItemConfig.Data = {
         Weight = 4,
     },
     [50] = {
-        Index = 1034,
+        ItemId = 1034,
         Item = "刀",
         DisplayName = "Knife",
         Icon = "rbxassetid://134783722097358",
@@ -953,7 +953,7 @@ ItemConfig.Data = {
         Weight = 4,
     },
     [51] = {
-        Index = 1035,
+        ItemId = 1035,
         Item = "龙珠",
         DisplayName = "Dragon Orb",
         Icon = "rbxassetid://103874659967279",
@@ -972,7 +972,7 @@ ItemConfig.Data = {
         Weight = 1.5,
     },
     [52] = {
-        Index = 1036,
+        ItemId = 1036,
         Item = "红宝石",
         DisplayName = "Ruby Gem",
         Icon = "rbxassetid://94532553074007",
@@ -991,7 +991,7 @@ ItemConfig.Data = {
         Weight = 0.8,
     },
     [53] = {
-        Index = 1037,
+        ItemId = 1037,
         Item = "蓝宝石",
         DisplayName = "Sapphire Gem",
         Icon = "rbxassetid://95443518196844",
@@ -1010,7 +1010,7 @@ ItemConfig.Data = {
         Weight = 0.8,
     },
     [54] = {
-        Index = 1038,
+        ItemId = 1038,
         Item = "心形宝石",
         DisplayName = "Heart Gem",
         Icon = "rbxassetid://108864196858289",
@@ -1032,8 +1032,12 @@ ItemConfig.Data = {
 
 -- 辅助函数
 function ItemConfig:GetByIndex(index)
+    return self.Data[index]
+end
+
+function ItemConfig:GetByItemId(value)
     for i, item in pairs(self.Data) do
-        if item.Index == index then
+        if item.ItemId == value then
             return item
         end
     end

@@ -132,7 +132,7 @@ function GMService:GMCommand(player)
                                 Attribute = GameConfig.GetItemAttribute(),
                             })
                         else
-                            local itemInfo = ItemConfig:GetByIndex(itemId)
+                            local itemInfo = ItemConfig:GetByItemId(itemId)
                             Knit.GetService("InventoryService"):CreateItemToFloor(player, itemInfo, {
                                 ItemId = itemId,
                                 Attribute = GameConfig.GetItemAttribute(),

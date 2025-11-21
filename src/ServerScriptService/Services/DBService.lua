@@ -29,8 +29,14 @@ local _dataTemplate = {
 		level = 1,				-- 当前段位的级别
 		star = 0				-- 当前级别的星级
 	},
-	AbilityData = {},			-- 能力列表
-	Overwhelmed = 15,			-- 负重
+	TalentData = {
+		["8001"] = {
+			TalentTreeId = 8001,
+			ItemNum = {},
+			Gold = 0,
+			Complated = false,
+		},
+	},			-- 能力列表
 	IsFirstLoginFuben = 0,		-- 是否第一次进入副本
 	QuestData = {},				-- 任务数据（QuestService 持久化使用）
 }
@@ -179,8 +185,8 @@ function DBService:SetToAllStore(userId, key, value)
 		Knit.GetService("InventoryService"):GetToolFromDBService(userId, value)
 	elseif key == "DuanWeiData" then
 		Knit.GetService("LevelService"):GetLevelFromDBService(userId, value)
-	elseif key == "AbilityData" then
-		Knit.GetService("AbilityService"):GetAbilityFromDBService(userId, value)
+	elseif key == "TalentData" then
+		Knit.GetService("TalentService"):GetTalentFromDBService(userId, value)
 	elseif key == "QuestData" then
 		Knit.GetService("QuestService"):GetQuestFromDBService(userId, value)
 	end
