@@ -181,6 +181,26 @@ function GMService:GMCommand(player)
                     return true
                 end
             end
+
+			local equipMatch = string.match(lowerMessage, "^add equip (%d+)$")
+            if equipMatch then
+                local equipId = tonumber(equipMatch)
+                if equipId then
+                    Knit.GetService("EquipmentService"):AddEquip(player, equipId)
+                    Knit.GetService("ClientUIService"):ShowTip(player, "已添加装备 ID: " .. equipId)
+                    return true
+                end
+            end
+
+			local equipRemoveMatch = string.match(lowerMessage, "^remove equip (%d+)$")
+            if equipRemoveMatch then
+                local equipId = tonumber(equipRemoveMatch)
+                if equipId then
+                    Knit.GetService("EquipmentService"):RemoveEquip(player, equipId)
+                    Knit.GetService("ClientUIService"):ShowTip(player, "已移除装备 ID: " .. equipId)
+                    return true
+                end
+            end
             
             -- 解析 "help" 命令 - 显示帮助信息
             if lowerMessage == "help" or lowerMessage == "debug help" then

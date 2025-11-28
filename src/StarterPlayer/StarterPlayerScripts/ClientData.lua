@@ -7,6 +7,7 @@ local ClientData = {}
 ClientData.Gold = 0
 ClientData.Inventory = {}
 ClientData.ToolData = {}
+ClientData.EquipmentData = {}
 ClientData.TalentData = {}
 ClientData.QuestData = {}
 ClientData.RankPersonalData = {}
@@ -22,6 +23,7 @@ local function setInitData(data)
     ClientData.Gold = data.Gold or 0
     ClientData.Inventory = data.Inventory or {}
     ClientData.ToolData = data.ToolData or {}
+    ClientData.EquipmentData = data.EquipmentData or {}
     ClientData.TalentData = data.TalentData or {}
     ClientData.RankPersonalData = data.RankPersonalData or {}
     ClientData.RankData = data.RankData or {}
@@ -37,6 +39,7 @@ local function setInitData(data)
     Knit.GetController("UIController").ChangeGoldUI:Fire(ClientData.Gold)
     Knit.GetController("UIController").UpdateBackpack:Fire(ClientData.Inventory)
     Knit.GetController("UIController").UpdateToolUI:Fire(ClientData.ToolData)
+    Knit.GetController("UIController").UpdateEquipment:Fire(ClientData.EquipmentData)
     Knit.GetController("UIController").ShowAdminButton:Fire(ClientData.IsAdmin)
     Knit.GetController("UIController").UpdateRankPersonalData:Fire(ClientData.RankPersonalData)
     Knit.GetController("UIController").UpdateTalentData:Fire(ClientData.TalentData)
@@ -69,7 +72,13 @@ local function init()
         -- 监听服务器的发送工具数据请求
 		Knit.GetService("InventoryService").SendToolData:Connect(function(toolData)
 			ClientData.ToolData = toolData or {}
-			Knit.GetController("UIController").UpdateToolData:Fire(toolData or {})
+			Knit.GetController("UIController").UpdateToolUI:Fire(toolData or {})
+		end)
+
+        -- 监听服务器的发送装备数据请求
+		Knit.GetService("EquipmentService").SendEquipment:Connect(function(equipmentData)
+			ClientData.EquipmentData = equipmentData or {}
+			Knit.GetController("UIController").UpdateEquipment:Fire(equipmentData or {})
 		end)
 
         -- 监听服务器的发送开始传送请求

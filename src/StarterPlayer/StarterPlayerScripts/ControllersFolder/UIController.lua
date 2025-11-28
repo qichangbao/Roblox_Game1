@@ -31,6 +31,8 @@ local UIController = Knit.CreateController {
     ShowFlyItemUI = Signal.new(),
     ShowQuestUI = Signal.new(),
     UpdateQuestData = Signal.new(),
+    ShowEquipmentUI = Signal.new(),
+    UpdateEquipment = Signal.new(),
 }
 
 function UIController:KnitInit()

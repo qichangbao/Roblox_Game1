@@ -23,6 +23,7 @@ local _dataTemplate = {
 			UsedNum = 0,
 		},
 	},		-- 工具栏数据
+	EquipmentData = {},			-- 装备数据
 	EscapeActions = {},			-- 逃生数据
 	DuanWeiData = {				-- 段位数据
 		duanWei = 1,			-- 段位等级 (1-7)

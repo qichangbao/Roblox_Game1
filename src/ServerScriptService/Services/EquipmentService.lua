@@ -32,9 +32,11 @@ local GROUPS = {
 local EquipmentService = Knit.CreateService {
 	Name = "EquipmentService",
 	Client = {
+		SendEquipment = Knit.CreateSignal(),
 	},
 
-    OriginalDescriptions = {}
+    OriginalDescriptions = {},
+    EquipmentData = {},
 }
 
 function EquipmentService:KnitInit()
@@ -57,6 +59,9 @@ local function getCharacterAndHumanoid(player: Player)
 end
 
 function EquipmentService:PlayerAdded(player)
+    local equipmentData = Knit.GetService("DBService"):Get(player.UserId, "EquipmentData") or {}
+    self.EquipmentData[player.UserId] = equipmentData
+
     local _, humanoid = getCharacterAndHumanoid(player)
     local ok, accountDesc = pcall(function()
         return Players:GetHumanoidDescriptionFromUserId(player.UserId)
@@ -67,7 +72,44 @@ end
 
 function EquipmentService:PlayerRemoved(player)
     self.OriginalDescriptions[player.UserId] = nil
+    self.EquipmentData[player.UserId] = nil
 end
+
+function EquipmentService:GetEquipmentData(player)
+    return self.EquipmentData[player.UserId]
+end
+
+function EquipmentService:AddEquip(player, equipId)
+    local equipmentData = self.EquipmentData[player.UserId]
+    if not equipmentData then
+        warn(("玩家 %s 未初始化装备数据"):format(player.Name))
+        return
+    end
+
+    table.insert(equipmentData, {EquipId = equipId, isEquiped = false})
+    Knit.GetService("DBService"):Set(player.UserId, "EquipmentData", equipmentData)
+    self.Client.SendEquipment:Fire(player, equipmentData)
+end
+
+function EquipmentService:RemoveEquip(player, equipId)
+    local equipmentData = self.EquipmentData[player.UserId]
+    if not equipmentData then
+        warn(("玩家 %s 未初始化装备数据"):format(player.Name))
+        return
+    end
+
+    for i, equipData in ipairs(equipmentData) do
+        if equipData.EquipId == equipId then
+            table.remove(equipmentData, i)
+            Knit.GetService("DBService"):Set(player.UserId, "EquipmentData", equipmentData)
+            self.Client.SendEquipment:Fire(player, equipmentData)
+            return
+        end
+    end
+    warn(("玩家 %s 未找到装备 ID: %s"):format(player.Name, equipId))
+end
+
+
 
 --[[
     从资产ID加载所有 Accessory（支持一个资产包含多个配件）
@@ -301,17 +343,6 @@ local function addAccessories(humanoid: Humanoid, accessoryOrAssetId, predicate)
     end
 
     return clones
-end
-
---[[
-    兼容函数：挂载单个 Accessory（内部调用批量函数，返回第一个）
-    @param humanoid Humanoid
-    @param accessoryOrAssetId any
-    @return Accessory? 返回第一个成功挂载的克隆实例
-]]
-local function addAccessory(humanoid: Humanoid, accessoryOrAssetId): Accessory?
-    local list = addAccessories(humanoid, accessoryOrAssetId)
-    return list[1]
 end
 
 --[[

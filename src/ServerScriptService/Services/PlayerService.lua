@@ -44,8 +44,6 @@ function PlayerService:KnitStart()
             end
             Knit.GetService("LevelService"):CreatePlayerBillboard(player)
 
-            Knit.GetService("EquipmentService"):EquipHat(player, game:GetService("ServerStorage"):WaitForChild("Equipment"):WaitForChild("Hat"):WaitForChild("1"))
-
             self.AnimationTracks[player.UserId] = {}
             local animator = humanoid:FindFirstChildOfClass("Animator")
             if animator then
@@ -172,6 +170,7 @@ function PlayerService:GetInitData(player)
     local gold = Knit.GetService("GoldService"):GetGoldData(player)
     local inventoryData = Knit.GetService("InventoryService"):GetInventoryData(player)
     local toolData = Knit.GetService("InventoryService"):GetToolData(player)
+    local equipmentData = Knit.GetService("EquipmentService"):GetEquipmentData(player)
     local rankPersonalData = Knit.GetService("RankService"):GetPersonalDataWithRank(player)
     local rankData = Knit.GetService("RankService"):GetLeaderboard()
     local talentData = Knit.GetService("TalentService"):GetTalentData(player)
@@ -202,6 +201,7 @@ function PlayerService:GetInitData(player)
         Gold = gold,
         Inventory = inventoryData,
         ToolData = toolData,
+        EquipmentData = equipmentData,
         TalentData = self.TalentData[player.UserId],
         RankPersonalData = rankPersonalData,
         RankData = rankData,
