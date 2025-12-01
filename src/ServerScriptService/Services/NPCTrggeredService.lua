@@ -20,8 +20,8 @@ end
 function NPCTrggeredService:KnitStart()
 end
 
-function NPCTrggeredService:Triggered(player, npcType)
-	self.Client.Triggered:Fire(player, npcType)
+function NPCTrggeredService:Triggered(player, npcType, data)
+	self.Client.Triggered:Fire(player, npcType, data)
 end
 
 return NPCTrggeredService

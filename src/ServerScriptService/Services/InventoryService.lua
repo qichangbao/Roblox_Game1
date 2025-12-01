@@ -2,7 +2,6 @@
 -- 使用Knit框架管理服务器数据
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ServerStorage = game:GetService("ServerStorage")
 
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local ItemConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("ItemConfig"))
@@ -291,7 +290,7 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
 		return
 	end
 
-    local itemFolder = ServerStorage:FindFirstChild("Item")
+    local itemFolder = ReplicatedStorage:FindFirstChild("ItemFolder")
     if not itemFolder then
         warn("Item folder not found")
         return

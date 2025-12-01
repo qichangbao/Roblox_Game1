@@ -311,4 +311,83 @@ function Interface.AnimateNumberIncrease(labelOrFrom, to)
     return num, tween
 end
 
+-- 存储每个GuiObject的缩放动画状态，避免重复动画冲突
+local uiScaleStates = {}
+
+--[[
+    UI显示动画：使用 UIScale 将尺寸从 0 缩放到 1
+    @param guiObject GuiObject|ScreenGui 目标UI元素（Frame、ImageLabel、TextLabel等）或屏幕容器
+    @param opts table? 可选配置
+        - duration number 动画时长（秒），默认 0.1
+        - easingStyle Enum.EasingStyle 缓动类型，默认 Quad
+        - easingDirection Enum.EasingDirection 缓动方向，默认 Out
+        - setVisible boolean 是否在播放前设置为可见：
+            GuiObject 使用 Visible=true，ScreenGui/SurfaceGui/BillboardGui 使用 Enabled=true，默认 true
+        - center boolean 是否将 AnchorPoint 设为居中 (0.5,0.5)，仅 GuiObject 生效，默认 false
+    @return UIScale, Tween 返回 UIScale 与 Tween 对象（便于外部控制/监听）
+    说明：
+    - 优先使用 UIScale 缩放，不会破坏原始 Size/Position 布局
+    - 若目标下不存在 UIScale，会自动创建一个
+]]
+function Interface.AnimateUIShowScale(guiObject, opts)
+    if typeof(guiObject) ~= "Instance" or not guiObject:IsA("GuiBase2d") then
+        warn("AnimateUIShowScale: 需要传入 GuiObject 或 ScreenGui（GuiBase2d）")
+        return nil, nil
+    end
+
+    opts = opts or {}
+    local duration = typeof(opts.duration) == "number" and opts.duration or 0.1
+    local easingStyle = opts.easingStyle or Enum.EasingStyle.Quad
+    local easingDirection = opts.easingDirection or Enum.EasingDirection.Out
+    local setVisible = (opts.setVisible == nil) and true or opts.setVisible
+    local center = opts.center == true
+    local isGuiObject = guiObject:IsA("GuiObject")
+
+    if center and isGuiObject then
+        guiObject.AnchorPoint = Vector2.new(0.5, 0.5)
+    end
+    if setVisible then
+        if isGuiObject then
+            guiObject.Visible = true
+        else
+            if guiObject:IsA("ScreenGui") or guiObject:IsA("SurfaceGui") or guiObject:IsA("BillboardGui") then
+                guiObject.Enabled = true
+            end
+        end
+    end
+
+    local scale = guiObject:FindFirstChildOfClass("UIScale")
+    if not scale then
+        scale = Instance.new("UIScale")
+        scale.Scale = 0
+        scale.Parent = guiObject
+    else
+        -- 从 0 开始，保证有缩放过渡
+        scale.Scale = 0
+    end
+
+    -- 如果该 GuiObject 有动画在运行，先取消旧动画
+    if uiScaleStates[guiObject] then
+        local old = uiScaleStates[guiObject]
+        if old.tween then old.tween:Cancel() end
+    end
+
+    local tweenInfo = TweenInfo.new(duration, easingStyle, easingDirection)
+    local tween = TweenService:Create(scale, tweenInfo, { Scale = 1 })
+
+    -- 记录当前动画状态
+    uiScaleStates[guiObject] = {
+        scale = scale,
+        tween = tween,
+    }
+
+    tween:Play()
+    tween.Completed:Connect(function()
+        -- 动画完成后清理状态记录
+        uiScaleStates[guiObject] = nil
+    end)
+
+    return scale, tween
+end
+
 return Interface

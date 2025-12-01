@@ -27,6 +27,7 @@ GameConfig.NpcUIType = {
     Sell = 2,       -- 出售
     Talent = 3,     -- 天赋
     Quest = 4,      -- 任务
+    Reward = 5,     -- 奖励
 }
 
 GameConfig.Difficulty = {
