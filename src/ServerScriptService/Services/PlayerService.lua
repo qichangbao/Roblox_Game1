@@ -13,11 +13,13 @@ local PlayerService = Knit.CreateService {
 	Client = {
 	},
 
-    TalentData = {},       -- 能力列表
-    Overwhelmed = {},       -- 负重
-    CollectSpeed = {},       -- 搜集速度
-    Lucky = {},              -- 幸运
-    AnimationTracks = {},
+    TalentData = {},            -- 能力列表
+    Overwhelmed = {},           -- 负重
+    CollectSpeed = {},          -- 搜集速度
+    Lucky = {},                 -- 幸运
+    AnimationTracks = {},       -- 动画轨道
+    OfflineTime = {},           -- 离线时间
+    AnimationMarkerConns = {},  -- 动画标记事件连接
 }
 
 function PlayerService:KnitInit()
@@ -28,39 +30,30 @@ end
 function PlayerService:KnitStart()
     local function PlayerAdded(player)
         local function characterAdd(character)
-            local humanoid = character:FindFirstChildOfClass("Humanoid")
-            if humanoid then
-                humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-                humanoid.AutoJumpEnabled = false
-                humanoid.UseJumpPower = true
-                humanoid:SetAttribute("InitHealth", humanoid.Health)
-                humanoid:SetAttribute("InitWalkSpeed", humanoid.WalkSpeed)
-                humanoid:SetAttribute("InitJumpPower", humanoid.JumpPower)
-                humanoid:SetAttribute("InitMaxHealth", humanoid.MaxHealth)
-                
-                if self.TalentData[player.UserId] then
-                    self:InitPlayerTalent(player, self.TalentData[player.UserId])
-                end
+            local humanoid = character:WaitForChild("Humanoid")
+            humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+            humanoid.AutoJumpEnabled = false
+            humanoid.UseJumpPower = true
+            humanoid:SetAttribute("InitHealth", humanoid.Health)
+            humanoid:SetAttribute("InitWalkSpeed", humanoid.WalkSpeed)
+            humanoid:SetAttribute("InitJumpPower", humanoid.JumpPower)
+            humanoid:SetAttribute("InitMaxHealth", humanoid.MaxHealth)
+            
+            if self.TalentData[player.UserId] then
+                self:InitPlayerTalent(player, self.TalentData[player.UserId])
             end
             Knit.GetService("LevelService"):CreatePlayerBillboard(player)
+
+            -- 如果之前已有标记连接，先清理（例如角色重生）
+            self:RemoveAnimationMarker(player)
 
             self.AnimationTracks[player.UserId] = {}
             local animator = humanoid:FindFirstChildOfClass("Animator")
             if animator then
-                -- 定义动画映射表
-                local animationMap = {
-                    swing = {"rbxassetid://107273238071706", "rbxassetid://90203983110020"},
-                    dig = {"rbxassetid://96906531402562", "rbxassetid://82370673878002"},
-                }
-                
                 -- 预加载所有动画
-                for animName, animInfo in pairs(animationMap) do
+                for animName, animInfo in pairs(GameConfig.AnimationMap) do
                     local animation = Instance.new("Animation")
-                    if humanoid.RigType == Enum.HumanoidRigType.R6 then
-                        animation.AnimationId = animInfo[1]
-                    else
-                        animation.AnimationId = animInfo[2]
-                    end
+                    animation.AnimationId = animInfo
                     
                     local success, track = pcall(function()
                         return animator:LoadAnimation(animation)
@@ -70,6 +63,24 @@ function PlayerService:KnitStart()
                         track.Priority = Enum.AnimationPriority.Action
                         track.Looped = false
                         self.AnimationTracks[player.UserId][animName] = track
+
+                        -- 为动画标记添加监听（支持 "Hit" 或 "hit" 名称）
+                        self.AnimationMarkerConns[player.UserId] = self.AnimationMarkerConns[player.UserId] or {}
+                        self.AnimationMarkerConns[player.UserId][animName] = self.AnimationMarkerConns[player.UserId][animName] or {}
+
+                        local function bindMarker(markerName)
+                            local ok, signal = pcall(function()
+                                return track:GetMarkerReachedSignal(markerName)
+                            end)
+                            if ok and signal then
+                                local conn = signal:Connect(function(param)
+                                    self:OnAnimationMarker(player, animName, markerName, param, track)
+                                end)
+                                self.AnimationMarkerConns[player.UserId][animName][markerName] = conn
+                            end
+                        end
+
+                        bindMarker("Hit")
                     end
                 end
 
@@ -100,14 +111,16 @@ function PlayerService:KnitStart()
     end
 
     local function PlayerRemoved(player)
+        -- 断开动画标记事件连接，避免内存泄漏
+        self:RemoveAnimationMarker(player)
+
         self.AnimationTracks[player.UserId] = nil
         self.TalentData[player.UserId] = nil
         self.Overwhelmed[player.UserId] = nil
         self.CollectSpeed[player.UserId] = nil
         self.Lucky[player.UserId] = nil
+        self.OfflineTime[player.UserId] = nil
 
-        local DBService = Knit.GetService("DBService")
-        DBService:PlayerRemoving(player)
         Knit.GetService("InventoryService"):PlayerRemoved(player)
         Knit.GetService("GoldService"):PlayerRemoved(player)
         Knit.GetService("RankService"):PlayerRemoved(player)
@@ -116,6 +129,14 @@ function PlayerService:KnitStart()
         Knit.GetService("GMService"):PlayerRemoved(player)
         Knit.GetService("QuestService"):PlayerRemoved(player)
         Knit.GetService("EquipmentService"):PlayerRemoved(player)
+
+        local DBService = Knit.GetService("DBService")
+        -- 在玩家离开时记录离开时间到数据库（仅时间戳）
+        -- @param player Player 离开的玩家
+        -- @details 写入字段 "LeaveGameTime" 为 Unix 时间戳（单位：秒），用于下次进入时计算累计离线时长
+        local now = DateTime.now().UnixTimestamp
+        DBService:Set(player.UserId, "LeaveGameTime", now)
+        DBService:PlayerRemoving(player)
     end
 
     for _, player in pairs(Players:GetPlayers()) do
@@ -197,6 +218,17 @@ function PlayerService:GetInitData(player)
         lucky = humanoid:GetAttribute("Lucky")
     end
 
+    -- 计算并累计离线时长（基于上次离开时间）
+    -- @function 统计累计离线时长
+    -- @param player Player 当前加入的玩家
+    -- @details 若存在上次离开时间（LeaveGameTime > 0），则将 (now - LeaveGameTime) 累加到 TotalOfflineSeconds
+    local now = DateTime.now().UnixTimestamp
+    self.OfflineTime[player.UserId] = 0
+    local lastLeave = Knit.GetService("DBService"):Get(player.UserId, "LeaveGameTime") or 0
+    if type(lastLeave) == "number" and lastLeave > 0 and now > lastLeave then
+        self.OfflineTime[player.UserId] = now - lastLeave
+    end
+
     return {
         Gold = gold,
         Inventory = inventoryData,
@@ -211,6 +243,7 @@ function PlayerService:GetInitData(player)
         Weight = weight,
         CollectSpeed = collectSpeed,
         Lucky = lucky,
+        OfflineTime = self.OfflineTime[player.UserId],
     }
 end
 
@@ -413,6 +446,31 @@ function PlayerService:playAnimation(player, animationName, soundName, cd)
     if music then
         music:Play()
     end
+end
+
+function  PlayerService:RemoveAnimationMarker(player)
+    if self.AnimationMarkerConns[player.UserId] then
+        for _, markers in pairs(self.AnimationMarkerConns[player.UserId]) do
+            for _, conn in pairs(markers) do
+                if typeof(conn) == "RBXScriptConnection" then
+                    conn:Disconnect()
+                end
+            end
+        end
+        self.AnimationMarkerConns[player.UserId] = nil
+    end
+end
+
+-- 动画标记统一回调（服务端）
+-- @function OnAnimationMarker
+-- @param player Player 触发标记的玩家
+-- @param animationName string 动画名称（如 "swing"、"dig"）
+-- @param markerName string 标记名称（如 "Hit"）
+-- @param param any 标记参数（来自动画编辑器中该标记的参数）
+-- @param track AnimationTrack 触发的动画轨道
+-- @return void
+function PlayerService:OnAnimationMarker(player, animationName, markerName, param, track)
+    -- 在这里编写你的命中逻辑。例如：处理武器命中、采集判定等。
 end
 
 return PlayerService

@@ -40,6 +40,7 @@ local _dataTemplate = {
 	},			-- 能力列表
 	IsFirstLoginFuben = 0,		-- 是否第一次进入副本
 	QuestData = {},				-- 任务数据（QuestService 持久化使用）
+	LeaveGameTime = 0,			-- 玩家离开游戏时间（Unix 时间戳，单位：秒）
 }
 
 local ProfileStore = ProfileService.GetProfileStore(
@@ -107,10 +108,10 @@ function DBService:ProcessAdminRequest(player, action, userId, ...)
 end
 
 function DBService:PlayerAdded(player)
-	local userId = player.UserId
-	if self.Profiles[userId] then
-		return
-	end
+    local userId = player.UserId
+    if self.Profiles[userId] then
+        return
+    end
 
 	local profileKey = "Player_"..userId
 	local profile = ProfileStore:LoadProfileAsync(profileKey)
@@ -126,22 +127,22 @@ function DBService:PlayerAdded(player)
 
 		if not player:IsDescendantOf(Players) then
 			profile:Release()
-		else
-			self.Profiles[userId] = profile
-		end
-	else
-		player:Kick()
-	end
-	
-	self:GiveStats(player)
+        else
+            self.Profiles[userId] = profile
+        end
+    else
+        player:Kick()
+    end
+    
+    self:GiveStats(player)
 end
 
 function DBService:PlayerRemoving(player)
-	local userId = player.UserId
+    local userId = player.UserId
 
-	if self.Profiles[userId] then
-		self.Profiles[userId]:Release()
-	end
+    if self.Profiles[userId] then
+        self.Profiles[userId]:Release()
+    end
 end
 
 function DBService:InitDataFromUserId(userId)

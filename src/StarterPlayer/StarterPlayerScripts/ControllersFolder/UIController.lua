@@ -34,6 +34,8 @@ local UIController = Knit.CreateController {
     UpdateQuestData = Signal.new(),
     ShowEquipmentUI = Signal.new(),
     UpdateEquipment = Signal.new(),
+    UpdateOfflineTime = Signal.new(),
+    RewardAction = Signal.new(),
 }
 
 function UIController:KnitInit()

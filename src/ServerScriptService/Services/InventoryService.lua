@@ -471,27 +471,18 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
             return
         end
 
-		local script = tool:FindFirstChild("ModuleScript")
-		if script then
-			local module = require(script)
-			if module then
-                local isSuccess = module:Activate(player, itemInfo)
-                if isSuccess then
-					local CDElapsedTime = currentTime + itemInfo.CD
-					self.ToolData[player.UserId][slot].Attribute.CDElapsedTime = CDElapsedTime
-					GameConfig.UpdateItemAttribute(tool, "CDElapsedTime", CDElapsedTime)
-					self.Client.SendToolData:Fire(player, self.ToolData[player.UserId])
-                end
-			end
+        local CDElapsedTime = currentTime + itemInfo.CD
+        self.ToolData[player.UserId][slot].Attribute.CDElapsedTime = CDElapsedTime
+        GameConfig.UpdateItemAttribute(tool, "CDElapsedTime", CDElapsedTime)
+        self:SendToolData(player)
 
-			if itemInfo.Type == GameConfig.ItemType.Weapon then    -- 进攻类
-                if itemInfo.ItemId == 202 then
-					Knit.GetService("PlayerService"):playAnimation(player, "dig", "Attack2", itemInfo.CD)
-                elseif itemInfo.ItemId == 203 then
-					Knit.GetService("PlayerService"):playAnimation(player, "swing", "Attack1", itemInfo.CD)
-                else
-					Knit.GetService("PlayerService"):playAnimation(player, "swing", "Attack1", itemInfo.CD)
-                end
+		if itemInfo.Type == GameConfig.ItemType.Weapon then    -- 进攻类
+			if itemInfo.ItemId == 202 then
+				Knit.GetService("PlayerService"):playAnimation(player, "dig", "Attack2", itemInfo.CD)
+			elseif itemInfo.ItemId == 203 then
+				Knit.GetService("PlayerService"):playAnimation(player, "swing", "Attack1", itemInfo.CD)
+			else
+				Knit.GetService("PlayerService"):playAnimation(player, "swing", "Attack1", itemInfo.CD)
 			end
 		end
 	end)

@@ -136,6 +136,11 @@ GameConfig.DuanWeiType = {
     },
 }
 
+GameConfig.AnimationMap = {
+    swing = "rbxassetid://116313478364741",
+    dig = "rbxassetid://106509260307106",
+}
+
 GameConfig.BackpackSlotCount = 6    -- 背包槽位数量
 GameConfig.InitItemNums = 30        -- 初始物品数量
 GameConfig.LandName = "出生岛"
