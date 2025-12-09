@@ -17,7 +17,6 @@ local PlayerService = Knit.CreateService {
     Overwhelmed = {},           -- 负重
     CollectSpeed = {},          -- 搜集速度
     Lucky = {},                 -- 幸运
-    AnimationTracks = {},       -- 动画轨道
     OfflineTime = {},           -- 离线时间
     AnimationMarkerConns = {},  -- 动画标记事件连接
 }
@@ -43,62 +42,6 @@ function PlayerService:KnitStart()
                 self:InitPlayerTalent(player, self.TalentData[player.UserId])
             end
             Knit.GetService("LevelService"):CreatePlayerBillboard(player)
-
-            -- 如果之前已有标记连接，先清理（例如角色重生）
-            self:RemoveAnimationMarker(player)
-
-            self.AnimationTracks[player.UserId] = {}
-            local animator = humanoid:FindFirstChildOfClass("Animator")
-            if animator then
-                -- 预加载所有动画
-                for animName, animInfo in pairs(GameConfig.AnimationMap) do
-                    local animation = Instance.new("Animation")
-                    animation.AnimationId = animInfo
-                    
-                    local success, track = pcall(function()
-                        return animator:LoadAnimation(animation)
-                    end)
-                    
-                    if success and track then
-                        track.Priority = Enum.AnimationPriority.Action
-                        track.Looped = false
-                        self.AnimationTracks[player.UserId][animName] = track
-
-                        -- 为动画标记添加监听（支持 "Hit" 或 "hit" 名称）
-                        self.AnimationMarkerConns[player.UserId] = self.AnimationMarkerConns[player.UserId] or {}
-                        self.AnimationMarkerConns[player.UserId][animName] = self.AnimationMarkerConns[player.UserId][animName] or {}
-
-                        local function bindMarker(markerName)
-                            local ok, signal = pcall(function()
-                                return track:GetMarkerReachedSignal(markerName)
-                            end)
-                            if ok and signal then
-                                local conn = signal:Connect(function(param)
-                                    self:OnAnimationMarker(player, animName, markerName, param, track)
-                                end)
-                                self.AnimationMarkerConns[player.UserId][animName][markerName] = conn
-                            end
-                        end
-
-                        bindMarker("Hit")
-                    end
-                end
-
-                local gameSound = Interface.safeWaitPart(game:GetService("SoundService"), "GAME")
-                local music1 = Interface.safeWaitPart(gameSound, "Attack1")
-                music1.Name = "Attack1"
-                if not music1.IsLoaded then
-                    music1.Loaded:Wait()
-                end
-                music1.Parent = character
-
-                local music2 = Interface.safeWaitPart(gameSound, "Attack2")
-                music2.Name = "Attack2"
-                if not music2.IsLoaded then
-                    music2.Loaded:Wait()
-                end
-                music2.Parent = character
-            end
         end
 
         if player.Character then
@@ -111,10 +54,6 @@ function PlayerService:KnitStart()
     end
 
     local function PlayerRemoved(player)
-        -- 断开动画标记事件连接，避免内存泄漏
-        self:RemoveAnimationMarker(player)
-
-        self.AnimationTracks[player.UserId] = nil
         self.TalentData[player.UserId] = nil
         self.Overwhelmed[player.UserId] = nil
         self.CollectSpeed[player.UserId] = nil
@@ -388,89 +327,6 @@ function PlayerService:ChangePlayerAttribute(player, attributeName, attributeVal
             humanoid:SetAttribute("Lucky", self:GetLucky(player))
         end
     end
-end
-
--- 播放挥舞动画
--- @param player Player 玩家对象
--- @param cd number 冷却时间，用于调整动画播放速度 (cd越小动画越快，cd越大动画越慢)
-function PlayerService:PlaySwingAnimation(player, cd)
-    if not self.AnimationTracks[player.UserId] or not self.AnimationTracks[player.UserId]["swing"] then
-        return
-    end
-    
-    local animationTrack = self.AnimationTracks[player.UserId]["swing"]
-    
-    -- 获取动画的总时长
-    local animationLength = animationTrack.Length
-    
-    -- 根据cd参数和动画时长计算播放速度
-    -- 目标：让动画在cd秒内播放完成
-    local playbackSpeed = cd / animationLength
-    animationTrack:AdjustSpeed(playbackSpeed)
-    animationTrack:Play()
-end
-
--- 播放挖掘动画函数（从下往上）
--- @param player Player 玩家对象
--- @param cd number 冷却时间，用于调整动画播放速度 (cd越小动画越快，cd越大动画越慢)
-function PlayerService:PlayDigAnimation(player, cd)
-    if not self.AnimationTracks[player.UserId] or not self.AnimationTracks[player.UserId]["dig"] then
-        return
-    end
-    
-    local animationTrack = self.AnimationTracks[player.UserId]["dig"]
-    
-    -- 获取动画的总时长
-    local animationLength = animationTrack.Length
-    
-    -- 根据cd参数和动画时长计算播放速度
-    -- 目标：让动画在cd秒内播放完成
-    local playbackSpeed = cd / animationLength
-    animationTrack:AdjustSpeed(playbackSpeed)
-    animationTrack:Play()
-end
-
-function PlayerService:playAnimation(player, animationName, soundName, cd)
-    local character = player.Character
-    if not character then return end
-    local humanoid = character:FindFirstChildOfClass("Humanoid")
-    if not humanoid then return end
-
-    if animationName == "dig" then
-        self:PlayDigAnimation(player, cd)
-    else
-        self:PlaySwingAnimation(player, cd)
-    end
-
-    local music = character:FindFirstChild(soundName)
-    if music then
-        music:Play()
-    end
-end
-
-function  PlayerService:RemoveAnimationMarker(player)
-    if self.AnimationMarkerConns[player.UserId] then
-        for _, markers in pairs(self.AnimationMarkerConns[player.UserId]) do
-            for _, conn in pairs(markers) do
-                if typeof(conn) == "RBXScriptConnection" then
-                    conn:Disconnect()
-                end
-            end
-        end
-        self.AnimationMarkerConns[player.UserId] = nil
-    end
-end
-
--- 动画标记统一回调（服务端）
--- @function OnAnimationMarker
--- @param player Player 触发标记的玩家
--- @param animationName string 动画名称（如 "swing"、"dig"）
--- @param markerName string 标记名称（如 "Hit"）
--- @param param any 标记参数（来自动画编辑器中该标记的参数）
--- @param track AnimationTrack 触发的动画轨道
--- @return void
-function PlayerService:OnAnimationMarker(player, animationName, markerName, param, track)
-    -- 在这里编写你的命中逻辑。例如：处理武器命中、采集判定等。
 end
 
 return PlayerService

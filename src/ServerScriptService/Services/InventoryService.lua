@@ -453,41 +453,13 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
 
 	-- 连接工具激活事件（服务器端处理）
 	tool.Activated:Connect(function()
-		local player = game.Players:GetPlayerFromCharacter(tool.Parent)
-		if not player then return end
-
-		local character = player.Character
-		if not character then return end
-
-		local humanoid = character:FindFirstChild("Humanoid")
-		if not humanoid then return end
-
-		-- 检查冷却时间
-		local currentTime = tick()
-        local attribute = GameConfig.GetItemAttribute(tool)
-
-        -- 在冷却时间内，忽略激活
-        if currentTime < attribute.CDElapsedTime then
-            return
-        end
-
-        local CDElapsedTime = currentTime + itemInfo.CD
-        self.ToolData[player.UserId][slot].Attribute.CDElapsedTime = CDElapsedTime
-        GameConfig.UpdateItemAttribute(tool, "CDElapsedTime", CDElapsedTime)
-        self:SendToolData(player)
-
-		if itemInfo.Type == GameConfig.ItemType.Weapon then    -- 进攻类
-			if itemInfo.ItemId == 202 then
-				Knit.GetService("PlayerService"):playAnimation(player, "dig", "Attack2", itemInfo.CD)
-			elseif itemInfo.ItemId == 203 then
-				Knit.GetService("PlayerService"):playAnimation(player, "swing", "Attack1", itemInfo.CD)
-			else
-				Knit.GetService("PlayerService"):playAnimation(player, "swing", "Attack1", itemInfo.CD)
-			end
-		end
 	end)
 
 	return tool
+end
+
+function InventoryService:SendToolData(player)
+    self.Client.SendToolData:Fire(player, self.ToolData[player.UserId])
 end
 
 -- 设置玩家按键绑定
