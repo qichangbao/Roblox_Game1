@@ -214,6 +214,10 @@ function PlayerService:GetLucky(player)
     return self.Lucky[player.UserId]
 end
 
+function PlayerService:GetOfflineTime(player)
+    return self.OfflineTime[player.UserId] or 0
+end
+
 -- 初始化玩家能力
 -- @param player Player 玩家
 -- @param talent table 能力数据

@@ -931,7 +931,7 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
-        Weight = 4,
+        Weight = 8,
     },
     [50] = {
         ItemId = 1034,
@@ -950,7 +950,7 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
-        Weight = 4,
+        Weight = 8,
     },
     [51] = {
         ItemId = 1035,
@@ -969,7 +969,7 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
-        Weight = 1.5,
+        Weight = 15,
     },
     [52] = {
         ItemId = 1036,
@@ -988,7 +988,7 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
-        Weight = 0.8,
+        Weight = 15,
     },
     [53] = {
         ItemId = 1037,
@@ -1007,7 +1007,7 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
-        Weight = 0.8,
+        Weight = 15,
     },
     [54] = {
         ItemId = 1038,
@@ -1026,7 +1026,7 @@ ItemConfig.Data = {
         CD = 0,
         Duration = 0,
         TimeUsed = 0,
-        Weight = 0.9,
+        Weight = 15,
     },
 }
 
