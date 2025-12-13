@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local WeaponConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("WeaponConfig"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
+local DesignConfig = require(ReplicatedStorage:WaitForChild('ConfigFolder'):WaitForChild('DesignConfig'))
 local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
 
 local ItemInterface = {}
@@ -51,10 +52,12 @@ local function _takeDamage(player, hitCharacter, damage)
 		end
 		return true
 	elseif humanoidType == GameConfig.HumanoidType.Player then
-		local isOnBoat = Interface.isPlayerOnBoat(player, Knit.GetService("IslandService"):GetIslandName())
-		if isOnBoat then
-			return
-		end
+		local islandId = Knit.GetService("IslandService"):GetIslandId()
+		if not islandId then return end
+		local mapConfig = DesignConfig:GetByMapId(islandId)
+		if not mapConfig then return end
+		local isOnBoat = Interface.isPlayerOnBoat(player, mapConfig.MapName)
+		if isOnBoat then return end
 		Interface.decHp(hitCharacter, normalDamage, isCrit)
     end
 end

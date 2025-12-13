@@ -30,12 +30,6 @@ GameConfig.NpcUIType = {
     Reward = 5,     -- 奖励
 }
 
-GameConfig.Difficulty = {
-    Easy = 1,           -- 简单
-    Difficulty = 2,     -- 困难
-    HellDifficulty = 3, -- 地狱
-}
-
 GameConfig.TalentType = {
     WalkSpeed = 1,      -- 移动
     MaxHealth = 2,      -- 最大生命值
@@ -138,7 +132,7 @@ GameConfig.DuanWeiType = {
 
 GameConfig.BackpackSlotCount = 6    -- 背包槽位数量
 GameConfig.InitItemNums = 30        -- 初始物品数量
-GameConfig.LandName = "出生岛"
+GameConfig.IslandId = 100           -- 出生岛ID
 GameConfig.TeleportPartNames = {"go1", "go2", "go3"}-- 触发传送的Part名称
 
 -- 为了向后兼容，保留原有的FontFace属性

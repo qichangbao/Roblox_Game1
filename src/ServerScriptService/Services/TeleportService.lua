@@ -8,6 +8,7 @@ local RunService = game:GetService("RunService")
 
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
+local DesignConfig = require(ReplicatedStorage:WaitForChild('ConfigFolder'):WaitForChild('DesignConfig'))
 
 local TeleportServiceModule = Knit.CreateService {
 	Name = "TeleportService",
@@ -81,18 +82,18 @@ local function initializeTriggerZoneStates()
 end
 
 local function getTriggerPart(modelName)
-    local land = workspace:FindFirstChild(GameConfig.LandName)
+	local mapConfig = DesignConfig:GetByMapId(GameConfig.IslandId)
+	if not mapConfig then return end
+    local land = workspace:FindFirstChild(mapConfig.MapName)
+	if not land then return end
 	local special = land:FindFirstChild("Special")
+	if not special then return end
 	local teleport = special:FindFirstChild("Teleport")
+    if not teleport then return end
     local triggerModel = teleport:FindFirstChild(modelName)
-    if not triggerModel then
-        return
-    end
-
+    if not triggerModel then return end
 	local triggerPart = triggerModel:FindFirstChild("TriggerPart")
-    if not triggerPart then
-        return
-    end
+    if not triggerPart then return end
     return triggerPart
 end
 
@@ -100,17 +101,13 @@ end
 -- @param player Player 要检查的玩家
 -- @return boolean, BasePart 是否在触发范围内以及触发的Part
 local function isPlayerInTriggerZone(player)
-	if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
-		return false, nil
-	end
+	if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then return false end
+	local mapConfig = DesignConfig:GetByMapId(GameConfig.IslandId)
+	if not mapConfig then return false end
+	local land = workspace:FindFirstChild(mapConfig.MapName)
+	if not land then return false end
 
 	local playerPosition = player.Character.HumanoidRootPart.Position
-
-	local land = workspace:FindFirstChild(GameConfig.LandName)
-	if not land then
-		logMessage("ERROR", string.format("未找到LandName: %s", GameConfig.LandName))
-		return false, nil
-	end
 	-- 检查每个触发Part
 	for _, modelName in ipairs(GameConfig.TeleportPartNames) do
 		local triggerPart = getTriggerPart(modelName)
@@ -130,7 +127,7 @@ local function isPlayerInTriggerZone(player)
 		end
 	end
 
-	return false, nil
+	return false
 end
 
 -- 获取触发区域内的实际玩家数量
@@ -273,24 +270,10 @@ function TeleportServiceModule:teleportToReserveServer(players)
 	end
 	
 	logMessage("INFO", string.format("成功创建预留服务器，访问码: %s", accessCode))
-	local playerCount = #players
 	-- 准备传送数据
 	local teleportData = {}
-	teleportData.IslandName = "恐龙岛"
-	teleportData.EscapeTime = 15 * 60 + 20		-- 逃生时间
-	teleportData.Difficulty = GameConfig.Difficulty.Easy			-- 难度等级
-
-	if playerCount == 1 then
-		teleportData.EscapeTask = 5000			-- 逃生目标金钱
-	elseif playerCount == 2 then
-		teleportData.EscapeTask = 8000			-- 逃生目标金钱
-	elseif playerCount == 3 then
-		teleportData.EscapeTask = 12000			-- 逃生目标金钱
-	elseif playerCount == 4 then
-		teleportData.EscapeTask = 17000			-- 逃生目标金钱
-	elseif playerCount == 5 then
-		teleportData.EscapeTask = 23000			-- 逃生目标金钱
-	end
+	teleportData.IslandId = 101
+	teleportData.PlayerCount = #players
 
 	local function teleportPlayersToReserveServer(data)
 		-- 执行传送到预留服务器 - 使用现代化的TeleportAsync API
@@ -373,18 +356,24 @@ end
 
 -- 初始化BillboardGui
 local function initializeBillboad()
-	local land = workspace:WaitForChild(GameConfig.LandName)
-	if not land then
-		return
-	end
+	local mapConfig = DesignConfig:GetByMapId(GameConfig.IslandId)
+	if not mapConfig then return end
+	local land = workspace:WaitForChild(mapConfig.MapName)
+	if not land then return end
 	local special = land:WaitForChild("Special")
+	if not special then return end
 	local teleport = special:WaitForChild("Teleport")
+	if not teleport then return end
 	-- 检查每个触发Part
 	for _, partName in ipairs(GameConfig.TeleportPartNames) do
 		local triggerModel = teleport:WaitForChild(partName)
+		if not triggerModel then continue end
 		local triggerPart = triggerModel:WaitForChild("TriggerPart")
+		if not triggerPart then continue end
 		local billboard = triggerPart:WaitForChild("BillboardGui")
+		if not billboard then continue end
 		local frame = billboard:FindFirstChild("TimeFrame")
+		if not frame then continue end
 		frame.Visible = false
     end
 end

@@ -36,6 +36,7 @@ local Knit = require(ReplicatedStorage:WaitForChild('Packages'):WaitForChild('Kn
 Knit.AddControllers(script.Parent:WaitForChild('ControllersFolder'))
 local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
+local DesignConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("DesignConfig"))
 
 -- local playerGui = Interface.safeWaitPart(game.Players.LocalPlayer, "PlayerGui")
 -- local loadingUI = Interface.safeWaitPart(playerGui, "LoadingUI")
@@ -86,7 +87,8 @@ end):catch(warn)
 game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
 game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.PlayerList, true)
 
-local land = Interface.safeWaitPart(game.Workspace, GameConfig.LandName)
+local mapConfig = DesignConfig:GetByMapId(GameConfig.IslandId)
+local land = Interface.safeWaitPart(game.Workspace, mapConfig.MapName)
 local spawnPoint = Interface.safeWaitPart(land, "SpawnLocation")
 workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
 if not workspace.CurrentCamera.CameraSubject then
