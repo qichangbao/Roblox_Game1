@@ -50,6 +50,36 @@ GameConfig.TaskType = {
     Composite = 7,            -- 复合型任务
 }
 
+-- 职业解锁条件枚举
+GameConfig.JobUnlockCondition = {
+    Gold = 1,                   -- 金币获得_数量
+    IslandLevel = 2,            -- 达到岛屿_第几关
+    FreeRelive = 3,             -- 复活_次数
+    Escape = 4,                 -- 撤离_次数
+    RobCoins = 5,               -- 罗布币_消耗数量
+    DamageNoWeapon = 6,         -- 伤害（无指定武器_伤害值）
+    DamageNoWeaponNum = 7,      -- 伤害（无指定武器_数量）
+    DamageWithWeapon = 8,       -- 伤害（指定武器_伤害值/数量）
+    DamageWithWeaponNum = 9,    -- 伤害（指定武器_数量）
+    DamageMonster = 10,         -- 伤害（怪物ID_伤害值）
+    DamageMonsterNum = 11,      -- 伤害（怪物ID_数量）
+    DamageDefense = 12,         -- 伤害（防御工事_伤害值）
+    DamageDefenseNum = 13,      -- 伤害（防御工事_数量）
+    CollectItemNum = 14,        -- 收集（道具_数量）
+    HealItemNum = 15,           -- 治疗（治疗道具_值/数量）
+    SaveNpcNum = 16,            -- 救人（NPC_次数）
+    SaveTeammateNum = 17,       -- 救人（队友_次数）
+}
+
+-- 职业属性枚举
+GameConfig.JobAttributeType = {
+    Attribute = 1,              -- 属性
+    Backpack = 100,             -- 背包容量
+    FreeRelive = 101,           -- 免费复活次数
+    DoubleDamage = 102,         -- 双倍伤害
+    KillMonsterDoubleDrop = 103, -- 击杀怪物双倍掉落
+}
+
 GameConfig.DuanWeiType = {
     [1] = {
         name = "新手",
@@ -132,7 +162,7 @@ GameConfig.DuanWeiType = {
 
 GameConfig.BackpackSlotCount = 6    -- 背包槽位数量
 GameConfig.InitItemNums = 30        -- 初始物品数量
-GameConfig.IslandId = 100           -- 出生岛ID
+GameConfig.IslandId = 100000        -- 出生岛ID
 GameConfig.TeleportPartNames = {"go1", "go2", "go3"}-- 触发传送的Part名称
 
 -- 为了向后兼容，保留原有的FontFace属性

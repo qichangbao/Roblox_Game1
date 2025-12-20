@@ -87,8 +87,7 @@ end):catch(warn)
 game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
 game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.PlayerList, true)
 
-local mapConfig = DesignConfig:GetByMapId(GameConfig.IslandId)
-local land = Interface.safeWaitPart(game.Workspace, mapConfig.MapName)
+local land = Interface.safeWaitPart(game.Workspace, tostring(GameConfig.IslandId))
 local spawnPoint = Interface.safeWaitPart(land, "SpawnLocation")
 workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
 if not workspace.CurrentCamera.CameraSubject then

@@ -3,10 +3,22 @@ local DesignConfig = {}
 
 DesignConfig.Data = {
     [1] = {
+        DesignId = 0,
+        DesignName = "出生岛",
+        MapId = 0,
+        MapName = "新手岛",
+        MusicId = 100,
+        WeatherId = 0,
+        DesignTarget = 0,
+        EvacuateTime = 0,
+        ResourceNum = 0,
+        Monster = 0,
+    },
+    [2] = {
         DesignId = 1,
         DesignName = "新手海湾",
         MapId = 100,
-        MapName = "新手岛",
+        MapName = "恐龙岛",
         MusicId = 100,
         WeatherId = {
             1,
@@ -39,11 +51,11 @@ DesignConfig.Data = {
             4
         },
     },
-    [2] = {
+    [3] = {
         DesignId = 2,
         DesignName = "珊瑚浅滩",
         MapId = 101,
-        MapName = "恐龙岛",
+        MapName = nil,
         MusicId = 101,
         WeatherId = {
             1,
@@ -54,7 +66,7 @@ DesignConfig.Data = {
         ResourceNum = nil,
         Monster = nil,
     },
-    [3] = {
+    [4] = {
         DesignId = 3,
         DesignName = "迷雾海峡",
         MapId = 102,
@@ -75,7 +87,7 @@ DesignConfig.Data = {
         ResourceNum = nil,
         Monster = nil,
     },
-    [4] = {
+    [5] = {
         DesignId = 4,
         DesignName = "暴风海域",
         MapId = 103,
@@ -96,7 +108,7 @@ DesignConfig.Data = {
         ResourceNum = nil,
         Monster = nil,
     },
-    [5] = {
+    [6] = {
         DesignId = 5,
         DesignName = "幽灵深渊",
         MapId = 104,

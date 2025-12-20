@@ -390,4 +390,13 @@ function Interface.AnimateUIShowScale(guiObject, opts)
     return scale, tween
 end
 
+function Interface.Split(str, delim)
+	local result = {}
+	local pattern = string.format("([^%s]+)", delim)
+	for part in string.gmatch(str, pattern) do
+		table.insert(result, part)
+	end
+	return result
+end
+
 return Interface

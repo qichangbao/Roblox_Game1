@@ -17,6 +17,7 @@ ClientData.IsFromFuben = false
 ClientData.Weight = 0
 ClientData.CollectSpeed = 0
 ClientData.Lucky = 0
+ClientData.JobData = {}
 
 local function setInitData(data)
     -- 安全地设置数据
@@ -33,6 +34,7 @@ local function setInitData(data)
     ClientData.Weight = data.Weight or 0
     ClientData.CollectSpeed = data.CollectSpeed or 0
     ClientData.Lucky = data.Lucky or 0
+    ClientData.JobData = data.JobData or {}
     local offlineTime = data.OfflineTime or 0
     -- local playerGui = Interface.safeWaitPart(game.Players.LocalPlayer, "PlayerGui")
 	-- local loadingUI = Interface.safeWaitPart(playerGui, "LoadingUI")

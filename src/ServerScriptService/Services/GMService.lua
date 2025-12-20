@@ -126,7 +126,7 @@ function GMService:GMCommand(player)
 				local ids = self:ParseItemIds(addMultiMatch)
 				if #ids > 0 then
 					for _, itemId in ipairs(ids) do
-                        if GameConfig.IslandId == 100 then
+                        if GameConfig.IslandId == 100000 then
                             Knit.GetService("InventoryService"):AddItem(player, {
                                 ItemId = itemId,
                                 Attribute = GameConfig.GetItemAttribute(),

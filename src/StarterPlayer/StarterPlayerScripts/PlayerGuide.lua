@@ -4,15 +4,11 @@ local SimpleArrowNavigation = require(ReplicatedStorage:WaitForChild("ToolFolder
 local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
 local TalentTreeConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("TalentTreeConfig"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
-local DesignConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("DesignConfig"))
-
-local mapConfig = DesignConfig:GetByMapId(GameConfig.IslandId)
-if not mapConfig then return end
 
 local Module = {}
 
 local function findNpc3()
-    local island = Interface.safeWaitPart(workspace, mapConfig.MapName)
+    local island = Interface.safeWaitPart(workspace, tostring(GameConfig.IslandId))
     local Special = Interface.safeWaitPart(island, "Special")
     local Npc = Interface.safeWaitPart(Special, "Npc")
     local npc3 = Interface.safeWaitPart(Npc, "Npc3")

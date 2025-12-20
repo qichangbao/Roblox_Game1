@@ -4,10 +4,11 @@ local TalentTreeConfig = {}
 TalentTreeConfig.Data = {
     [1] = {
         TalentTreeId = 8001,
-        Type = 4,
-        ChildType = 2,
+        NextTalent = 8002,
         DisplayName = "Carry Capacity 1",
         Description = "Max Carry Capacity +3",
+        Type = 4,
+        ChildType = 2,
         Value = 3,
         Icon = "rbxassetid://132844373362963",
         Need = {
@@ -23,322 +24,321 @@ TalentTreeConfig.Data = {
                 Gold = 2000
             }
         },
-        NextTalent = 8002,
     },
     [2] = {
         TalentTreeId = 8002,
-        Type = 2,
-        ChildType = 2,
-        DisplayName = "Health 1",
-        Description = "Max HP +10",
-        Value = 10,
-        Icon = "rbxassetid://132844373362963",
-        Need = nil,
         NextTalent = {
             8003,
             8004
         },
+        DisplayName = "Health 1",
+        Description = "Max HP +10",
+        Type = 2,
+        ChildType = 2,
+        Value = 10,
+        Icon = "rbxassetid://132844373362963",
+        Need = nil,
     },
     [3] = {
         TalentTreeId = 8003,
-        Type = 1,
-        ChildType = 2,
+        NextTalent = 8005,
         DisplayName = "Movement Speed 1",
         Description = "Max Movement Speed +2",
+        Type = 1,
+        ChildType = 2,
         Value = 2,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8005,
     },
     [4] = {
         TalentTreeId = 8004,
-        Type = 3,
-        ChildType = 2,
+        NextTalent = 8005,
         DisplayName = "Jump Power 1",
         Description = "Max Jump Power +2",
+        Type = 3,
+        ChildType = 2,
         Value = 2,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8005,
     },
     [5] = {
         TalentTreeId = 8005,
-        Type = 6,
-        ChildType = 2,
-        DisplayName = "Luck 1",
-        Description = "Luck +1",
-        Value = 1,
-        Icon = "rbxassetid://132844373362963",
-        Need = nil,
         NextTalent = {
             8006,
             8007,
             8008
         },
+        DisplayName = "Luck 1",
+        Description = "Luck +1",
+        Type = 6,
+        ChildType = 2,
+        Value = 1,
+        Icon = "rbxassetid://132844373362963",
+        Need = nil,
     },
     [6] = {
         TalentTreeId = 8006,
-        Type = 4,
-        ChildType = 2,
+        NextTalent = 8009,
         DisplayName = "Explorer",
         Description = "Max Carry Capacity +10",
+        Type = 4,
+        ChildType = 2,
         Value = 10,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8009,
     },
     [7] = {
         TalentTreeId = 8007,
-        Type = 5,
-        ChildType = 1,
+        NextTalent = 8010,
         DisplayName = "Battle Master",
         Description = "Crit Chance +30%",
+        Type = 5,
+        ChildType = 1,
         Value = 0.3,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8010,
     },
     [8] = {
         TalentTreeId = 8008,
-        Type = 2,
-        ChildType = 2,
+        NextTalent = 8011,
         DisplayName = "Survivor",
         Description = "Max HP +20",
+        Type = 2,
+        ChildType = 2,
         Value = 20,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8011,
     },
     [9] = {
         TalentTreeId = 8009,
-        Type = 7,
-        ChildType = 2,
+        NextTalent = 8012,
         DisplayName = "slot",
         Description = "Permanently unlock 1 slot",
+        Type = 7,
+        ChildType = 2,
         Value = 1,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8012,
     },
     [10] = {
         TalentTreeId = 8010,
-        Type = 9,
-        ChildType = 0,
+        NextTalent = 8029,
         DisplayName = "No Retreat",
         Description = "+50% Attack Speed when HP is below 30%",
+        Type = 9,
+        ChildType = 0,
         Value = 0,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8029,
     },
     [11] = {
         TalentTreeId = 8011,
-        Type = 8,
-        ChildType = 0,
+        NextTalent = nil,
         DisplayName = "Life Siphon",
         Description = "Restore 1 HP per loot collected",
+        Type = 8,
+        ChildType = 0,
         Value = 0,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = nil,
     },
     [12] = {
         TalentTreeId = 8012,
-        Type = 1,
-        ChildType = 2,
+        NextTalent = 8013,
         DisplayName = "Movement Speed 2",
         Description = "Max Movement Speed +2",
+        Type = 1,
+        ChildType = 2,
         Value = 2,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8013,
     },
     [13] = {
         TalentTreeId = 8013,
-        Type = 6,
-        ChildType = 2,
+        NextTalent = 8014,
         DisplayName = "Luck 2",
         Description = "Luck +1",
+        Type = 6,
+        ChildType = 2,
         Value = 1,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8014,
     },
     [14] = {
         TalentTreeId = 8014,
-        Type = 4,
-        ChildType = 2,
+        NextTalent = 8015,
         DisplayName = "Carry Capacity 2",
         Description = "Max Carry Capacity +3",
+        Type = 4,
+        ChildType = 2,
         Value = 3,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8015,
     },
     [15] = {
         TalentTreeId = 8015,
-        Type = 1,
-        ChildType = 2,
+        NextTalent = 8016,
         DisplayName = "Movement Speed 3",
         Description = "Max Movement Speed +2",
+        Type = 1,
+        ChildType = 2,
         Value = 2,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8016,
     },
     [16] = {
         TalentTreeId = 8016,
-        Type = 6,
-        ChildType = 2,
+        NextTalent = 8017,
         DisplayName = "Luck 3",
         Description = "Luck +1",
+        Type = 6,
+        ChildType = 2,
         Value = 1,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8017,
     },
     [17] = {
         TalentTreeId = 8017,
-        Type = 4,
-        ChildType = 2,
+        NextTalent = 8018,
         DisplayName = "Carry Capacity 3",
         Description = "Max Carry Capacity +3",
+        Type = 4,
+        ChildType = 2,
         Value = 3,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8018,
     },
     [18] = {
         TalentTreeId = 8018,
-        Type = 1,
-        ChildType = 2,
+        NextTalent = 8019,
         DisplayName = "Movement Speed 4",
         Description = "Max Movement Speed +2",
+        Type = 1,
+        ChildType = 2,
         Value = 2,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8019,
     },
     [19] = {
         TalentTreeId = 8019,
-        Type = 6,
-        ChildType = 2,
+        NextTalent = 8020,
         DisplayName = "Luck 4",
         Description = "Luck +1",
+        Type = 6,
+        ChildType = 2,
         Value = 1,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8020,
     },
     [20] = {
         TalentTreeId = 8020,
-        Type = 4,
-        ChildType = 2,
+        NextTalent = 8021,
         DisplayName = "Carry Capacity 4",
         Description = "Max Carry Capacity +5",
+        Type = 4,
+        ChildType = 2,
         Value = 5,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8021,
     },
     [21] = {
         TalentTreeId = 8021,
-        Type = 1,
-        ChildType = 2,
+        NextTalent = 8022,
         DisplayName = "Movement Speed 5",
         Description = "Max Movement Speed +2",
+        Type = 1,
+        ChildType = 2,
         Value = 2,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8022,
     },
     [22] = {
         TalentTreeId = 8022,
-        Type = 6,
-        ChildType = 2,
+        NextTalent = 8023,
         DisplayName = "Luck 5",
         Description = "Luck +1",
+        Type = 6,
+        ChildType = 2,
         Value = 1,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8023,
     },
     [23] = {
         TalentTreeId = 8023,
-        Type = 4,
-        ChildType = 2,
+        NextTalent = 8024,
         DisplayName = "Carry Capacity 5",
         Description = "Max Carry Capacity +5",
+        Type = 4,
+        ChildType = 2,
         Value = 5,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8024,
     },
     [24] = {
         TalentTreeId = 8024,
-        Type = 1,
-        ChildType = 2,
+        NextTalent = 8025,
         DisplayName = "Movement Speed 6",
         Description = "Max Movement Speed +2",
+        Type = 1,
+        ChildType = 2,
         Value = 2,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8025,
     },
     [25] = {
         TalentTreeId = 8025,
-        Type = 6,
-        ChildType = 2,
+        NextTalent = 8026,
         DisplayName = "Luck 6",
         Description = "Luck +1",
+        Type = 6,
+        ChildType = 2,
         Value = 1,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8026,
     },
     [26] = {
         TalentTreeId = 8026,
-        Type = 4,
-        ChildType = 2,
+        NextTalent = 8027,
         DisplayName = "Carry Capacity 6",
         Description = "Max Carry Capacity +8",
+        Type = 4,
+        ChildType = 2,
         Value = 8,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8027,
     },
     [27] = {
         TalentTreeId = 8027,
-        Type = 1,
-        ChildType = 2,
+        NextTalent = 8028,
         DisplayName = "Movement Speed 7",
         Description = "Max Movement Speed +2",
+        Type = 1,
+        ChildType = 2,
         Value = 4,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 8028,
     },
     [28] = {
         TalentTreeId = 8028,
-        Type = 6,
-        ChildType = 2,
+        NextTalent = 0,
         DisplayName = "Luck 7",
         Description = "Luck +2",
+        Type = 6,
+        ChildType = 2,
         Value = 2,
         Icon = "rbxassetid://132844373362963",
         Need = nil,
-        NextTalent = 0,
     },
     [29] = {
         TalentTreeId = 8029,
-        Type = nil,
-        ChildType = nil,
+        NextTalent = nil,
         DisplayName = nil,
         Description = nil,
+        Type = nil,
+        ChildType = nil,
         Value = nil,
         Icon = nil,
         Need = nil,
-        NextTalent = nil,
     },
 }
 
@@ -356,18 +356,9 @@ function TalentTreeConfig:GetByTalentTreeId(value)
     return nil
 end
 
-function TalentTreeConfig:GetByType(value)
+function TalentTreeConfig:GetByNextTalent(value)
     for i, item in pairs(self.Data) do
-        if item.Type == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function TalentTreeConfig:GetByChildType(value)
-    for i, item in pairs(self.Data) do
-        if item.ChildType == value then
+        if item.NextTalent == value then
             return item
         end
     end
@@ -386,6 +377,24 @@ end
 function TalentTreeConfig:GetByDescription(value)
     for i, item in pairs(self.Data) do
         if item.Description == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function TalentTreeConfig:GetByType(value)
+    for i, item in pairs(self.Data) do
+        if item.Type == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function TalentTreeConfig:GetByChildType(value)
+    for i, item in pairs(self.Data) do
+        if item.ChildType == value then
             return item
         end
     end
@@ -413,15 +422,6 @@ end
 function TalentTreeConfig:GetByNeed(value)
     for i, item in pairs(self.Data) do
         if item.Need == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function TalentTreeConfig:GetByNextTalent(value)
-    for i, item in pairs(self.Data) do
-        if item.NextTalent == value then
             return item
         end
     end

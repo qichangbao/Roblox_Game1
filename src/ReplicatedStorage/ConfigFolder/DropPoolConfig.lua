@@ -46,7 +46,7 @@ DropPoolConfig.Data = {
         ID = 401,
         dropType = 1,
         weight = {
-            321,
+            401,
             10000
         },
     },
@@ -54,7 +54,7 @@ DropPoolConfig.Data = {
         ID = 402,
         dropType = 1,
         weight = {
-            322,
+            401,
             10000
         },
     },
@@ -62,7 +62,7 @@ DropPoolConfig.Data = {
         ID = 403,
         dropType = 1,
         weight = {
-            323,
+            401,
             10000
         },
     },
@@ -70,7 +70,7 @@ DropPoolConfig.Data = {
         ID = 404,
         dropType = 1,
         weight = {
-            324,
+            401,
             10000
         },
     },
@@ -78,7 +78,7 @@ DropPoolConfig.Data = {
         ID = 405,
         dropType = 1,
         weight = {
-            325,
+            401,
             10000
         },
     },

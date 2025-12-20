@@ -8,9 +8,7 @@ local Interface = require(ReplicatedStorage:WaitForChild('ToolFolder'):WaitForCh
 local DesignConfig = require(ReplicatedStorage:WaitForChild('ConfigFolder'):WaitForChild('DesignConfig'))
 
 -- 找到场景中的“神树”作为演出来源位置
-local mapConfig = DesignConfig:GetByMapId(GameConfig.IslandId)
-if not mapConfig then return end
-local land = Interface.safeWaitPart(workspace, mapConfig.MapName)
+local land = Interface.safeWaitPart(workspace, tostring(GameConfig.IslandId))
 local special = Interface.safeWaitPart(land, "Special")
 local npc = Interface.safeWaitPart(special, "Npc")
 local treeModel = Interface.safeWaitPart(npc, "DivineTree")

@@ -3,67 +3,67 @@ local OfflineRewardConfig = {}
 
 OfflineRewardConfig.Data = {
     [1] = {
-        RewardId = 9001,
+        RewardId = 1,
         PlanId = 5101,
     },
     [2] = {
-        RewardId = 9002,
+        RewardId = 2,
         PlanId = 5102,
     },
     [3] = {
-        RewardId = 9003,
+        RewardId = 3,
         PlanId = 5103,
     },
     [4] = {
-        RewardId = 9004,
+        RewardId = 4,
         PlanId = 5103,
     },
     [5] = {
-        RewardId = 9005,
+        RewardId = 5,
         PlanId = 5103,
     },
     [6] = {
-        RewardId = 9006,
+        RewardId = 6,
         PlanId = 5103,
     },
     [7] = {
-        RewardId = 9007,
+        RewardId = 7,
         PlanId = 5103,
     },
     [8] = {
-        RewardId = 9008,
+        RewardId = 8,
         PlanId = 5103,
     },
     [9] = {
-        RewardId = 9009,
+        RewardId = 9,
         PlanId = 5104,
     },
     [10] = {
-        RewardId = 9010,
+        RewardId = 10,
         PlanId = 5104,
     },
     [11] = {
-        RewardId = 9011,
+        RewardId = 11,
         PlanId = 5104,
     },
     [12] = {
-        RewardId = 9012,
+        RewardId = 12,
         PlanId = 5104,
     },
     [13] = {
-        RewardId = 9013,
+        RewardId = 13,
         PlanId = 5105,
     },
     [14] = {
-        RewardId = 9014,
+        RewardId = 14,
         PlanId = 5105,
     },
     [15] = {
-        RewardId = 9015,
+        RewardId = 15,
         PlanId = 5105,
     },
     [16] = {
-        RewardId = 9016,
+        RewardId = 16,
         PlanId = 5105,
     },
 }

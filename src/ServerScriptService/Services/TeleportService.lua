@@ -82,17 +82,15 @@ local function initializeTriggerZoneStates()
 end
 
 local function getTriggerPart(modelName)
-	local mapConfig = DesignConfig:GetByMapId(GameConfig.IslandId)
-	if not mapConfig then return end
-    local land = workspace:FindFirstChild(mapConfig.MapName)
+    local land = workspace:WaitForChild(tostring(GameConfig.IslandId))
 	if not land then return end
-	local special = land:FindFirstChild("Special")
+	local special = land:WaitForChild("Special")
 	if not special then return end
-	local teleport = special:FindFirstChild("Teleport")
+	local teleport = special:WaitForChild("Teleport")
     if not teleport then return end
-    local triggerModel = teleport:FindFirstChild(modelName)
+    local triggerModel = teleport:WaitForChild(modelName)
     if not triggerModel then return end
-	local triggerPart = triggerModel:FindFirstChild("TriggerPart")
+	local triggerPart = triggerModel:WaitForChild("TriggerPart")
     if not triggerPart then return end
     return triggerPart
 end
@@ -102,10 +100,6 @@ end
 -- @return boolean, BasePart 是否在触发范围内以及触发的Part
 local function isPlayerInTriggerZone(player)
 	if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then return false end
-	local mapConfig = DesignConfig:GetByMapId(GameConfig.IslandId)
-	if not mapConfig then return false end
-	local land = workspace:FindFirstChild(mapConfig.MapName)
-	if not land then return false end
 
 	local playerPosition = player.Character.HumanoidRootPart.Position
 	-- 检查每个触发Part
@@ -272,7 +266,7 @@ function TeleportServiceModule:teleportToReserveServer(players)
 	logMessage("INFO", string.format("成功创建预留服务器，访问码: %s", accessCode))
 	-- 准备传送数据
 	local teleportData = {}
-	teleportData.IslandId = 101
+	teleportData.IslandId = 100
 	teleportData.PlayerCount = #players
 
 	local function teleportPlayersToReserveServer(data)
@@ -356,9 +350,7 @@ end
 
 -- 初始化BillboardGui
 local function initializeBillboad()
-	local mapConfig = DesignConfig:GetByMapId(GameConfig.IslandId)
-	if not mapConfig then return end
-	local land = workspace:WaitForChild(mapConfig.MapName)
+    local land = workspace:WaitForChild(tostring(GameConfig.IslandId))
 	if not land then return end
 	local special = land:WaitForChild("Special")
 	if not special then return end

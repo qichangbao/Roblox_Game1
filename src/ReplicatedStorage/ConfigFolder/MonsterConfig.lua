@@ -4,66 +4,66 @@ local MonsterConfig = {}
 MonsterConfig.Data = {
     [1] = {
         MonsterId = 30001,
-        Name = "wolf",
+        Name = nil,
         DisplayName = "wolf",
         Model = "wolf",
         Type = 1,
         HP = 50,
+        Attack = 5,
+        AttackSpeed = 0.8,
+        MoveSpeed = 17,
         VisionRange = 30,
         AttackRange = 10,
         PatrolRadius = 15,
         MaxDisForSpawn = 30,
         RespawnTime = 0,
-        Attack = 5,
-        MoveSpeed = 17,
-        AttackSpeed = 0.8,
-        DropPlanId = 5011,
-        AnimationIdle = 86165926642946,
-        AnimationRun = 102675215328247,
-        AnimationAttack = 91758031306128,
-        AnimationDeath = 118554650060974,
+        DropPlanId = 401,
+        AnimationIdle = "86165926642946",
+        AnimationRun = "102675215328247",
+        AnimationAttack = "91758031306128",
+        AnimationDeath = "118554650060974",
     },
     [2] = {
         MonsterId = 30002,
-        Name = "culuflu",
+        Name = nil,
         DisplayName = "culuflu",
         Model = "culuflu",
         Type = 1,
         HP = 70,
+        Attack = 7,
+        AttackSpeed = 0.8,
+        MoveSpeed = 18,
         VisionRange = 30,
         AttackRange = 5,
         PatrolRadius = 15,
         MaxDisForSpawn = 30,
         RespawnTime = 0,
-        Attack = 7,
-        MoveSpeed = 18,
-        AttackSpeed = 0.8,
-        DropPlanId = 5012,
-        AnimationIdle = 114563261272011,
-        AnimationRun = 138867349575521,
-        AnimationAttack = 98792934038893,
-        AnimationDeath = 122311177197535,
+        DropPlanId = 402,
+        AnimationIdle = "114563261272011",
+        AnimationRun = "138867349575521",
+        AnimationAttack = "98792934038893",
+        AnimationDeath = "122311177197535",
     },
     [3] = {
         MonsterId = 30003,
-        Name = "dinosaur",
+        Name = nil,
         DisplayName = "dinosaur",
         Model = "dinosaur",
         Type = 1,
         HP = 200,
+        Attack = 30,
+        AttackSpeed = 2,
+        MoveSpeed = 16,
         VisionRange = 100,
         AttackRange = 20,
         PatrolRadius = 30,
         MaxDisForSpawn = 100,
         RespawnTime = 0,
-        Attack = 30,
-        MoveSpeed = 16,
-        AttackSpeed = 2,
-        DropPlanId = 5010,
-        AnimationIdle = 127174947382589,
-        AnimationRun = 102931343411723,
-        AnimationAttack = 86582808256856,
-        AnimationDeath = 140562207405408,
+        DropPlanId = 403,
+        AnimationIdle = "127174947382589",
+        AnimationRun = "102931343411723",
+        AnimationAttack = "86582808256856",
+        AnimationDeath = "140562207405408",
     },
 }
 
@@ -126,6 +126,33 @@ function MonsterConfig:GetByHP(value)
     return nil
 end
 
+function MonsterConfig:GetByAttack(value)
+    for i, item in pairs(self.Data) do
+        if item.Attack == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function MonsterConfig:GetByAttackSpeed(value)
+    for i, item in pairs(self.Data) do
+        if item.AttackSpeed == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function MonsterConfig:GetByMoveSpeed(value)
+    for i, item in pairs(self.Data) do
+        if item.MoveSpeed == value then
+            return item
+        end
+    end
+    return nil
+end
+
 function MonsterConfig:GetByVisionRange(value)
     for i, item in pairs(self.Data) do
         if item.VisionRange == value then
@@ -165,33 +192,6 @@ end
 function MonsterConfig:GetByRespawnTime(value)
     for i, item in pairs(self.Data) do
         if item.RespawnTime == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function MonsterConfig:GetByAttack(value)
-    for i, item in pairs(self.Data) do
-        if item.Attack == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function MonsterConfig:GetByMoveSpeed(value)
-    for i, item in pairs(self.Data) do
-        if item.MoveSpeed == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function MonsterConfig:GetByAttackSpeed(value)
-    for i, item in pairs(self.Data) do
-        if item.AttackSpeed == value then
             return item
         end
     end

@@ -4,6 +4,7 @@ local QuestConfig = {}
 QuestConfig.Data = {
     [1] = {
         QuestId = 40001,
+        PreQuestId = 0,
         QuestName = "Monster Elimination Objective",
         Map = "Dinosaur Island",
         NPC = "Captain",
@@ -33,10 +34,10 @@ QuestConfig.Data = {
                 Num = 1
             }
         },
-        PreQuestId = 0,
     },
     [2] = {
         QuestId = 40002,
+        PreQuestId = 40001,
         QuestName = "Resource Gathering Objective",
         Map = "Dinosaur Island",
         NPC = "Captain",
@@ -72,10 +73,10 @@ QuestConfig.Data = {
                 Num = 1
             }
         },
-        PreQuestId = 40001,
     },
     [3] = {
         QuestId = 40003,
+        PreQuestId = 40002,
         QuestName = "Secure Item Retrieval",
         Map = "Dinosaur Island",
         NPC = "Captain",
@@ -106,10 +107,10 @@ QuestConfig.Data = {
                 Num = 1
             }
         },
-        PreQuestId = 40002,
     },
     [4] = {
         QuestId = 40004,
+        PreQuestId = 40003,
         QuestName = "Strategic Item Placement",
         Map = "Dinosaur Island",
         NPC = "Captain",
@@ -136,10 +137,10 @@ QuestConfig.Data = {
                 Num = 1
             }
         },
-        PreQuestId = 40003,
     },
     [5] = {
         QuestId = 40005,
+        PreQuestId = 40004,
         QuestName = "Reconnaissance Zone",
         Map = "Dinosaur Island",
         NPC = "Captain",
@@ -164,10 +165,10 @@ QuestConfig.Data = {
                 Num = 1
             }
         },
-        PreQuestId = 40004,
     },
     [6] = {
         QuestId = 40006,
+        PreQuestId = 40005,
         QuestName = "Specialized Equipment Use",
         Map = "Dinosaur Island",
         NPC = "Captain",
@@ -203,10 +204,10 @@ QuestConfig.Data = {
                 Num = 1
             }
         },
-        PreQuestId = 40005,
     },
     [7] = {
         QuestId = 40007,
+        PreQuestId = 40006,
         QuestName = "Combined Operations Mission",
         Map = "Dinosaur Island",
         NPC = "Captain",
@@ -254,7 +255,6 @@ QuestConfig.Data = {
                 Num = 1
             }
         },
-        PreQuestId = 40006,
     },
 }
 
@@ -266,6 +266,15 @@ end
 function QuestConfig:GetByQuestId(value)
     for i, item in pairs(self.Data) do
         if item.QuestId == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function QuestConfig:GetByPreQuestId(value)
+    for i, item in pairs(self.Data) do
+        if item.PreQuestId == value then
             return item
         end
     end
@@ -338,15 +347,6 @@ end
 function QuestConfig:GetByRewardItem(value)
     for i, item in pairs(self.Data) do
         if item.RewardItem == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function QuestConfig:GetByPreQuestId(value)
-    for i, item in pairs(self.Data) do
-        if item.PreQuestId == value then
             return item
         end
     end

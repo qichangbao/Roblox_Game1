@@ -36,6 +36,7 @@ local UIController = Knit.CreateController {
     UpdateEquipment = Signal.new(),
     UpdateOfflineTime = Signal.new(),
     RewardAction = Signal.new(),
+    ShowJobUI = Signal.new(),
 }
 
 function UIController:KnitInit()
