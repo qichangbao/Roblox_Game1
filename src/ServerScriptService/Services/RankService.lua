@@ -16,6 +16,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local DataStoreService = game:GetService("DataStoreService")
 local Players = game:GetService("Players")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
+local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 
 -- 创建OrderedDataStore用于排行榜
 local EscapeActionsDataStore = DataStoreService:GetOrderedDataStore("EscapeActions")
@@ -142,6 +143,8 @@ function RankService:PlayerAdded(player)
             playerName = player.Name
         }
     end
+
+    Knit.GetService("JobService"):TriggerJob(player, GameConfig.JobUnlockCondition.Escape, escapeActions.successNum)
 end
 
 function RankService:PlayerRemoved(player)

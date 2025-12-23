@@ -399,4 +399,47 @@ function Interface.Split(str, delim)
 	return result
 end
 
+
+-- 设置鼠标悬停时的缩放效果
+-- @param frame Frame 需要缩放的UI容器
+-- @param button GuiButton 负责接收鼠标事件的按钮
+function Interface.SetupHoverScale(frame, button)
+	local uiScale = frame:FindFirstChildOfClass("UIScale")
+	if not uiScale then
+		uiScale = Instance.new("UIScale")
+		uiScale.Scale = 1
+		uiScale.Parent = frame
+	end
+
+	local tweenIn
+	local tweenOut
+    if not button then
+        button = Instance.new("TextButton")
+        button.BackgroundTransparency = 1
+        button.Parent = frame
+        button.Text = ""
+        button.Size = UDim2.new(1, 0, 1, 0)
+    end
+
+	button.MouseEnter:Connect(function()
+		if tweenOut then
+			tweenOut:Cancel()
+		end
+		tweenIn = TweenService:Create(uiScale, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			Scale = 1.1,
+		})
+		tweenIn:Play()
+	end)
+
+	button.MouseLeave:Connect(function()
+		if tweenIn then
+			tweenIn:Cancel()
+		end
+		tweenOut = TweenService:Create(uiScale, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			Scale = 1,
+		})
+		tweenOut:Play()
+	end)
+end
+
 return Interface

@@ -50,25 +50,26 @@ GameConfig.TaskType = {
     Composite = 7,            -- 复合型任务
 }
 
+-- 职业升级成本枚举
+GameConfig.JobUpgradeCost = {
+    Gold = 1,                   -- 金币获得_数量
+    RobCoins = 2,               -- 罗布币_消耗数量
+}
+
 -- 职业解锁条件枚举
 GameConfig.JobUnlockCondition = {
     Gold = 1,                   -- 金币获得_数量
     IslandLevel = 2,            -- 达到岛屿_第几关
-    FreeRelive = 3,             -- 复活_次数
+    Relive = 3,                 -- 复活_次数
     Escape = 4,                 -- 撤离_次数
     RobCoins = 5,               -- 罗布币_消耗数量
     DamageNoWeapon = 6,         -- 伤害（无指定武器_伤害值）
     DamageNoWeaponNum = 7,      -- 伤害（无指定武器_数量）
-    DamageWithWeapon = 8,       -- 伤害（指定武器_伤害值/数量）
-    DamageWithWeaponNum = 9,    -- 伤害（指定武器_数量）
-    DamageMonster = 10,         -- 伤害（怪物ID_伤害值）
-    DamageMonsterNum = 11,      -- 伤害（怪物ID_数量）
-    DamageDefense = 12,         -- 伤害（防御工事_伤害值）
-    DamageDefenseNum = 13,      -- 伤害（防御工事_数量）
-    CollectItemNum = 14,        -- 收集（道具_数量）
-    HealItemNum = 15,           -- 治疗（治疗道具_值/数量）
-    SaveNpcNum = 16,            -- 救人（NPC_次数）
-    SaveTeammateNum = 17,       -- 救人（队友_次数）
+    DamageMonster = 8,          -- 伤害（怪物ID_伤害值）
+    DamageMonsterNum = 9,       -- 伤害（怪物ID_数量）
+    CollectItemNum = 10,        -- 收集（道具_数量）
+    HealItemNum = 11,           -- 治疗（治疗道具_值/数量）
+    SaveTeammateNum = 12,       -- 救人（队友_次数）
 }
 
 -- 职业属性枚举

@@ -38,9 +38,54 @@ local _dataTemplate = {
 			Complated = false,
 		},
 	},			-- 能力列表
+	JobData = {
+		["101"] = {
+			Level = 1,
+			Unlock = 0,
+			IsFinished = false,
+		},
+		["102"] = {
+			Level = 1,
+			Unlock = 0,
+			IsFinished = false,
+		},
+		["103"] = {
+			Level = 1,
+			Unlock = 0,
+			IsFinished = false,
+		},
+		["104"] = {
+			Level = 1,
+			Unlock = 0,
+			IsFinished = false,
+		},
+		["105"] = {
+			Level = 1,
+			Unlock = 0,
+			IsFinished = false,
+		},
+		["106"] = {
+			Level = 1,
+			Unlock = 0,
+			IsFinished = false,
+		},
+		["107"] = {
+			Level = 1,
+			Unlock = 0,
+			IsFinished = false,
+		},
+		["108"] = {
+			Level = 1,
+			Unlock = 0,
+			IsFinished = false,
+		}
+	},				-- 职业
 	IsFirstLoginFuben = 0,		-- 是否第一次进入副本
 	QuestData = {},				-- 任务数据（QuestService 持久化使用）
 	LeaveGameTime = 0,			-- 玩家离开游戏时间（Unix 时间戳，单位：秒）
+	MaxIslandLevel = 0,			-- 最大岛屿关数
+	ByReviveCount = 0,			-- 复活次数
+	TotalRobCoins = 0,			-- 总共消耗的rob币
 }
 
 local ProfileStore = ProfileService.GetProfileStore(
@@ -191,6 +236,8 @@ function DBService:SetToAllStore(userId, key, value)
 		Knit.GetService("TalentService"):GetTalentFromDBService(userId, value)
 	elseif key == "QuestData" then
 		Knit.GetService("QuestService"):GetQuestFromDBService(userId, value)
+	elseif key == "JobData" then
+		Knit.GetService("JobService"):GetJobFromDBService(userId, value)
 	end
 	-- 初始化用户数据，确保用户数据存在，并且可以设置value
 	self:InitDataFromUserId(userId)

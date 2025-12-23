@@ -45,6 +45,18 @@ function GMService:GMCommand(player)
             local humanoid = character and character:FindFirstChildOfClass("Humanoid")
             
             -- 解析 "heal [amount]" 命令 - 加血
+            local goldMatch = string.match(lowerMessage, "^gold (%d+)$")
+            if goldMatch then
+                local amount = tonumber(goldMatch)
+                if amount then
+                    Knit.GetService("GoldService"):ChangeGold(player, amount)
+                    print(string.format("玩家 %s 增加了 %d 点金币，当前金币: %d", 
+                        player.Name, amount, Knit.GetService("GoldService"):GetGoldData(player)))
+                    return true
+                end
+            end
+            
+            -- 解析 "heal [amount]" 命令 - 加血
             local healMatch = string.match(lowerMessage, "^hp (%d+)$")
             if healMatch then
                 local amount = tonumber(healMatch)
@@ -172,6 +184,16 @@ function GMService:GMCommand(player)
                 return true
             end
 
+            local monsterIdStr, valueStr = lowerMessage:match("^damage monster%s+(%d+)%s+(%d+)$")
+            if monsterIdStr and valueStr then
+                local monsterId = tonumber(monsterIdStr)
+                local damage = tonumber(valueStr)
+                Knit.GetService("JobService"):TriggerJob(player, GameConfig.JobUnlockCondition.DamageNoWeapon, damage)
+                Knit.GetService("JobService"):TriggerJob(player, GameConfig.JobUnlockCondition.DamageNoWeaponNum, 1)
+                Knit.GetService("JobService"):TriggerJob(player, GameConfig.JobUnlockCondition.DamageMonster, {monsterId = monsterId, count = damage})
+                Knit.GetService("JobService"):TriggerJob(player, GameConfig.JobUnlockCondition.DamageMonsterNum, {monsterId = monsterId, count = 1})
+            end
+
 			local killMonsterMatch = string.match(lowerMessage, "^kill monster (%d+)$")
             if killMonsterMatch then
                 local monsterId = tonumber(killMonsterMatch)
@@ -201,10 +223,54 @@ function GMService:GMCommand(player)
                     return true
                 end
             end
+
+			local levelMatch = string.match(lowerMessage, "^island level (%d+)$")
+            if levelMatch then
+                local level = tonumber(levelMatch)
+                if level then
+                    Knit.GetService("DBService"):Set(player, "MaxIslandLevel", level)
+                    Knit.GetService("JobService"):TriggerJob(player, GameConfig.JobUnlockCondition.IslandLevel, level)
+                    return true
+                end
+            end
+
+            local reviveCountMatch = string.match(lowerMessage, "^revive (%d+)$")
+            if reviveCountMatch then
+                local count = tonumber(reviveCountMatch)
+                if count then
+                    Knit.GetService("DBService"):Set(player, "ByReviveCount", count)
+                    Knit.GetService("JobService"):TriggerJob(player, GameConfig.JobUnlockCondition.Relive, count)
+                    return true
+                end
+            end
+
+            local escapeCountMatch = string.match(lowerMessage, "^escape (%d+)$")
+            if escapeCountMatch then
+                local count = tonumber(escapeCountMatch)
+                if count then
+                    local escapeActions = Knit.GetService("DBService"):Get(player.UserId, "EscapeActions")
+                    escapeActions.successNum = count
+                    Knit.GetService("DBService"):Set(player.UserId, "EscapeActions", escapeActions)
+                    Knit.GetService("JobService"):TriggerJob(player, GameConfig.JobUnlockCondition.Escape, count)
+                    return true
+                end
+            end
+
+            local robCoinsMatch = string.match(lowerMessage, "^rob (%d+)$")
+            if robCoinsMatch then
+                local robCoins = tonumber(robCoinsMatch)
+                if robCoins then
+                    -- 更新玩家的rob币数量
+                    Knit.GetService('DBService'):Set(player.UserId, "TotalRobCoins", robCoins)
+                    Knit.GetService('JobService'):TriggerJob(player, GameConfig.JobUnlockCondition.RobCoins, Knit.GetService('DBService'):Get(player.UserId, "TotalRobCoins"))
+                    return true
+                end
+            end
             
             -- 解析 "help" 命令 - 显示帮助信息
             if lowerMessage == "help" or lowerMessage == "debug help" then
                 print("=== 调试命令帮助 ===")
+                print("gold [amount] - 恢复指定金币")
                 print("hp [amount] - 恢复指定生命值")
                 print("hp - 恢复满血")
                 print("damage [amount] - 造成指定伤害")
@@ -217,7 +283,14 @@ function GMService:GMCommand(player)
                 print("add star - 为玩家添加一颗星")
                 print("dec star - 为玩家移除一颗星")
                 print("show tip [tip] - 显示指定提示信息")
+                print("damage monster [monsterId] [damage] - 造成指定伤害给怪物")
                 print("kill monster [monsterId] - 击杀指定怪物")
+                print("add equip [equipId] - 添加装备")
+                print("remove equip [equipId] - 移除装备")
+                print("island level [level] - 设置最大岛屿关数")
+                print("revive [count] - 设置复活次数")
+                print("escape [count] - 设置逃脱次数")
+                print("rob [amount] - 设置rob币数量")
                 print("help - 显示此帮助信息")
                 return true
             end

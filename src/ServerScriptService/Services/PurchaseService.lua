@@ -6,6 +6,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local Shop1Config = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("Shop1Config"))
+local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 
 local PurchaseService = Knit.CreateService({
     Name = 'PurchaseService',
@@ -43,7 +44,7 @@ local function processReceipt(receiptInfo)
     end
     
     -- 发放物品
-    local shopInfo = Shop1Config:GetByAssetID(receiptInfo.ProductId)
+    local shopInfo = Shop1Config:GetByAssetId(receiptInfo.ProductId)
     if not shopInfo then
         return Enum.ProductPurchaseDecision.NotProcessedYet
     end
@@ -64,6 +65,12 @@ local function processReceipt(receiptInfo)
     
     -- 清理已处理的购买请求
     PendingPurchases[receiptInfo.PlayerId] = nil
+
+    -- 更新玩家的rob币数量
+    Knit.GetService('DBService'):Update(player.UserId, "TotalRobCoins", function(robCoins)
+        return robCoins + receiptInfo.CurrencySpent
+    end)
+    Knit.GetService('JobService'):TriggerJob(player, GameConfig.JobUnlockCondition.RobCoins, Knit.GetService('DBService'):Get(player.UserId, "TotalRobCoins"))
     
     return Enum.ProductPurchaseDecision.PurchaseGranted
 end

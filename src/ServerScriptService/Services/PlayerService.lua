@@ -68,6 +68,7 @@ function PlayerService:KnitStart()
         Knit.GetService("GMService"):PlayerRemoved(player)
         Knit.GetService("QuestService"):PlayerRemoved(player)
         Knit.GetService("EquipmentService"):PlayerRemoved(player)
+        Knit.GetService("JobService"):PlayerRemoved(player)
 
         local DBService = Knit.GetService("DBService")
         -- 在玩家离开时记录离开时间到数据库（仅时间戳）
@@ -97,6 +98,7 @@ function PlayerService:GetInitData(player)
     local DBService = Knit.GetService("DBService")
     DBService:PlayerAdded(player)
 
+    Knit.GetService("JobService"):PlayerAdded(player)
     Knit.GetService("EquipmentService"):PlayerAdded(player)
     Knit.GetService("GoldService"):PlayerAdded(player)
     Knit.GetService("InventoryService"):PlayerAdded(player)
@@ -131,6 +133,7 @@ function PlayerService:GetInitData(player)
     local inventoryData = Knit.GetService("InventoryService"):GetInventoryData(player)
     local toolData = Knit.GetService("InventoryService"):GetToolData(player)
     local equipmentData = Knit.GetService("EquipmentService"):GetEquipmentData(player)
+    local jobData = Knit.GetService("JobService"):GetJobData(player)
     local rankPersonalData = Knit.GetService("RankService"):GetPersonalDataWithRank(player)
     local rankData = Knit.GetService("RankService"):GetLeaderboard()
     local talentData = Knit.GetService("TalentService"):GetTalentData(player)
@@ -174,6 +177,7 @@ function PlayerService:GetInitData(player)
         ToolData = toolData,
         EquipmentData = equipmentData,
         TalentData = self.TalentData[player.UserId],
+        JobData = jobData,
         RankPersonalData = rankPersonalData,
         RankData = rankData,
         IsAdmin = isAdmin,

@@ -84,6 +84,12 @@ local function init()
 			ClientData.EquipmentData = equipmentData or {}
 			Knit.GetController("UIController").UpdateEquipment:Fire(equipmentData or {})
 		end)
+        
+        -- 监听服务器的发送职业数据请求
+		Knit.GetService("JobService").UpdateJobData:Connect(function(jobData)
+			ClientData.JobData = jobData or {}
+			Knit.GetController("UIController").UpdateJobData:Fire(jobData or {})
+		end)
 
         -- 监听服务器的发送开始传送请求
         Knit.GetService("TeleportService").SendStartTeleport:Connect(function()
