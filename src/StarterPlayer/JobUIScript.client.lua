@@ -3,6 +3,7 @@ local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Kn
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 local HeroConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("HeroConfig"))
 local MonsterConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("MonsterConfig"))
+local ItemConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("ItemConfig"))
 local AttributeConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("AttributeConfig"))
 local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
 
@@ -12,7 +13,9 @@ local _originalCameraSubject = _camera.CameraSubject
 local _originalCameraCFrame = _camera.CFrame
 
 local _jobsData = {}
+local _curJobId = 0
 local _selectItem = nil
+local _curModel = nil
 
 local _screenGui = script.Parent
 _screenGui.Enabled = false
@@ -65,6 +68,137 @@ _robImage.Visible = false
 local _unlockTextLabel = _frame:WaitForChild("UnlockTextLabel")
 _unlockTextLabel.Text = ""
 
+local _activeButton = _frame:WaitForChild("ActiveButton")
+_activeButton.MouseButton1Click:Connect(function()
+	if not _selectItem.Name then return end
+	Knit.GetService("JobService"):ChangeJob(_selectItem.Name):andThen(function(isActive)
+	end)
+end)
+local _activeTextLabel = _activeButton:WaitForChild("TextLabel")
+_activeTextLabel.Text = ""
+
+local function setActiveText(jobId)
+	if _curJobId == 0 then
+		_activeTextLabel.Text = "Activate"
+	elseif _curJobId == jobId then
+		_activeTextLabel.Text = "Deactivate"
+	else
+		_activeTextLabel.Text = "Activate"
+	end
+end
+
+-- 为模型播放攻击与Idle循环动作
+-- @param model Model 需要播放动作的模型
+local function playPreviewAnimations(model)
+	local humanoid = model:FindFirstChildOfClass("Humanoid")
+	local animationController = model:FindFirstChildOfClass("AnimationController")
+	local animatorParent = humanoid or animationController
+	if not animatorParent then
+		return
+	end
+
+	local animator = animatorParent:FindFirstChildOfClass("Animator")
+	if not animator then
+		animator = Instance.new("Animator")
+		animator.Parent = animatorParent
+	end
+
+	local players = game:GetService("Players")
+	local localPlayer = players.LocalPlayer
+	if not localPlayer then
+		return
+	end
+
+	local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+	local animateScript = character:FindFirstChild("Animate")
+	if not animateScript then
+		return
+	end
+
+	local idleFolder = animateScript:FindFirstChild("idle")
+	if not idleFolder then
+		return
+	end
+
+	local sourceIdleAnimation = idleFolder:FindFirstChildOfClass("Animation")
+	if not sourceIdleAnimation or not sourceIdleAnimation.AnimationId or sourceIdleAnimation.AnimationId == "" then
+		return
+	end
+
+	local idleAnimation = Instance.new("Animation")
+	idleAnimation.AnimationId = sourceIdleAnimation.AnimationId
+	local idleTrack = animator:LoadAnimation(idleAnimation)
+	idleTrack.Looped = true
+
+	local attackAnimationIds = GameConfig.AnimationMap.swing
+
+	task.spawn(function()
+		while model.Parent do
+			local attackIndex = math.random(1, #attackAnimationIds)
+			local attackAnimation = Instance.new("Animation")
+			attackAnimation.AnimationId = attackAnimationIds[attackIndex]
+			local attackTrack = animator:LoadAnimation(attackAnimation)
+			attackTrack.Looped = false
+			attackTrack:Play()
+
+			local attackFinished = false
+			attackTrack.Stopped:Connect(function()
+				attackFinished = true
+			end)
+
+			local elapsed = 0
+			while not attackFinished and elapsed < (attackTrack.Length + 0.5) do
+				if not model.Parent then
+					return
+				end
+				local dt = task.wait(0.1)
+				elapsed += dt
+			end
+
+			if not model.Parent then
+				return
+			end
+
+			idleTrack:Play()
+			local idleDuration = math.random(3, 5)
+			local idleElapsed = 0
+			while idleElapsed < idleDuration do
+				if not model.Parent then
+					idleTrack:Stop()
+					return
+				end
+				local dt = task.wait(0.1)
+				idleElapsed += dt
+			end
+
+			idleTrack:Stop()
+		end
+	end)
+end
+
+-- 更新展示模型并播放预览动作
+-- @param config table 职业配置数据
+local function updateModel(config)
+	local modelFolder = ReplicatedStorage:FindFirstChild("JobModel")
+	if not modelFolder then return end
+	local model = modelFolder:FindFirstChild(config.Model)
+	if not model then return end
+
+	if _curModel then
+		_curModel:Destroy()
+		_curModel = nil
+	end
+
+	local newModel = model:Clone()
+	newModel.Name = config.Model
+	local cframe = model:GetAttribute("CFrame")
+	newModel:PivotTo(cframe)
+	newModel.Parent = workspace
+	_curModel = newModel
+
+	playPreviewAnimations(newModel)
+end
+
 local function updateInfo(config)
 	_infoNameLabel.Text = config.Name
 	_infoModelDesLabel.Text = config.HeroDesc
@@ -80,14 +214,14 @@ local function updateInfo(config)
 			else
 				str = string.format("%s+%s%%", attribute.DisplayName, effectAction[3])
 			end
-		elseif effectType == GameConfig.JobAttributeType.Backpack then
-			str = string.format("Backpack+%s", effectAction[2])
 		elseif effectType == GameConfig.JobAttributeType.FreeRelive then
-			str = string.format("Free relive+%s", effectAction[2])
+			str = string.format("Free relive count +%s", effectAction[2])
 		elseif effectType == GameConfig.JobAttributeType.DoubleDamage then
-			str = string.format("Double damage+%s", effectAction[2])
+			local itemId = tonumber(effectAction[2])
+			local item = ItemConfig:GetByItemId(itemId)
+			str = string.format("Deal double damage when using %s", item and item.DisplayName or "unknown item")
 		elseif effectType == GameConfig.JobAttributeType.KillMonsterDoubleDrop then
-			str = string.format("KillMonsterDoubleDrop+%s", effectAction[2])
+			str = "Killing monsters has a chance to trigger double drops"
 		end
 
 		local attributeFrame = _attributeChild[i]
@@ -149,9 +283,11 @@ local function updateInfo(config)
 			local monsterInfo = MonsterConfig:GetByMonsterId(tonumber(unlock[2]))
 			str = string.format("对%s造成 %s 次伤害(%s/%s)", monsterInfo.DisplayName, unlock[3], jobData.Unlock, unlock[3])
 		elseif unlockType == GameConfig.JobUnlockCondition.CollectItemNum then
-			str = string.format("收集 %s(%s/%s)", unlock[2], jobData.Unlock, unlock[2])
-		elseif unlockType == GameConfig.JobUnlockCondition.HealItemNum then
-			str = string.format("治疗 %s 次(%s/%s)", unlock[2], jobData.Unlock, unlock[2])
+			local itemInfo = ItemConfig:GetByItemId(tonumber(unlock[2]))
+			str = string.format("收集%s %s 个(%s/%s)", itemInfo.DisplayName, unlock[3], jobData.Unlock, unlock[3])
+		elseif unlockType == GameConfig.JobUnlockCondition.TreatmentItemNum then
+			local itemInfo = ItemConfig:GetByItemId(tonumber(unlock[2]))
+			str = string.format("用%s治疗 %s 次(%s/%s)", itemInfo.DisplayName, unlock[3], jobData.Unlock, unlock[3])
 		elseif unlockType == GameConfig.JobUnlockCondition.SaveTeammateNum then
 			str = string.format("救人 %s 次(%s/%s)", unlock[2], jobData.Unlock, unlock[2])
 		end
@@ -185,6 +321,8 @@ local function updateData(data)
 		_selectItem.BackgroundColor3 = Color3.fromRGB(141, 125, 136)
 		_selectItem:FindFirstChild("NameLabel").TextColor3 = Color3.fromRGB(240, 240, 240)
 		updateInfo(config)
+		setActiveText(config.Id)
+		updateModel(config)
 	end
 
 	for i, config in ipairs(HeroConfig:GetAll()) do
@@ -226,6 +364,12 @@ Knit.OnStart():andThen(function()
 		if _screenGui.Enabled then
 			updateData(_G.ClientData.JobData)
 		end
+	end)
+
+	-- 监听服务器的发送当前职业ID请求
+	Knit.GetController("UIController").ChangeCurJobId:Connect(function(jobId)
+		_curJobId = jobId or 0
+		setActiveText(_curJobId)
 	end)
 
 	Knit.GetController("UIController").ShowJobUI:Connect(function(type)

@@ -15,7 +15,7 @@ Shop1Config.Data = {
         AssetId = 3386569943,
     },
     [4] = {
-        Index = 301,
+        Index = 801,
         AssetId = 3386571239,
     },
     [5] = {

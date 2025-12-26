@@ -7,7 +7,7 @@ EquipmentConfig.Data = {
         Type = 1,
         DisplayName = "衣服",
         Quality = 1,
-        Icon = "rbxassetid://108864196858289",
+        IconId = "rbxassetid://108864196858289",
         AssetId = "rbxassetid://2067610595",
     },
     [2] = {
@@ -15,7 +15,7 @@ EquipmentConfig.Data = {
         Type = 2,
         DisplayName = "裤子",
         Quality = 1,
-        Icon = "rbxassetid://108864196858289",
+        IconId = "rbxassetid://108864196858289",
         AssetId = "rbxassetid://2067611839",
     },
     [3] = {
@@ -23,7 +23,7 @@ EquipmentConfig.Data = {
         Type = 3,
         DisplayName = "帽子",
         Quality = 1,
-        Icon = "rbxassetid://108864196858289",
+        IconId = "rbxassetid://108864196858289",
         AssetId = 1,
     },
 }
@@ -69,9 +69,9 @@ function EquipmentConfig:GetByQuality(value)
     return nil
 end
 
-function EquipmentConfig:GetByIcon(value)
+function EquipmentConfig:GetByIconId(value)
     for i, item in pairs(self.Data) do
-        if item.Icon == value then
+        if item.IconId == value then
             return item
         end
     end

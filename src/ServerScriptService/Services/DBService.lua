@@ -13,7 +13,7 @@ local _dataTemplate = {
 			UsedNum = 0,
 		},
 		[2] = {
-			ItemId = 301,
+			ItemId = 801,
 			UsedTime = 0,
 			UsedNum = 0,
 		},
@@ -80,11 +80,12 @@ local _dataTemplate = {
 			IsFinished = false,
 		}
 	},				-- 职业
+	CurJobId = 0,				-- 当前职业ID
 	IsFirstLoginFuben = 0,		-- 是否第一次进入副本
 	QuestData = {},				-- 任务数据（QuestService 持久化使用）
 	LeaveGameTime = 0,			-- 玩家离开游戏时间（Unix 时间戳，单位：秒）
 	MaxIslandLevel = 0,			-- 最大岛屿关数
-	ByReviveCount = 0,			-- 复活次数
+	BuyReviveCount = 0,			-- 复活次数
 	TotalRobCoins = 0,			-- 总共消耗的rob币
 }
 

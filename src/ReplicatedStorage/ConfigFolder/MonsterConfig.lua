@@ -65,27 +65,6 @@ MonsterConfig.Data = {
         AnimationAttack = "86582808256856",
         AnimationDeath = "140562207405408",
     },
-    [4] = {
-        MonsterId = 30004,
-        Name = nil,
-        DisplayName = "spider",
-        Model = "spider",
-        Type = 1,
-        HP = 200,
-        Attack = 30,
-        AttackSpeed = 2,
-        MoveSpeed = 16,
-        VisionRange = 100,
-        AttackRange = 20,
-        PatrolRadius = 30,
-        MaxDisForSpawn = 100,
-        RespawnTime = 0,
-        DropPlanId = 403,
-        AnimationIdle = "104063481809103",
-        AnimationRun = nil,
-        AnimationAttack = nil,
-        AnimationDeath = nil,
-    },
 }
 
 -- 辅助函数

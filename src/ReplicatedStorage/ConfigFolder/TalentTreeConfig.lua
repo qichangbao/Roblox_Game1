@@ -10,7 +10,7 @@ TalentTreeConfig.Data = {
         Type = 4,
         ChildType = 2,
         Value = 3,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = {
             {
                 Item = 1002,
@@ -36,7 +36,7 @@ TalentTreeConfig.Data = {
         Type = 2,
         ChildType = 2,
         Value = 10,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [3] = {
@@ -47,7 +47,7 @@ TalentTreeConfig.Data = {
         Type = 1,
         ChildType = 2,
         Value = 2,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [4] = {
@@ -58,7 +58,7 @@ TalentTreeConfig.Data = {
         Type = 3,
         ChildType = 2,
         Value = 2,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [5] = {
@@ -73,7 +73,7 @@ TalentTreeConfig.Data = {
         Type = 6,
         ChildType = 2,
         Value = 1,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [6] = {
@@ -84,7 +84,7 @@ TalentTreeConfig.Data = {
         Type = 4,
         ChildType = 2,
         Value = 10,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [7] = {
@@ -95,7 +95,7 @@ TalentTreeConfig.Data = {
         Type = 5,
         ChildType = 1,
         Value = 0.3,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [8] = {
@@ -106,7 +106,7 @@ TalentTreeConfig.Data = {
         Type = 2,
         ChildType = 2,
         Value = 20,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [9] = {
@@ -117,7 +117,7 @@ TalentTreeConfig.Data = {
         Type = 7,
         ChildType = 2,
         Value = 1,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [10] = {
@@ -128,7 +128,7 @@ TalentTreeConfig.Data = {
         Type = 9,
         ChildType = 0,
         Value = 0,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [11] = {
@@ -139,7 +139,7 @@ TalentTreeConfig.Data = {
         Type = 8,
         ChildType = 0,
         Value = 0,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [12] = {
@@ -150,7 +150,7 @@ TalentTreeConfig.Data = {
         Type = 1,
         ChildType = 2,
         Value = 2,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [13] = {
@@ -161,7 +161,7 @@ TalentTreeConfig.Data = {
         Type = 6,
         ChildType = 2,
         Value = 1,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [14] = {
@@ -172,7 +172,7 @@ TalentTreeConfig.Data = {
         Type = 4,
         ChildType = 2,
         Value = 3,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [15] = {
@@ -183,7 +183,7 @@ TalentTreeConfig.Data = {
         Type = 1,
         ChildType = 2,
         Value = 2,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [16] = {
@@ -194,7 +194,7 @@ TalentTreeConfig.Data = {
         Type = 6,
         ChildType = 2,
         Value = 1,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [17] = {
@@ -205,7 +205,7 @@ TalentTreeConfig.Data = {
         Type = 4,
         ChildType = 2,
         Value = 3,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [18] = {
@@ -216,7 +216,7 @@ TalentTreeConfig.Data = {
         Type = 1,
         ChildType = 2,
         Value = 2,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [19] = {
@@ -227,7 +227,7 @@ TalentTreeConfig.Data = {
         Type = 6,
         ChildType = 2,
         Value = 1,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [20] = {
@@ -238,7 +238,7 @@ TalentTreeConfig.Data = {
         Type = 4,
         ChildType = 2,
         Value = 5,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [21] = {
@@ -249,7 +249,7 @@ TalentTreeConfig.Data = {
         Type = 1,
         ChildType = 2,
         Value = 2,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [22] = {
@@ -260,7 +260,7 @@ TalentTreeConfig.Data = {
         Type = 6,
         ChildType = 2,
         Value = 1,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [23] = {
@@ -271,7 +271,7 @@ TalentTreeConfig.Data = {
         Type = 4,
         ChildType = 2,
         Value = 5,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [24] = {
@@ -282,7 +282,7 @@ TalentTreeConfig.Data = {
         Type = 1,
         ChildType = 2,
         Value = 2,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [25] = {
@@ -293,7 +293,7 @@ TalentTreeConfig.Data = {
         Type = 6,
         ChildType = 2,
         Value = 1,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [26] = {
@@ -304,7 +304,7 @@ TalentTreeConfig.Data = {
         Type = 4,
         ChildType = 2,
         Value = 8,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [27] = {
@@ -315,7 +315,7 @@ TalentTreeConfig.Data = {
         Type = 1,
         ChildType = 2,
         Value = 4,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [28] = {
@@ -326,7 +326,7 @@ TalentTreeConfig.Data = {
         Type = 6,
         ChildType = 2,
         Value = 2,
-        Icon = "rbxassetid://132844373362963",
+        IconId = "rbxassetid://132844373362963",
         Need = nil,
     },
     [29] = {
@@ -337,7 +337,7 @@ TalentTreeConfig.Data = {
         Type = nil,
         ChildType = nil,
         Value = nil,
-        Icon = nil,
+        IconId = nil,
         Need = nil,
     },
 }
@@ -410,9 +410,9 @@ function TalentTreeConfig:GetByValue(value)
     return nil
 end
 
-function TalentTreeConfig:GetByIcon(value)
+function TalentTreeConfig:GetByIconId(value)
     for i, item in pairs(self.Data) do
-        if item.Icon == value then
+        if item.IconId == value then
             return item
         end
     end

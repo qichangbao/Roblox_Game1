@@ -101,16 +101,6 @@ function GMService:GMCommand(player)
                 end
             end
             
-            -- 解析 "speed reset" 命令 - 重置移动速度
-            if lowerMessage == "speed reset" then
-                if humanoid then
-                    local initSpeed = player:GetAttribute("InitWalkSpeed") or 16
-                    humanoid.WalkSpeed = initSpeed
-                    print(string.format("玩家 %s 移动速度已重置为: %d", player.Name, initSpeed))
-                    return true
-                end
-            end
-            
             -- 解析 "jump [value]" 命令 - 设置跳跃力
             local jumpMatch = string.match(lowerMessage, "^jump (%d+)$")
             if jumpMatch then
@@ -118,16 +108,6 @@ function GMService:GMCommand(player)
                 if jumpPower and humanoid then
                     humanoid.JumpPower = jumpPower
                     print(string.format("玩家 %s 跳跃力设置为: %d", player.Name, jumpPower))
-                    return true
-                end
-            end
-            
-            -- 解析 "jump reset" 命令 - 重置跳跃力
-            if lowerMessage == "jump reset" then
-                if humanoid then
-                    local initJump = player:GetAttribute("InitJumpPower") or 50
-                    humanoid.JumpPower = initJump
-                    print(string.format("玩家 %s 跳跃力已重置为: %d", player.Name, initJump))
                     return true
                 end
             end
@@ -150,6 +130,7 @@ function GMService:GMCommand(player)
                                 Attribute = GameConfig.GetItemAttribute(),
                             })
                         end
+                        Knit.GetService("JobService"):TriggerJob(player, GameConfig.JobUnlockCondition.CollectItemNum, {itemId = itemId, count = 1})
 					end
 					print(string.format("已为玩家 %s 添加物品 IDs: %s", player.Name, table.concat(ids, ", ")))
 					return true
@@ -238,7 +219,7 @@ function GMService:GMCommand(player)
             if reviveCountMatch then
                 local count = tonumber(reviveCountMatch)
                 if count then
-                    Knit.GetService("DBService"):Set(player, "ByReviveCount", count)
+                    Knit.GetService("DBService"):Set(player, "BuyReviveCount", count)
                     Knit.GetService("JobService"):TriggerJob(player, GameConfig.JobUnlockCondition.Relive, count)
                     return true
                 end
@@ -266,6 +247,15 @@ function GMService:GMCommand(player)
                     return true
                 end
             end
+
+            local treatmentMatch = string.match(lowerMessage, "^treatment (%d+)$")
+            if treatmentMatch then
+                local treatment = tonumber(treatmentMatch)
+                if treatment then
+                    Knit.GetService("JobService"):TriggerJob(player, GameConfig.JobUnlockCondition.TreatmentItemNum, {itemId = treatment, count = 1})
+                    return true
+                end
+            end
             
             -- 解析 "help" 命令 - 显示帮助信息
             if lowerMessage == "help" or lowerMessage == "debug help" then
@@ -275,9 +265,7 @@ function GMService:GMCommand(player)
                 print("hp - 恢复满血")
                 print("damage [amount] - 造成指定伤害")
                 print("speed [value] - 设置移动速度")
-                print("speed reset - 重置移动速度")
                 print("jump [value] - 设置跳跃力")
-                print("jump reset - 重置跳跃力")
                 print("add item [id1 id2 ...] 或 [id1,id2,...] - 添加多个物品")
                 print("remove item [itemId] - 移除玩家指定物品")
                 print("add star - 为玩家添加一颗星")
@@ -291,6 +279,7 @@ function GMService:GMCommand(player)
                 print("revive [count] - 设置复活次数")
                 print("escape [count] - 设置逃脱次数")
                 print("rob [amount] - 设置rob币数量")
+                print("treatment [itemId] - 指定治疗道具")
                 print("help - 显示此帮助信息")
                 return true
             end

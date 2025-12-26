@@ -1,3 +1,6 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ConstantConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("ConstantConfig"))
+
 local GameConfig = {}
 
 -- 物品类型
@@ -8,8 +11,9 @@ GameConfig.ItemType = {
     Collect = 4,    -- 搜集类
     Chest = 5,      -- 宝箱类
     Mound = 6,      -- 土堆
-    Buff = 7,      --  buff类
-    Max = 8,        -- 最大物品类型
+    Buff = 7,       --  buff类
+    Treatment = 8,  -- 治疗类
+    Max = 9,        -- 最大物品类型
 }
 
 GameConfig.ItemTypeFolder = {
@@ -20,6 +24,7 @@ GameConfig.ItemTypeFolder = {
     [GameConfig.ItemType.Chest] = "箱子",
     [GameConfig.ItemType.Mound] = "土堆",
     [GameConfig.ItemType.Buff] = "Buff",
+    [GameConfig.ItemType.Treatment] = "治疗",
 }
 
 GameConfig.NpcUIType = {
@@ -50,6 +55,12 @@ GameConfig.TaskType = {
     Composite = 7,            -- 复合型任务
 }
 
+-- 角色动画枚举
+GameConfig.AnimationMap = {
+    swing = {"rbxassetid://122275399055808", "rbxassetid://106851209030806"},
+    dig = {"rbxassetid://133396559381410"},
+}
+
 -- 职业升级成本枚举
 GameConfig.JobUpgradeCost = {
     Gold = 1,                   -- 金币获得_数量
@@ -68,17 +79,54 @@ GameConfig.JobUnlockCondition = {
     DamageMonster = 8,          -- 伤害（怪物ID_伤害值）
     DamageMonsterNum = 9,       -- 伤害（怪物ID_数量）
     CollectItemNum = 10,        -- 收集（道具_数量）
-    HealItemNum = 11,           -- 治疗（治疗道具_值/数量）
+    TreatmentItemNum = 11,      -- 治疗（治疗道具_值/数量）
     SaveTeammateNum = 12,       -- 救人（队友_次数）
 }
 
 -- 职业属性枚举
 GameConfig.JobAttributeType = {
     Attribute = 1,              -- 属性
-    Backpack = 100,             -- 背包容量
     FreeRelive = 101,           -- 免费复活次数
     DoubleDamage = 102,         -- 双倍伤害
     KillMonsterDoubleDrop = 103, -- 击杀怪物双倍掉落
+}
+
+-- 玩家属性枚举
+GameConfig.PlayerAttributeId = {
+    Attack = 1001,
+    Health = 1002,
+    Endurance = 1003,
+    WalkSpeed = 1004,
+    EnduranceRecovery = 1005,
+    JumpPower = 1006,
+    Weight = 1007,
+    Lucky = 1008,
+    CriticalProbability = 1009,
+    CriticalValue = 1010,
+    AttackPoint = 2001,
+    HealthPoint = 2002,
+    EndurancePoint = 2003,
+    WalkSpeedPoint = 2004,
+    EnduranceRecoveryPoint = 2005,
+    JumpPowerPoint = 2006,
+    WeightPoint = 2007,
+    LuckyPoint = 2008,
+    CriticalProbabilityPoint = 2009,
+    CriticalValuePoint = 2010,
+}
+
+-- 玩家初始属性
+GameConfig.PlayerInitAttribute = {
+    Attack = ConstantConfig:GetByConstant("InitialAttack").Effect1,
+    Health = ConstantConfig:GetByConstant("InitialHealth").Effect1,
+    WalkSpeed = ConstantConfig:GetByConstant("InitialMovementSpeed").Effect1,
+    RunSpeed = ConstantConfig:GetByConstant("InitialSprintSpeed").Effect1,
+    JumpPower = ConstantConfig:GetByConstant("InitialJumpPower").Effect1,
+    Endurance = ConstantConfig:GetByConstant("InitialEndurance").Effect1,
+    Weight = ConstantConfig:GetByConstant("InitiaWeight").Effect1,
+    Lucky = ConstantConfig:GetByConstant("InitiaLucky").Effect1,
+    CriticalProbability = ConstantConfig:GetByConstant("InitiaCriticalProbability").Effect1,
+    CriticalValue = ConstantConfig:GetByConstant("InitiaCriticalValue").Effect1,
 }
 
 GameConfig.DuanWeiType = {
@@ -170,9 +218,6 @@ GameConfig.TeleportPartNames = {"go1", "go2", "go3"}-- 触发传送的Part名称
 GameConfig.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json")
 GameConfig.SLOT_NUM = 3
 GameConfig.Item_DragTime = 0.3       -- 物品拖拽响应事件
-GameConfig.Overwhelmed = 15         -- 负重
-GameConfig.CollectSpeed = 16        -- 搜集速度
-GameConfig.Lucky = 0                -- 幸运
 
 -- 物品的扩展属性，用于服务器客户端同步一些动态数据
 GameConfig.GetItemAttribute = function(item)

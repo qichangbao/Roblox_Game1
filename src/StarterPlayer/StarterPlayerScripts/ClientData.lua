@@ -18,6 +18,7 @@ ClientData.Weight = 0
 ClientData.CollectSpeed = 0
 ClientData.Lucky = 0
 ClientData.JobData = {}
+ClientData.CurJobId = 0
 
 local function setInitData(data)
     -- 安全地设置数据
@@ -35,6 +36,7 @@ local function setInitData(data)
     ClientData.CollectSpeed = data.CollectSpeed or 0
     ClientData.Lucky = data.Lucky or 0
     ClientData.JobData = data.JobData or {}
+    ClientData.CurJobId = data.CurJobId or 0
     local offlineTime = data.OfflineTime or 0
     -- local playerGui = Interface.safeWaitPart(game.Players.LocalPlayer, "PlayerGui")
 	-- local loadingUI = Interface.safeWaitPart(playerGui, "LoadingUI")
@@ -89,6 +91,12 @@ local function init()
 		Knit.GetService("JobService").UpdateJobData:Connect(function(jobData)
 			ClientData.JobData = jobData or {}
 			Knit.GetController("UIController").UpdateJobData:Fire(jobData or {})
+		end)
+        
+        -- 监听服务器的发送当前职业ID请求
+		Knit.GetService("JobService").ChangeCurJobId:Connect(function(jobId)
+			ClientData.CurJobId = jobId or 0
+			Knit.GetController("UIController").ChangeCurJobId:Fire(jobId or 0)
 		end)
 
         -- 监听服务器的发送开始传送请求

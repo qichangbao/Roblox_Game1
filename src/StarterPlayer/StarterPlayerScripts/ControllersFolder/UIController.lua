@@ -38,6 +38,7 @@ local UIController = Knit.CreateController {
     RewardAction = Signal.new(),
     ShowJobUI = Signal.new(),
     UpdateJobData = Signal.new(),
+    ChangeCurJobId = Signal.new(),
 }
 
 function UIController:KnitInit()

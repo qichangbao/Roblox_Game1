@@ -3,280 +3,72 @@ local DropTableConfig = {}
 
 DropTableConfig.Data = {
     [1] = {
-        ID = 1,
-        type = 2,
-        minDrop = 1,
-        maxDrop = 1,
-        dropInfo = {
+        Id = 1,
+        Type = 2,
+        MinDrop = 1,
+        MaxDrop = 1,
+        DropInfo = {
             {
-                1001,
+                101,
                 1,
                 1000
             },
             {
-                1002,
-                1,
-                1000
-            },
-            {
-                1003,
-                1,
-                1000
-            },
-            {
-                1004,
+                102,
                 1,
                 1000
             }
         },
     },
     [2] = {
-        ID = 2,
-        type = 2,
-        minDrop = 1,
-        maxDrop = 1,
-        dropInfo = {
+        Id = 2,
+        Type = 2,
+        MinDrop = 1,
+        MaxDrop = 1,
+        DropInfo = {
             {
-                1001,
+                101,
                 1,
                 1000
             },
             {
-                1002,
-                1,
-                1000
-            },
-            {
-                1003,
-                1,
-                1000
-            },
-            {
-                1004,
+                102,
                 1,
                 1000
             }
         },
     },
     [3] = {
-        ID = 3,
-        type = 2,
-        minDrop = 1,
-        maxDrop = 1,
-        dropInfo = {
+        Id = 3,
+        Type = 2,
+        MinDrop = 1,
+        MaxDrop = 1,
+        DropInfo = {
             {
-                1001,
+                201,
                 1,
                 1000
             },
             {
-                1002,
-                1,
-                1000
-            },
-            {
-                1003,
-                1,
-                1000
-            },
-            {
-                1004,
+                202,
                 1,
                 1000
             }
         },
     },
     [4] = {
-        ID = 4,
-        type = 2,
-        minDrop = 1,
-        maxDrop = 1,
-        dropInfo = {
+        Id = 4,
+        Type = 2,
+        MinDrop = 1,
+        MaxDrop = 1,
+        DropInfo = {
             {
-                1001,
+                201,
                 1,
                 1000
             },
             {
-                1002,
-                1,
-                1000
-            },
-            {
-                1003,
-                1,
-                1000
-            },
-            {
-                1004,
-                1,
-                1000
-            }
-        },
-    },
-    [5] = {
-        ID = 5,
-        type = 2,
-        minDrop = 1,
-        maxDrop = 1,
-        dropInfo = {
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1002,
-                1,
-                1000
-            },
-            {
-                1003,
-                1,
-                1000
-            },
-            {
-                1004,
-                1,
-                1000
-            }
-        },
-    },
-    [6] = {
-        ID = 401,
-        type = 2,
-        minDrop = 1,
-        maxDrop = 1,
-        dropInfo = {
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            }
-        },
-    },
-    [7] = {
-        ID = 402,
-        type = 2,
-        minDrop = 1,
-        maxDrop = 1,
-        dropInfo = {
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            }
-        },
-    },
-    [8] = {
-        ID = 403,
-        type = 2,
-        minDrop = 1,
-        maxDrop = 1,
-        dropInfo = {
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            }
-        },
-    },
-    [9] = {
-        ID = 404,
-        type = 2,
-        minDrop = 1,
-        maxDrop = 1,
-        dropInfo = {
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            }
-        },
-    },
-    [10] = {
-        ID = 405,
-        type = 2,
-        minDrop = 1,
-        maxDrop = 1,
-        dropInfo = {
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
-                1,
-                1000
-            },
-            {
-                1001,
+                202,
                 1,
                 1000
             }
@@ -289,45 +81,45 @@ function DropTableConfig:GetByIndex(index)
     return self.Data[index]
 end
 
-function DropTableConfig:GetByID(value)
+function DropTableConfig:GetById(value)
     for i, item in pairs(self.Data) do
-        if item.ID == value then
+        if item.Id == value then
             return item
         end
     end
     return nil
 end
 
-function DropTableConfig:GetBytype(value)
+function DropTableConfig:GetByType(value)
     for i, item in pairs(self.Data) do
-        if item.type == value then
+        if item.Type == value then
             return item
         end
     end
     return nil
 end
 
-function DropTableConfig:GetByminDrop(value)
+function DropTableConfig:GetByMinDrop(value)
     for i, item in pairs(self.Data) do
-        if item.minDrop == value then
+        if item.MinDrop == value then
             return item
         end
     end
     return nil
 end
 
-function DropTableConfig:GetBymaxDrop(value)
+function DropTableConfig:GetByMaxDrop(value)
     for i, item in pairs(self.Data) do
-        if item.maxDrop == value then
+        if item.MaxDrop == value then
             return item
         end
     end
     return nil
 end
 
-function DropTableConfig:GetBydropInfo(value)
+function DropTableConfig:GetByDropInfo(value)
     for i, item in pairs(self.Data) do
-        if item.dropInfo == value then
+        if item.DropInfo == value then
             return item
         end
     end
@@ -344,6 +136,16 @@ function DropTableConfig:GetCount()
         count = count + 1
     end
     return count
+end
+
+function DropTableConfig:GetAllByType(itemType)
+    local result = {}
+    for i, item in pairs(self.Data) do
+        if item.Type == itemType then
+            table.insert(result, item)
+        end
+    end
+    return result
 end
 
 return DropTableConfig

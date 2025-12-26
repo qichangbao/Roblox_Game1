@@ -16,7 +16,7 @@ HeroConfig.Data = {
             3
         },
         HeroOpen = 1,
-        Model = "soldier1001",
+        Model = "S9",
         Icon = "rbxassetid://138713655406841",
         Property = {
             0,
@@ -55,7 +55,7 @@ HeroConfig.Data = {
             4
         },
         HeroOpen = 1,
-        Model = "soldier1002",
+        Model = "S8",
         Icon = "rbxassetid://138713655406841",
         Property = {
             0,
@@ -74,9 +74,9 @@ HeroConfig.Data = {
         },
         InitialItem = nil,
         EffectAction = {
-            "100_1",
             "101_1",
-            "102_1"
+            "101_1",
+            "102_201"
         },
         HeroDesc = "猫耳嗅风辨藏宝，绒尾摇，三海里内无秘藏",
     },
@@ -94,7 +94,7 @@ HeroConfig.Data = {
             4
         },
         HeroOpen = 1,
-        Model = "soldier1003",
+        Model = "S7",
         Icon = "rbxassetid://138713655406841",
         Property = {
             0,
@@ -113,9 +113,9 @@ HeroConfig.Data = {
         },
         InitialItem = nil,
         EffectAction = {
-            "100_1",
+            "102_201",
             "101_1",
-            "102_1"
+            "102_201"
         },
         HeroDesc = "魔角披雾探洞穴，深海摸沉船，悄行无踪迹",
     },
@@ -133,7 +133,7 @@ HeroConfig.Data = {
             5
         },
         HeroOpen = 1,
-        Model = "soldier1004",
+        Model = "S6",
         Icon = "rbxassetid://138713655406841",
         Property = {
             0,
@@ -141,8 +141,8 @@ HeroConfig.Data = {
             "1002_50"
         },
         Unlock = {
-            "10_1000",
-            "11_1000",
+            "10_1001_3",
+            "11_801_1",
             "12_1000"
         },
         UpgradeCost = {
@@ -152,9 +152,9 @@ HeroConfig.Data = {
         },
         InitialItem = nil,
         EffectAction = {
-            "100_1",
+            "102_201",
             "101_1",
-            "102_1"
+            "102_201"
         },
         HeroDesc = "白袍执古图破雾，指尖解暗号，引航向秘境",
     },
@@ -172,7 +172,7 @@ HeroConfig.Data = {
             6
         },
         HeroOpen = 1,
-        Model = "soldier1005",
+        Model = "S5",
         Icon = "rbxassetid://138713655406841",
         Property = {
             0,
@@ -182,7 +182,7 @@ HeroConfig.Data = {
         Unlock = {
             "8_30001_1000",
             "9_30001_1000",
-            "10_1000"
+            "10_1001_1"
         },
         UpgradeCost = {
             "1_1000",
@@ -191,9 +191,9 @@ HeroConfig.Data = {
         },
         InitialItem = nil,
         EffectAction = {
-            "100_1",
+            "103_1000",
             "101_1",
-            "102_1"
+            "102_201"
         },
         HeroDesc = "红装立舵逆狂浪，稳控船舷，怒海辟安途",
     },
@@ -211,7 +211,7 @@ HeroConfig.Data = {
             6
         },
         HeroOpen = 1,
-        Model = "soldier1006",
+        Model = "S4",
         Icon = "rbxassetid://138713655406841",
         Property = {
             0,
@@ -219,7 +219,7 @@ HeroConfig.Data = {
             "1002_50"
         },
         Unlock = {
-            "11_1000",
+            "11_801_1",
             "12_1000",
             "1_1000"
         },
@@ -230,9 +230,9 @@ HeroConfig.Data = {
         },
         InitialItem = nil,
         EffectAction = {
-            "100_1",
+            "103_1000",
             "101_1",
-            "102_1"
+            "102_201"
         },
         HeroDesc = "兔耳竖听暗礁险，沙间绘航，精准指安全道",
     },
@@ -250,7 +250,7 @@ HeroConfig.Data = {
             6
         },
         HeroOpen = 1,
-        Model = "soldier1007",
+        Model = "S3",
         Icon = "rbxassetid://138713655406841",
         Property = {
             0,
@@ -269,9 +269,9 @@ HeroConfig.Data = {
         },
         InitialItem = nil,
         EffectAction = {
-            "100_1",
+            "103_1000",
             "101_1",
-            "102_1"
+            "102_201"
         },
         HeroDesc = "金披风卷浪，怀藏秘宝图，领航寻传奇",
     },
@@ -289,7 +289,7 @@ HeroConfig.Data = {
             6
         },
         HeroOpen = 1,
-        Model = "soldier1008",
+        Model = "S2",
         Icon = "rbxassetid://138713655406841",
         Property = {
             0,
@@ -308,9 +308,9 @@ HeroConfig.Data = {
         },
         InitialItem = nil,
         EffectAction = {
-            "100_1",
+            "103_1000",
             "101_1",
-            "102_1"
+            "102_201"
         },
         HeroDesc = "怀表算潮汐星象，西装记航，定万程方向",
     },
