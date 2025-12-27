@@ -185,5 +185,38 @@ function PlayerAttribute.GetCriticalValue(player)
     return value
 end
 
+-- 获取玩家耐力消耗
+function PlayerAttribute.GetEnduranceConsume(player)
+    local jobEffect = perCondition(player)
+    if not jobEffect then return GameConfig.PlayerInitAttribute.EnduranceConsume end
+    local attribute = jobEffect.Attribute
+    local enduranceConsume = GameConfig.PlayerInitAttribute.EnduranceConsume
+    for _, effect in ipairs(attribute) do
+        if effect.AttributeId == GameConfig.PlayerAttributeId.EnduranceConsume then
+            enduranceConsume -= effect.Value
+        elseif effect.AttributeId == GameConfig.PlayerAttributeId.EnduranceConsumePoint then
+            enduranceConsume *= (1 - effect.Value / 100)
+        end
+    end
+    print("玩家耐力消耗", enduranceConsume)
+    return enduranceConsume
+end
+
+-- 获取玩家耐力恢复
+function PlayerAttribute.GetEnduranceRecovery(player)
+    local jobEffect = perCondition(player)
+    if not jobEffect then return GameConfig.PlayerInitAttribute.EnduranceRecovery end
+    local attribute = jobEffect.Attribute
+    local enduranceRecovery = GameConfig.PlayerInitAttribute.EnduranceRecovery
+    for _, effect in ipairs(attribute) do
+        if effect.AttributeId == GameConfig.PlayerAttributeId.EnduranceRecovery then
+            enduranceRecovery += effect.Value
+        elseif effect.AttributeId == GameConfig.PlayerAttributeId.EnduranceRecoveryPoint then
+            enduranceRecovery *= (1 + effect.Value / 100)
+        end
+    end
+    print("玩家耐力恢复", enduranceRecovery)
+    return enduranceRecovery
+end
 
 return PlayerAttribute
