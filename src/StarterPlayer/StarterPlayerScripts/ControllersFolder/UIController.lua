@@ -39,6 +39,7 @@ local UIController = Knit.CreateController {
     ShowJobUI = Signal.new(),
     UpdateJobData = Signal.new(),
     ChangeCurJobId = Signal.new(),
+    SwitchRun = Signal.new(),
 }
 
 function UIController:KnitInit()

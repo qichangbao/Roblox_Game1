@@ -264,9 +264,10 @@ function TeleportServiceModule:teleportToReserveServer(players)
 	end
 	
 	logMessage("INFO", string.format("成功创建预留服务器，访问码: %s", accessCode))
+	local designInfo = DesignConfig:GetByIndex(1)
 	-- 准备传送数据
 	local teleportData = {}
-	teleportData.IslandId = 100
+	teleportData.IslandId = designInfo and designInfo.MapId or 100
 	teleportData.PlayerCount = #players
 
 	local function teleportPlayersToReserveServer(data)

@@ -239,6 +239,72 @@ function PlayerService:SetJobModel(player, jobId)
     end
 end
 
+-- 获取玩家移动速度
+-- @param player Player 请求数据的玩家
+-- @return number 玩家移动速度
+function PlayerService:GetWalkSpeed(player)
+    local walkSpeed = PlayerAttribute.GetWalkSpeed(player)
+    return walkSpeed
+end
+
+-- 获取玩家跑步速度
+-- @param player Player 请求数据的玩家
+-- @return number 玩家跑步速度
+function PlayerService:GetRunSpeed(player)
+    local runSpeed = PlayerAttribute.GetRunSpeed(player)
+    return runSpeed
+end
+
+-- 获取玩家跳跃高度
+-- @param player Player 请求数据的玩家
+-- @return number 玩家跳跃高度
+function PlayerService:GetJumpPower(player)
+    local jumpPower = PlayerAttribute.GetJumpPower(player)
+    return jumpPower
+end
+
+-- 刷新玩家属性
+function PlayerService:RefreshPlayerAttribute(player, attributeName)
+    if not player or not player.Character then return end
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+    if not humanoid then return end
+
+    if attributeName == "Health" then
+        local health = PlayerAttribute.GetMaxHealth(player)
+        humanoid.MaxHealth = health
+        humanoid.Health = health
+    elseif attributeName == "WalkSpeed" then
+        humanoid.WalkSpeed = self:GetWalkSpeed(player)
+    elseif attributeName == "RunSpeed" then
+        humanoid:SetAttribute("RunSpeed", self:GetRunSpeed(player))
+    elseif attributeName == "JumpPower" then
+        humanoid.JumpPower = self:GetJumpPower(player)
+    elseif attributeName == "Weight" then
+        humanoid:SetAttribute("Weight", PlayerAttribute.GetWeight(player))
+    elseif attributeName == "Lucky" then
+        humanoid:SetAttribute("Lucky", PlayerAttribute.GetLucky(player))
+    elseif attributeName == "CriticalProbability" then
+        humanoid:SetAttribute("CriticalProbability", PlayerAttribute.GetCriticalProbability(player))
+    elseif attributeName == "CriticalValue" then
+        humanoid:SetAttribute("CriticalValue", PlayerAttribute.GetCriticalValue(player))
+    elseif attributeName == "Attack" then
+        humanoid:SetAttribute("Attack", PlayerAttribute.GetAttack(player))
+    elseif attributeName == "Endurance" then
+        humanoid:SetAttribute("Endurance", PlayerAttribute.GetEndurance(player))
+    elseif attributeName == "EnduranceConsume" then
+        humanoid:SetAttribute("EnduranceConsume", PlayerAttribute.GetEnduranceConsume(player))
+    elseif attributeName == "EnduranceRecovery" then
+        humanoid:SetAttribute("EnduranceRecovery", PlayerAttribute.GetEnduranceRecovery(player))
+    end
+end
+
+-- 刷新所有玩家属性
+function PlayerService:RefreshAllPlayerAttribute(player)
+    for i, v in pairs(GameConfig.PlayerInitAttribute) do
+        Knit.GetService("PlayerService"):RefreshPlayerAttribute(player, i)
+    end
+end
+
 -- -- 初始化玩家能力
 -- -- @param player Player 玩家
 -- -- @param talent table 能力数据
@@ -310,42 +376,21 @@ end
 --     end
 -- end
 
--- 刷新玩家属性
-function PlayerService:RefreshPlayerAttribute(player, attributeName)
-    if not player or not player.Character then return end
-    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-    if not humanoid then return end
+function PlayerService:SwitchWalkOrRun(player, state)
+    if not player then return end
 
-    if attributeName == "Health" then
-        local health = PlayerAttribute.GetMaxHealth(player)
-        humanoid.MaxHealth = PlayerAttribute.GetMaxHealth(player)
-        humanoid.Health = health
-    elseif attributeName == "WalkSpeed" then
-        humanoid.WalkSpeed = PlayerAttribute.GetWalkSpeed(player)
-    elseif attributeName == "RunSpeed" then
-        humanoid:SetAttribute("RunSpeed", PlayerAttribute.GetRunSpeed(player))
-    elseif attributeName == "JumpPower" then
-        humanoid.JumpPower = PlayerAttribute.GetJumpPower(player)
-    elseif attributeName == "Weight" then
-        humanoid:SetAttribute("Weight", PlayerAttribute.GetWeight(player))
-    elseif attributeName == "Lucky" then
-        humanoid:SetAttribute("Lucky", PlayerAttribute.GetLucky(player))
-    elseif attributeName == "CriticalProbability" then
-        humanoid:SetAttribute("CriticalProbability", PlayerAttribute.GetCriticalProbability(player))
-    elseif attributeName == "CriticalValue" then
-        humanoid:SetAttribute("CriticalValue", PlayerAttribute.GetCriticalValue(player))
-    elseif attributeName == "Attack" then
-        humanoid:SetAttribute("Attack", PlayerAttribute.GetAttack(player))
-    elseif attributeName == "Endurance" then
-        humanoid:SetAttribute("Endurance", PlayerAttribute.GetEndurance(player))
+    if player.Character and player.Character.Humanoid then
+        if state == 0 then
+            player.Character.Humanoid.WalkSpeed = self:GetWalkSpeed(player)
+        else
+            player.Character.Humanoid.WalkSpeed = self:GetRunSpeed(player)
+        end
     end
 end
 
--- 刷新所有玩家属性
-function PlayerService:RefreshAllPlayerAttribute(player)
-    for i, v in pairs(GameConfig.PlayerInitAttribute) do
-        Knit.GetService("PlayerService"):RefreshPlayerAttribute(player, i)
-    end
+-- 客户端切换走跑
+function PlayerService.Client:SwitchWalkOrRun(player, state)
+    return self.Server:SwitchWalkOrRun(player, state)
 end
 
 return PlayerService

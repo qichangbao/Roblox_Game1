@@ -404,7 +404,6 @@ function Interface.Split(str, delim)
 	return result
 end
 
-
 -- 设置鼠标悬停时的缩放效果
 -- @param frame Frame 需要缩放的UI容器
 -- @param button GuiButton 负责接收鼠标事件的按钮
