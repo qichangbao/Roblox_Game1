@@ -9,7 +9,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 100,
         WeatherId = 0,
-        DesignTarget = 78,
+        DesignTarget = 40,
         EvacuateTime = 3000,
         ResourceNum = {
             {
@@ -29,12 +29,6 @@ DesignConfig.Data = {
                 3
             }
         },
-        Monster = {
-            1,
-            2,
-            3,
-            4
-        },
     },
     [2] = {
         DesignId = 2,
@@ -43,7 +37,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 101,
         WeatherId = 0,
-        DesignTarget = 214,
+        DesignTarget = 60,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -62,12 +56,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [3] = {
@@ -77,7 +65,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 102,
         WeatherId = 0,
-        DesignTarget = 429,
+        DesignTarget = 80,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -96,12 +84,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [4] = {
@@ -111,7 +93,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 103,
         WeatherId = 0,
-        DesignTarget = 716,
+        DesignTarget = 100,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -130,12 +112,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [5] = {
@@ -145,7 +121,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 104,
         WeatherId = 0,
-        DesignTarget = 1078,
+        DesignTarget = 130,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -164,12 +140,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [6] = {
@@ -179,7 +149,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 105,
         WeatherId = 0,
-        DesignTarget = 1569,
+        DesignTarget = 160,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -198,12 +168,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [7] = {
@@ -213,7 +177,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 106,
         WeatherId = 0,
-        DesignTarget = 2168,
+        DesignTarget = 190,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -232,12 +196,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [8] = {
@@ -247,7 +205,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 107,
         WeatherId = 0,
-        DesignTarget = 2883,
+        DesignTarget = 220,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -266,12 +224,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [9] = {
@@ -281,7 +233,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 108,
         WeatherId = 0,
-        DesignTarget = 3719,
+        DesignTarget = 260,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -300,12 +252,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [10] = {
@@ -318,7 +264,7 @@ DesignConfig.Data = {
             1,
             100
         },
-        DesignTarget = 4683,
+        DesignTarget = 300,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -337,12 +283,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [11] = {
@@ -355,7 +295,7 @@ DesignConfig.Data = {
             1,
             100
         },
-        DesignTarget = 6031,
+        DesignTarget = 340,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -374,12 +314,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [12] = {
@@ -398,7 +332,7 @@ DesignConfig.Data = {
                 10
             }
         },
-        DesignTarget = 7588,
+        DesignTarget = 380,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -417,12 +351,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [13] = {
@@ -441,7 +369,7 @@ DesignConfig.Data = {
                 10
             }
         },
-        DesignTarget = 9363,
+        DesignTarget = 430,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -460,12 +388,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [14] = {
@@ -484,7 +406,7 @@ DesignConfig.Data = {
                 10
             }
         },
-        DesignTarget = 11366,
+        DesignTarget = 480,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -503,12 +425,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [15] = {
@@ -518,7 +434,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 114,
         WeatherId = 0,
-        DesignTarget = 13606,
+        DesignTarget = 540,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -537,12 +453,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [16] = {
@@ -552,7 +462,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 115,
         WeatherId = 0,
-        DesignTarget = 16973,
+        DesignTarget = 600,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -571,12 +481,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [17] = {
@@ -586,7 +490,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 116,
         WeatherId = 0,
-        DesignTarget = 20762,
+        DesignTarget = 700,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -605,12 +509,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [18] = {
@@ -620,7 +518,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 117,
         WeatherId = 0,
-        DesignTarget = 24988,
+        DesignTarget = 800,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -639,12 +537,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [19] = {
@@ -654,7 +546,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 118,
         WeatherId = 0,
-        DesignTarget = 29667,
+        DesignTarget = 950,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -673,12 +565,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [20] = {
@@ -688,7 +574,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 119,
         WeatherId = 0,
-        DesignTarget = 34812,
+        DesignTarget = 110,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -707,12 +593,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [21] = {
@@ -722,7 +602,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 120,
         WeatherId = 0,
-        DesignTarget = 41764,
+        DesignTarget = 1300,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -741,12 +621,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [22] = {
@@ -756,7 +630,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 121,
         WeatherId = 0,
-        DesignTarget = 49403,
+        DesignTarget = 1500,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -775,12 +649,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [23] = {
@@ -790,7 +658,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 122,
         WeatherId = 0,
-        DesignTarget = 57749,
+        DesignTarget = 1800,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -809,12 +677,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [24] = {
@@ -824,7 +686,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 123,
         WeatherId = 0,
-        DesignTarget = 66820,
+        DesignTarget = 2100,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -843,12 +705,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [25] = {
@@ -858,7 +714,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 124,
         WeatherId = 0,
-        DesignTarget = 76637,
+        DesignTarget = 2500,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -877,12 +733,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [26] = {
@@ -892,7 +742,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 125,
         WeatherId = 0,
-        DesignTarget = 89044,
+        DesignTarget = 3000,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -911,12 +761,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [27] = {
@@ -926,7 +770,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 126,
         WeatherId = 0,
-        DesignTarget = 102445,
+        DesignTarget = 3500,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -945,12 +789,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [28] = {
@@ -960,7 +798,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 127,
         WeatherId = 0,
-        DesignTarget = 116864,
+        DesignTarget = 4000,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -979,12 +817,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [29] = {
@@ -994,7 +826,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 128,
         WeatherId = 0,
-        DesignTarget = 132325,
+        DesignTarget = 4500,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -1013,12 +845,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
     [30] = {
@@ -1028,7 +854,7 @@ DesignConfig.Data = {
         DisplayName = nil,
         MusicId = 129,
         WeatherId = 0,
-        DesignTarget = 148850,
+        DesignTarget = 5200,
         EvacuateTime = 300,
         ResourceNum = {
             {
@@ -1047,12 +873,6 @@ DesignConfig.Data = {
                 4,
                 5
             }
-        },
-        Monster = {
-            1,
-            2,
-            3,
-            4
         },
     },
 }
@@ -1137,15 +957,6 @@ end
 function DesignConfig:GetByResourceNum(value)
     for i, item in pairs(self.Data) do
         if item.ResourceNum == value then
-            return item
-        end
-    end
-    return nil
-end
-
-function DesignConfig:GetByMonster(value)
-    for i, item in pairs(self.Data) do
-        if item.Monster == value then
             return item
         end
     end

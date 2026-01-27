@@ -136,7 +136,7 @@ function JobService:ChangeJob(player, jobId)
     Knit.GetService("DBService"):Set(player.UserId, "CurJobId", jobId)
     Knit.GetService("PlayerService"):RefreshAllPlayerAttribute(player)
     self.Client.ChangeCurJobId:Fire(player, tonumber(jobId))
-    Knit.GetService("PlayerService"):SetJobModel(player, jobId)
+    Knit.GetService("PlayerService"):SetJobModel(player, tonumber(jobId))
 end
 
 -- 玩家切换职业

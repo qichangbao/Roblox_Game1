@@ -3,7 +3,7 @@ local SignConfig = {}
 
 SignConfig.Data = {
     [1] = {
-        ID = 1,
+        Id = 1,
         Days = 1,
         SignReward = {
             1,
@@ -11,7 +11,7 @@ SignConfig.Data = {
         },
     },
     [2] = {
-        ID = 2,
+        Id = 2,
         Days = 2,
         SignReward = {
             1,
@@ -19,7 +19,7 @@ SignConfig.Data = {
         },
     },
     [3] = {
-        ID = 3,
+        Id = 3,
         Days = 3,
         SignReward = {
             1,
@@ -27,7 +27,7 @@ SignConfig.Data = {
         },
     },
     [4] = {
-        ID = 4,
+        Id = 4,
         Days = 4,
         SignReward = {
             1,
@@ -35,7 +35,7 @@ SignConfig.Data = {
         },
     },
     [5] = {
-        ID = 5,
+        Id = 5,
         Days = 5,
         SignReward = {
             1,
@@ -43,7 +43,7 @@ SignConfig.Data = {
         },
     },
     [6] = {
-        ID = 6,
+        Id = 6,
         Days = 6,
         SignReward = {
             1,
@@ -51,7 +51,7 @@ SignConfig.Data = {
         },
     },
     [7] = {
-        ID = 7,
+        Id = 7,
         Days = 7,
         SignReward = {
             1,
@@ -59,7 +59,7 @@ SignConfig.Data = {
         },
     },
     [8] = {
-        ID = 8,
+        Id = 8,
         Days = 8,
         SignReward = {
             1,
@@ -67,7 +67,7 @@ SignConfig.Data = {
         },
     },
     [9] = {
-        ID = 9,
+        Id = 9,
         Days = 9,
         SignReward = {
             1,
@@ -75,7 +75,7 @@ SignConfig.Data = {
         },
     },
     [10] = {
-        ID = 10,
+        Id = 10,
         Days = 10,
         SignReward = {
             1,
@@ -83,7 +83,7 @@ SignConfig.Data = {
         },
     },
     [11] = {
-        ID = 11,
+        Id = 11,
         Days = 11,
         SignReward = {
             1,
@@ -91,7 +91,7 @@ SignConfig.Data = {
         },
     },
     [12] = {
-        ID = 12,
+        Id = 12,
         Days = 12,
         SignReward = {
             1,
@@ -99,7 +99,7 @@ SignConfig.Data = {
         },
     },
     [13] = {
-        ID = 13,
+        Id = 13,
         Days = 13,
         SignReward = {
             1,
@@ -107,7 +107,7 @@ SignConfig.Data = {
         },
     },
     [14] = {
-        ID = 14,
+        Id = 14,
         Days = 14,
         SignReward = {
             1,
@@ -115,7 +115,7 @@ SignConfig.Data = {
         },
     },
     [15] = {
-        ID = 15,
+        Id = 15,
         Days = 15,
         SignReward = {
             1,
@@ -123,7 +123,7 @@ SignConfig.Data = {
         },
     },
     [16] = {
-        ID = 16,
+        Id = 16,
         Days = 16,
         SignReward = {
             1,
@@ -131,7 +131,7 @@ SignConfig.Data = {
         },
     },
     [17] = {
-        ID = 17,
+        Id = 17,
         Days = 17,
         SignReward = {
             1,
@@ -139,7 +139,7 @@ SignConfig.Data = {
         },
     },
     [18] = {
-        ID = 18,
+        Id = 18,
         Days = 18,
         SignReward = {
             1,
@@ -147,7 +147,7 @@ SignConfig.Data = {
         },
     },
     [19] = {
-        ID = 19,
+        Id = 19,
         Days = 19,
         SignReward = {
             1,
@@ -155,7 +155,7 @@ SignConfig.Data = {
         },
     },
     [20] = {
-        ID = 20,
+        Id = 20,
         Days = 20,
         SignReward = {
             1,
@@ -163,7 +163,7 @@ SignConfig.Data = {
         },
     },
     [21] = {
-        ID = 21,
+        Id = 21,
         Days = 21,
         SignReward = {
             1,
@@ -171,7 +171,7 @@ SignConfig.Data = {
         },
     },
     [22] = {
-        ID = 22,
+        Id = 22,
         Days = 22,
         SignReward = {
             1,
@@ -179,7 +179,7 @@ SignConfig.Data = {
         },
     },
     [23] = {
-        ID = 23,
+        Id = 23,
         Days = 23,
         SignReward = {
             1,
@@ -187,7 +187,7 @@ SignConfig.Data = {
         },
     },
     [24] = {
-        ID = 24,
+        Id = 24,
         Days = 24,
         SignReward = {
             1,
@@ -195,7 +195,7 @@ SignConfig.Data = {
         },
     },
     [25] = {
-        ID = 25,
+        Id = 25,
         Days = 25,
         SignReward = {
             1,
@@ -203,7 +203,7 @@ SignConfig.Data = {
         },
     },
     [26] = {
-        ID = 26,
+        Id = 26,
         Days = 26,
         SignReward = {
             1,
@@ -211,7 +211,7 @@ SignConfig.Data = {
         },
     },
     [27] = {
-        ID = 27,
+        Id = 27,
         Days = 27,
         SignReward = {
             1,
@@ -219,7 +219,7 @@ SignConfig.Data = {
         },
     },
     [28] = {
-        ID = 28,
+        Id = 28,
         Days = 28,
         SignReward = {
             1,
@@ -227,7 +227,7 @@ SignConfig.Data = {
         },
     },
     [29] = {
-        ID = 29,
+        Id = 29,
         Days = 29,
         SignReward = {
             1,
@@ -235,7 +235,7 @@ SignConfig.Data = {
         },
     },
     [30] = {
-        ID = 30,
+        Id = 30,
         Days = 30,
         SignReward = {
             1,
@@ -243,7 +243,7 @@ SignConfig.Data = {
         },
     },
     [31] = {
-        ID = 31,
+        Id = 31,
         Days = 31,
         SignReward = {
             1,
@@ -257,9 +257,9 @@ function SignConfig:GetByIndex(index)
     return self.Data[index]
 end
 
-function SignConfig:GetByID(value)
+function SignConfig:GetById(value)
     for i, item in pairs(self.Data) do
-        if item.ID == value then
+        if item.Id == value then
             return item
         end
     end

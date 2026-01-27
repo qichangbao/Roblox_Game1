@@ -27,6 +27,12 @@ GameConfig.ItemTypeFolder = {
     [GameConfig.ItemType.Treatment] = "治疗",
 }
 
+GameConfig.WeaponType = {
+    Swing = 1,      -- 挥砍类
+    dig = 1,        -- 挥砍类
+    Ranged = 3,     -- 远程类
+}
+
 GameConfig.NpcUIType = {
     Store = 1,      -- 商店
     Sell = 2,       -- 出售

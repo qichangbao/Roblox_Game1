@@ -143,7 +143,7 @@ local function RewardAction(rewards)
         local groundStart = getSurfaceGround(lateralStart, ignoreList)
         -- 起始高度提高 20（贴地基础上抬高），满足“出发点提高20”的需求
         local pos = Vector3.new(lateralStart.X, groundStart.Y + 15, lateralStart.Z)
-        local typeFolder = ReplicatedStorage:FindFirstChild("ItemFolder") and ReplicatedStorage.ItemFolder:FindFirstChild(GameConfig.ItemTypeFolder[itemInfo.Type])
+        local typeFolder = ReplicatedStorage:FindFirstChild("Item") and ReplicatedStorage.Item:FindFirstChild(GameConfig.ItemTypeFolder[itemInfo.Type])
         if not typeFolder then return nil end
         local template = typeFolder:FindFirstChild(itemInfo.Model)
         if not template then return nil end

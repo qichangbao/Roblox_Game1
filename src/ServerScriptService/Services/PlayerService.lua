@@ -134,7 +134,7 @@ function PlayerService:GetInitData(player)
     local questData = Knit.GetService("QuestService"):GetPlayerQuests(player)
     local isAdmin = Knit.GetService("DBService"):IsAdmin(player)
     local curJobId = Knit.GetService("DBService"):Get(player.UserId, "CurJobId") or 0
-    self:SetJobModel(player, curJobId)
+    self:SetJobModel(player, tonumber(curJobId))
     self:RefreshAllPlayerAttribute(player)
 
     self.TalentData[player.UserId] = talentData
@@ -161,7 +161,7 @@ function PlayerService:GetInitData(player)
         EquipmentData = equipmentData,
         TalentData = self.TalentData[player.UserId],
         JobData = jobData,
-        CurJobId = curJobId,
+        CurJobId = tonumber(curJobId),
         RankPersonalData = rankPersonalData,
         RankData = rankData,
         IsAdmin = isAdmin,

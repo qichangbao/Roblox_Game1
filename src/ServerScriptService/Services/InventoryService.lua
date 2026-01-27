@@ -6,6 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local ItemConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("ItemConfig"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
+local WeaponConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("WeaponConfig"))
 local Debris = game:GetService("Debris")
 
 local InventoryService = Knit.CreateService {
@@ -281,16 +282,16 @@ end
 -- @param itemId number 物品ID
 -- @return Tool|nil 创建的工具实例
 function InventoryService:CreateToolFromItemId(itemData, slot)
-	if itemData.ItemId == 0 then
-		return
-	end
-	local itemInfo = ItemConfig:GetByItemId(tonumber(itemData.ItemId))
-	if not itemInfo then
-		warn("找不到物品ID: " .. tostring(itemData.ItemId))
-		return
-	end
+    if itemData.ItemId == 0 then
+        return
+    end
+    local itemInfo = ItemConfig:GetByItemId(tonumber(itemData.ItemId))
+    if not itemInfo then
+        warn("找不到物品ID: " .. tostring(itemData.ItemId))
+        return
+    end
 
-    local itemFolder = ReplicatedStorage:FindFirstChild("ItemFolder")
+    local itemFolder = ReplicatedStorage:FindFirstChild("Item")
     if not itemFolder then
         warn("Item folder not found")
         return
@@ -301,124 +302,71 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
         warn("Item type folder not found: " .. GameConfig.ItemTypeFolder[itemInfo.Type])
         return
     end
-
-	local template = folder:FindFirstChild(itemInfo.Model)
-	if not template then
-		warn("Tool template not found:", itemInfo.Model)
-		return
-	end
-
-	-- 创建新的Tool实例
-	local tool = Instance.new("Tool")
-
-	-- 设置工具基本属性
-	tool.Name = itemInfo.Item
-	tool.ToolTip = itemInfo.Description or ""
-	tool.CanBeDropped = true
-	tool.RequiresHandle = true
-	tool:SetAttribute("ItemId", itemData.ItemId)
-	GameConfig.SetItemAttribute(tool, itemData.Attribute)
-
-	-- 设置工具图标（如果ItemConfig中有Icon）
-	if itemInfo.Icon and itemInfo.Icon ~= "" then
-		tool.TextureId = itemInfo.Icon
-	end
-
-	local handle = nil
-
-	-- 根据模板类型处理（Model 或 Part）
-	if template:IsA("Model") then
-		-- 处理 Model 类型的模板
-		local templateModel = template:Clone()
-
-		-- 确保模型有 PrimaryPart，这是作为 Handle 的关键
-		handle = templateModel.PrimaryPart
-		if not handle then
-			warn("Warning: Tool template '" .. itemInfo.Item .. "' does not have a PrimaryPart set.")
-			-- 备用方案：选择第一个找到的 BasePart
-			handle = templateModel:FindFirstChildOfClass("BasePart")
-			if not handle then
-				warn("Error: Tool template '" .. itemInfo.Item .. "' contains no parts to use as a handle.")
-				return
-			end
-		end
-
-		-- 遍历模型中的所有部件
-		for _, part in ipairs(templateModel:GetDescendants()) do
-			if part:IsA("BasePart") then
-				-- 解除所有部件的锚定
-				part.Anchored = false
-				-- 将除 PrimaryPart 之外的所有部件焊接到 PrimaryPart
-				if part ~= handle then
-					local weld = Instance.new("WeldConstraint")
-					weld.Part0 = handle
-					weld.Part1 = part
-					weld.Parent = handle
-				end
-			end
-		end
-
-		-- 将 Handle 命名为 "Handle"，这是 Tool 识别握柄的要求
-		handle.Name = "Handle"
-		handle.Parent = tool
-
-		-- 将模型中除了Handle之外的其他子项也移动到Tool下
-		for _, child in ipairs(templateModel:GetChildren()) do
-			if child ~= handle then
-				child.Parent = tool
-			end
-		end
-
-		-- 销毁空的模板模型
-		templateModel:Destroy()
-	elseif template:IsA("BasePart") then
-		-- 处理 Part 类型的模板
-		handle = template:Clone()
-		handle.Name = "Handle"
-		handle.Anchored = false
-		handle.Parent = tool
-
-		-- 遍历Part下的所有子Part并焊接到Handle
-		for _, part in ipairs(handle:GetDescendants()) do
-			if part:IsA("BasePart") and part ~= handle then
-				-- 解除子Part的锚定
-				part.Anchored = false
-				-- 将子Part焊接到Handle
-				local weld = Instance.new("WeldConstraint")
-				weld.Part0 = handle
-				weld.Part1 = part
-				weld.Parent = handle
-			end
-		end
-
-		-- 将模型中除了Handle之外的其他子项也移动到Tool下
-		for _, child in ipairs(handle:GetChildren()) do
-			if child ~= handle then
-				child.Parent = tool
-			end
-		end
-	else
-		warn("Error: Tool template '" .. itemInfo.Item .. "' is neither a Model nor a BasePart.")
-		return
-	end
-
-    -- 直接设置Tool的Grip属性来控制握持方向
-    if itemInfo.ItemId == 202 then
-        tool.Grip = CFrame.Angles(0, math.rad(180), 0)  -- 只旋转，不偏移位置
-    elseif itemInfo.ItemId == 203 then
-        tool.Grip = CFrame.new(0, -0.6, 0) * CFrame.Angles(0, math.rad(90), 0)  -- y轴偏移0.6并旋转
-    else
-        tool.Grip = CFrame.Angles(0, 0, math.rad(90))  -- 只旋转，不偏移位置
+    
+    local template = folder:FindFirstChild(itemInfo.Model)
+    if not template then
+        warn("Tool template not found:", itemInfo.Model)
+        return
+    end
+    
+    -- 创建新的Tool实例
+    local tool = Instance.new("Tool")
+    
+    -- 设置工具基本属性
+    tool.Name = itemInfo.Item
+    tool.ToolTip = itemInfo.Description or ""
+    tool.CanBeDropped = true
+    tool.RequiresHandle = true
+    tool:SetAttribute("ItemId", itemData.ItemId)
+    GameConfig.SetItemAttribute(tool, itemData.Attribute)
+    
+    -- 设置工具图标（如果ItemConfig中有Icon）
+    if itemInfo.Icon and itemInfo.Icon ~= "" then
+        tool.TextureId = itemInfo.Icon
     end
 
-	-- 连接工具装备事件，重置状态
-	tool.Equipped:Connect(function()
+    -- 处理 Model 类型的模板
+    local templateModel = template:Clone()
+    
+    -- 确保模型有 PrimaryPart，这是作为 Handle 的关键
+    local handle = templateModel.PrimaryPart
+    if not handle then
+        warn("Warning: Tool template '" .. itemInfo.Item .. "' does not have a PrimaryPart set.")
+        -- 备用方案：选择第一个找到的 BasePart
+        handle = templateModel:FindFirstChildOfClass("BasePart")
+        if not handle then
+            warn("Error: Tool template '" .. itemInfo.Item .. "' contains no parts to use as a handle.")
+            return
+        end
+    end
+
+    for _, part in ipairs(templateModel:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.CanCollide = false
+            part.Anchored = false
+        end
+    end
+    
+    -- 将 Handle 命名为 "Handle"，这是 Tool 识别握柄的要求
+    handle.Name = "Handle"
+    handle.Parent = tool
+
+    -- 将模型中除了Handle之外的其他子项也移动到Tool下
+    for _, child in ipairs(templateModel:GetChildren()) do
+        if child ~= handle then
+            child.Parent = tool
+        end
+    end
+
+    -- 销毁空的模板模型
+    templateModel:Destroy()
+    
+    -- 连接工具装备事件，重置状态
+    tool.Equipped:Connect(function()
         local player = game.Players:GetPlayerFromCharacter(tool.Parent)
         if not player then return end
-        
         local character = player.Character
         if not character then return end
-        
         local humanoid = character:FindFirstChild("Humanoid")
         if not humanoid then return end
 
@@ -426,36 +374,32 @@ function InventoryService:CreateToolFromItemId(itemData, slot)
 		if script then
 			local module = require(script)
 			if module and module.Equipped then
-				module:Equipped()
+				module:Equipped(player)
 			end
 		end
-	end)
-
-	-- 连接工具卸下事件，清理状态
-	tool.Unequipped:Connect(function()
-        local player = game.Players:GetPlayerFromCharacter(tool.Parent)
+    end)
+    
+    -- 连接工具卸下事件，清理状态
+    tool.Unequipped:Connect(function()
+        local userId = tool:GetAttribute("PlayerId")
+        if not userId then return end
+        local player = game.Players:GetPlayerByUserId(userId)
         if not player then return end
-        
-        local character = player.Character
-        if not character then return end
-        
-        local humanoid = character:FindFirstChild("Humanoid")
-        if not humanoid then return end
 
 		local script = tool:FindFirstChild("ModuleScript")
 		if script then
 			local module = require(script)
 			if module and module.Unequipped then
-				module:Unequipped()
+				module:Unequipped(player)
 			end
 		end
-	end)
-
-	-- 连接工具激活事件（服务器端处理）
-	tool.Activated:Connect(function()
-	end)
-
-	return tool
+    end)
+    
+    -- 连接工具激活事件（服务器端处理）
+    tool.Activated:Connect(function()
+    end)
+    
+    return tool
 end
 
 function InventoryService:SendToolData(player)
