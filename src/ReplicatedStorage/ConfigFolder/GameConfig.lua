@@ -67,6 +67,8 @@ GameConfig.AnimationMap = {
     dig = {"rbxassetid://133396559381410"},
 }
 
+GameConfig.MaxJobLevel = 3      -- 最大职业等级
+
 -- 职业升级成本枚举
 GameConfig.JobUpgradeCost = {
     Gold = 1,                   -- 金币获得_数量

@@ -60,8 +60,9 @@ function JobService:TriggerJob(player, jobType, jobValue)
     if not jobData then return end
     for id, data in pairs(jobData) do
         local config = HeroConfig:GetById(tonumber(id))
-        if not config then continue end
-        local unlock = Interface.Split(config.Unlock[data.Level], "_")
+		if not config then continue end
+		if data.IsFinished then continue end
+        local unlock = Interface.Split(config.Unlock[data.Level + 1], "_")
 		local unlockType = tonumber(unlock[1])
         if unlockType == jobType then
             if unlockType == GameConfig.JobUnlockCondition.IslandLevel
@@ -91,29 +92,30 @@ end
 
 function JobService.Client:LevelUp(player, jobId)
     local jobData = self.Server:GetJobData(player)
-    if not jobData then return end
+    if not jobData then return "No job information found" end
     local data = jobData[jobId]
-    if not data then return end
+    if not data then return "No job data found" end
     local config = HeroConfig:GetById(tonumber(jobId))
-    if not config then return end
+	if not config then return "No job config found" end
+	if data.IsFinished then return "Job is finished" end
 
-    local unlock = Interface.Split(config.Unlock[data.Level], "_")
+    local unlock = Interface.Split(config.Unlock[data.Level + 1], "_")
     local unlockType = tonumber(unlock[1])
     if unlockType == GameConfig.JobUnlockCondition.DamageMonster
     or unlockType == GameConfig.JobUnlockCondition.DamageMonsterNum
     or unlockType == GameConfig.JobUnlockCondition.CollectItemNum
     or unlockType == GameConfig.JobUnlockCondition.TreatmentItemNum then
-        if data.Unlock < tonumber(unlock[3]) then return end
+        if data.Unlock < tonumber(unlock[3]) then return "Not enough unlock condition" end
     else
-        if data.Unlock < tonumber(unlock[2]) then return end
+        if data.Unlock < tonumber(unlock[2]) then return "Not enough unlock condition" end
     end
 
-    local UpgradeCost = Interface.Split(config.UpgradeCost[data.Level], "_")
+    local UpgradeCost = Interface.Split(config.UpgradeCost[data.Level + 1], "_")
     local upgradeCostType = tonumber(UpgradeCost[1])
     local upgradeCostValue = tonumber(UpgradeCost[2])
     if upgradeCostType == GameConfig.JobUpgradeCost.Gold then
         local gold = Knit.GetService("GoldService"):GetGoldData(player)
-        if gold < upgradeCostValue then return end
+        if gold < upgradeCostValue then return "Not enough gold" end
         Knit.GetService("GoldService"):ChangeGold(player, -upgradeCostValue)
     elseif upgradeCostType == GameConfig.JobUpgradeCost.RobCoins then
         return
@@ -121,22 +123,28 @@ function JobService.Client:LevelUp(player, jobId)
         return
     end
 
-    if data.Level >= 3 then
+    if data.Level >= GameConfig.MaxJobLevel then
         data.IsFinished = true
-        data.Level = 3
+        data.Level = GameConfig.MaxJobLevel
     else
         data.Level += 1
     end
     data.Unlock = 0
     self.UpdateJobData:Fire(player, jobData)
+    return "Level up success"
 end
 
 function JobService:ChangeJob(player, jobId)
-    self.curJobId[player.UserId] = jobId
-    Knit.GetService("DBService"):Set(player.UserId, "CurJobId", jobId)
+    jobId = tonumber(jobId)
+    if self.curJobId[player.UserId] == jobId then
+        self.curJobId[player.UserId] = 0
+    else
+        self.curJobId[player.UserId] = jobId
+    end
+    Knit.GetService("DBService"):Set(player.UserId, "CurJobId", self.curJobId[player.UserId])
     Knit.GetService("PlayerService"):RefreshAllPlayerAttribute(player)
-    self.Client.ChangeCurJobId:Fire(player, tonumber(jobId))
-    Knit.GetService("PlayerService"):SetJobModel(player, tonumber(jobId))
+    Knit.GetService("PlayerService"):SetJobModel(player, self.curJobId[player.UserId])
+    self.Client.ChangeCurJobId:Fire(player, self.curJobId[player.UserId])
 end
 
 -- 玩家切换职业

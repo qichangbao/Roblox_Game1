@@ -17,6 +17,7 @@ local PlayerService = Knit.CreateService {
     TalentData = {},            -- 能力列表
     OfflineTime = {},           -- 离线时间
     AnimationMarkerConns = {},  -- 动画标记事件连接
+    ModelCache = {},            -- 模型缓存
 }
 
 function PlayerService:KnitInit()
@@ -34,6 +35,10 @@ function PlayerService:KnitStart()
             humanoid.Health = PlayerAttribute.GetMaxHealth(player)
             humanoid.WalkSpeed = PlayerAttribute.GetWalkSpeed(player)
             humanoid.JumpPower = PlayerAttribute.GetJumpPower(player)
+            self.ModelCache[player.UserId] = {
+                ShirtTemplate = character.Shirt.ShirtTemplate,
+                PantsTemplate = character.Pants.PantsTemplate,
+            }
             
             -- if self.TalentData[player.UserId] then
             --     self:InitPlayerTalent(player, self.TalentData[player.UserId])
@@ -53,6 +58,7 @@ function PlayerService:KnitStart()
     local function PlayerRemoved(player)
         self.TalentData[player.UserId] = nil
         self.OfflineTime[player.UserId] = nil
+        self.ModelCache[player.UserId] = nil
 
         Knit.GetService("InventoryService"):PlayerRemoved(player)
         Knit.GetService("GoldService"):PlayerRemoved(player)
@@ -224,43 +230,36 @@ end
 -- @param jobId number 玩家职业ID
 function PlayerService:SetJobModel(player, jobId)
     if not player or not jobId then return end
-    if not player.Character then return end
+	if not player.Character then return end
+	local character = player.Character
+	for _, child in ipairs(character:GetChildren()) do
+		if child:IsA("Accessory") and child.Name:find("JobAccessory") then
+			child:Destroy()
+		end
+	end
+    character.Pants.PantsTemplate = self.ModelCache[player.UserId].PantsTemplate or ""
+    character.Shirt.ShirtTemplate = self.ModelCache[player.UserId].ShirtTemplate or ""
     local config = HeroConfig:GetById(tonumber(jobId))
     if not config then return end
     local model = config.Model
     if not model then return end
     local jobModel = ReplicatedStorage:FindFirstChild("JobModel"):FindFirstChild(model)
     if not jobModel then return end
-    if jobModel:FindFirstChild("Shirt") then
-        player.Character.Shirt.ShirtTemplate = jobModel.Shirt.ShirtTemplate
-    end
-    if jobModel:FindFirstChild("Pants") then
-        player.Character.Pants.PantsTemplate = jobModel.Pants.PantsTemplate
-    end
-end
-
--- 获取玩家移动速度
--- @param player Player 请求数据的玩家
--- @return number 玩家移动速度
-function PlayerService:GetWalkSpeed(player)
-    local walkSpeed = PlayerAttribute.GetWalkSpeed(player)
-    return walkSpeed
-end
-
--- 获取玩家跑步速度
--- @param player Player 请求数据的玩家
--- @return number 玩家跑步速度
-function PlayerService:GetRunSpeed(player)
-    local runSpeed = PlayerAttribute.GetRunSpeed(player)
-    return runSpeed
-end
-
--- 获取玩家跳跃高度
--- @param player Player 请求数据的玩家
--- @return number 玩家跳跃高度
-function PlayerService:GetJumpPower(player)
-    local jumpPower = PlayerAttribute.GetJumpPower(player)
-    return jumpPower
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	if not humanoid then return end
+	if jobModel:FindFirstChild("Shirt") and character:FindFirstChild("Shirt") then
+		character.Shirt.ShirtTemplate = jobModel.Shirt.ShirtTemplate
+	end
+	if jobModel:FindFirstChild("Pants") and character:FindFirstChild("Pants") then
+		character.Pants.PantsTemplate = jobModel.Pants.PantsTemplate
+	end
+	for _, child in ipairs(jobModel:GetChildren()) do
+		if child:IsA("Accessory") then
+			local accessoryClone = child:Clone()
+            accessoryClone.Name = "JobAccessory" .. child.Name
+			humanoid:AddAccessory(accessoryClone)
+		end
+	end
 end
 
 -- 刷新玩家属性
@@ -274,27 +273,9 @@ function PlayerService:RefreshPlayerAttribute(player, attributeName)
         humanoid.MaxHealth = health
         humanoid.Health = health
     elseif attributeName == "WalkSpeed" then
-        humanoid.WalkSpeed = self:GetWalkSpeed(player)
-    elseif attributeName == "RunSpeed" then
-        humanoid:SetAttribute("RunSpeed", self:GetRunSpeed(player))
+        humanoid.WalkSpeed = PlayerAttribute.GetWalkSpeed(player)
     elseif attributeName == "JumpPower" then
-        humanoid.JumpPower = self:GetJumpPower(player)
-    elseif attributeName == "Weight" then
-        humanoid:SetAttribute("Weight", PlayerAttribute.GetWeight(player))
-    elseif attributeName == "Lucky" then
-        humanoid:SetAttribute("Lucky", PlayerAttribute.GetLucky(player))
-    elseif attributeName == "CriticalProbability" then
-        humanoid:SetAttribute("CriticalProbability", PlayerAttribute.GetCriticalProbability(player))
-    elseif attributeName == "CriticalValue" then
-        humanoid:SetAttribute("CriticalValue", PlayerAttribute.GetCriticalValue(player))
-    elseif attributeName == "Attack" then
-        humanoid:SetAttribute("Attack", PlayerAttribute.GetAttack(player))
-    elseif attributeName == "Endurance" then
-        humanoid:SetAttribute("Endurance", PlayerAttribute.GetEndurance(player))
-    elseif attributeName == "EnduranceConsume" then
-        humanoid:SetAttribute("EnduranceConsume", PlayerAttribute.GetEnduranceConsume(player))
-    elseif attributeName == "EnduranceRecovery" then
-        humanoid:SetAttribute("EnduranceRecovery", PlayerAttribute.GetEnduranceRecovery(player))
+        humanoid.JumpPower = PlayerAttribute.GetJumpPower(player)
     end
 end
 
@@ -305,85 +286,14 @@ function PlayerService:RefreshAllPlayerAttribute(player)
     end
 end
 
--- -- 初始化玩家能力
--- -- @param player Player 玩家
--- -- @param talent table 能力数据
--- function PlayerService:InitPlayerTalent(player, talent)
---     if not talent then
---         return
---     end
---     for talentId, talentData in pairs(talent) do
---         local talentInfo = TalentTreeConfig:GetByTalentTreeId(tonumber(talentId))
---         if talentInfo then
---             if talentInfo.Type == GameConfig.TalentType.WalkSpeed then
---                 local initWalkSpeed = player:GetAttribute("InitWalkSpeed")
---                 if initWalkSpeed then
---                     if talentInfo.ChildType == 1 then
---                         self:ChangePlayerAttribute(player, "WalkSpeed", initWalkSpeed *  (1 + talentInfo.Value / 100))
---                     else
---                         self:ChangePlayerAttribute(player, "WalkSpeed", initWalkSpeed +  talentInfo.Value)
---                     end
---                 end
---             elseif talentInfo.Type == GameConfig.TalentType.MaxHealth then
---                 local initMaxHealth = player:GetAttribute("InitMaxHealth")
---                 if initMaxHealth then
---                     if talentInfo.ChildType == 1 then
---                         self:ChangePlayerAttribute(player, "MaxHealth", initMaxHealth * (1 + talentInfo.Value / 100))
---                         self:ChangePlayerAttribute(player, "Health", initMaxHealth * (1 + talentInfo.Value / 100))
---                     else
---                         self:ChangePlayerAttribute(player, "MaxHealth", initMaxHealth + talentInfo.Value)
---                         self:ChangePlayerAttribute(player, "Health", initMaxHealth + talentInfo.Value)
---                     end
---                 end
---             elseif talentInfo.Type == GameConfig.TalentType.Jump then
---                 local initJumpPower = player:GetAttribute("InitJumpPower")
---                 if initJumpPower then
---                     if talentInfo.ChildType == 1 then
---                         self:ChangePlayerAttribute(player, "JumpPower", initJumpPower * (1 + talentInfo.Value / 100))
---                     else
---                         self:ChangePlayerAttribute(player, "JumpPower", initJumpPower + talentInfo.Value)
---                     end
---                 end
---             elseif talentInfo.Type == GameConfig.TalentType.Weight then
---                 local initWeight = self:GetOverwhelmed(player)
---                 if initWeight then
---                     if talentInfo.ChildType == 1 then
---                         self:ChangePlayerAttribute(player, "Weight", initWeight * (1 + talentInfo.Value / 100))
---                     else
---                         self:ChangePlayerAttribute(player, "Weight", initWeight + talentInfo.Value)
---                     end
---                 end
---             elseif talentInfo.Type == GameConfig.TalentType.CollectSpeed then
---                 local initCollectSpeed = self:GetCollectSpeed(player)
---                 if initCollectSpeed then
---                     if talentInfo.ChildType == 1 then
---                         self:ChangePlayerAttribute(player, "CollectSpeed", initCollectSpeed * (1 + talentInfo.Value / 100))
---                     else
---                         self:ChangePlayerAttribute(player, "CollectSpeed", initCollectSpeed + talentInfo.Value)
---                     end
---                 end
---             elseif talentInfo.Type == GameConfig.TalentType.Lucky then
---                 local initLucky = self:GetLucky(player)
---                 if initLucky then
---                     if talentInfo.ChildType == 1 then
---                         self:ChangePlayerAttribute(player, "Lucky", initLucky * (1 + talentInfo.Value / 100))
---                     else
---                         self:ChangePlayerAttribute(player, "Lucky", initLucky + talentInfo.Value)
---                     end
---                 end
---             end
---         end
---     end
--- end
-
 function PlayerService:SwitchWalkOrRun(player, state)
     if not player then return end
 
     if player.Character and player.Character.Humanoid then
         if state == 0 then
-            player.Character.Humanoid.WalkSpeed = self:GetWalkSpeed(player)
+            player.Character.Humanoid.WalkSpeed = PlayerAttribute.GetWalkSpeed(player)
         else
-            player.Character.Humanoid.WalkSpeed = self:GetRunSpeed(player)
+            player.Character.Humanoid.WalkSpeed = PlayerAttribute.GetRunSpeed(player)
         end
     end
 end

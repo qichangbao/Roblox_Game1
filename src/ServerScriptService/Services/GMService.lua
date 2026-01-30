@@ -125,10 +125,7 @@ function GMService:GMCommand(player)
                             })
                         else
                             local itemInfo = ItemConfig:GetByItemId(itemId)
-                            Knit.GetService("InventoryService"):CreateItemToFloor(player, itemInfo, {
-                                ItemId = itemId,
-                                Attribute = GameConfig.GetItemAttribute(),
-                            })
+                            Knit.GetService("InventoryService"):CreateItemToFloor(player.Character, itemInfo, GameConfig.GetItemAttribute())
                         end
                         Knit.GetService("JobService"):TriggerJob(player, GameConfig.JobUnlockCondition.CollectItemNum, {itemId = itemId, count = 1})
 					end

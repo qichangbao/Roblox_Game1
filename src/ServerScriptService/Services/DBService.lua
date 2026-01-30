@@ -40,42 +40,42 @@ local _dataTemplate = {
 	},			-- 能力列表
 	JobData = {
 		["101"] = {
-			Level = 1,
+			Level = 0,
 			Unlock = 0,
 			IsFinished = false,
 		},
 		["102"] = {
-			Level = 1,
+			Level = 0,
 			Unlock = 0,
 			IsFinished = false,
 		},
 		["103"] = {
-			Level = 1,
+			Level = 0,
 			Unlock = 0,
 			IsFinished = false,
 		},
 		["104"] = {
-			Level = 1,
+			Level = 0,
 			Unlock = 0,
 			IsFinished = false,
 		},
 		["105"] = {
-			Level = 1,
+			Level = 0,
 			Unlock = 0,
 			IsFinished = false,
 		},
 		["106"] = {
-			Level = 1,
+			Level = 0,
 			Unlock = 0,
 			IsFinished = false,
 		},
 		["107"] = {
-			Level = 1,
+			Level = 0,
 			Unlock = 0,
 			IsFinished = false,
 		},
 		["108"] = {
-			Level = 1,
+			Level = 0,
 			Unlock = 0,
 			IsFinished = false,
 		}
