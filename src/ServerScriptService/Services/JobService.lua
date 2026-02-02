@@ -51,8 +51,16 @@ function JobService:GetJobData(player)
     return self.JobData[player.UserId]
 end
 
+function JobService.Client:GetJobData(player)
+    return self.Server:GetJobData(player)
+end
+
 function JobService:GetCurJobId(player)
     return self.curJobId[player.UserId]
+end
+
+function JobService.Client:GetCurJobId(player)
+    return self.Server:GetCurJobId(player)
 end
 
 function JobService:TriggerJob(player, jobType, jobValue)

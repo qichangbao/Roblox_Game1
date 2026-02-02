@@ -223,6 +223,48 @@ function TweenInterface.StartPulseGuiColorLoop(gui, toColor, toBlackDuration, ba
     end)
 end
 
+-- 设置鼠标悬停时的缩放效果
+-- @param frame Frame 需要缩放的UI容器
+-- @param button GuiButton 负责接收鼠标事件的按钮
+function TweenInterface.SetupHoverScale(frame, button)
+	local uiScale = frame:FindFirstChildOfClass("UIScale")
+	if not uiScale then
+		uiScale = Instance.new("UIScale")
+		uiScale.Scale = 1
+		uiScale.Parent = frame
+	end
+
+	local tweenIn
+	local tweenOut
+    if not button then
+        button = Instance.new("TextButton")
+        button.BackgroundTransparency = 1
+        button.Parent = frame
+        button.Text = ""
+        button.Size = UDim2.new(1, 0, 1, 0)
+    end
+
+	button.MouseEnter:Connect(function()
+		if tweenOut then
+			tweenOut:Cancel()
+		end
+		tweenIn = TweenService:Create(uiScale, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			Scale = 1.1,
+		})
+		tweenIn:Play()
+	end)
+
+	button.MouseLeave:Connect(function()
+		if tweenIn then
+			tweenIn:Cancel()
+		end
+		tweenOut = TweenService:Create(uiScale, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			Scale = 1,
+		})
+		tweenOut:Play()
+	end)
+end
+
 -- 停止Gui颜色黑色脉冲循环（函数级注释）：
 -- @param gui GuiObject 待停止的UI对象
 -- 行为：将运行标记置为false，正在进行的当前补间完成后退出循环

@@ -6,6 +6,9 @@ local MonsterConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):Wai
 local ItemConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("ItemConfig"))
 local AttributeConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("AttributeConfig"))
 local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
+local TweenInterface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("TweenInterface"))
+local players = game:GetService("Players")
+local localPlayer = players.LocalPlayer
 
 local _camera = workspace.CurrentCamera
 local _originalCameraType = _camera.CameraType
@@ -17,18 +20,19 @@ local _curJobId = 0
 local _selectItem = nil
 local _curModel = nil
 
-local _screenGui = script.Parent
+local _screenGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("JobUI")
 _screenGui.Enabled = false
 local _frame = _screenGui:WaitForChild("Frame")
 local _closeButton = _frame:WaitForChild("CloseButton")
 _closeButton.MouseButton1Click:Connect(function()
+	_screenGui.Parent:FindFirstChild("MainUI").Enabled = true
 	_screenGui.Enabled = false
 	_selectItem = nil
 	_camera.CameraType = _originalCameraType
 	_camera.CameraSubject = _originalCameraSubject
 	_camera.CFrame = _originalCameraCFrame
 end)
-Interface.SetupHoverScale(_closeButton, _closeButton)
+TweenInterface.SetupHoverScale(_closeButton, _closeButton)
 
 local _jobsFrame = _frame:WaitForChild("JobsFrame")
 local _scrollingFrame = _jobsFrame:WaitForChild("ScrollingFrame")
@@ -39,13 +43,11 @@ local _infoFrame = _frame:WaitForChild("InfoFrame")
 local _infoNameLabel = _infoFrame:WaitForChild("NameLabel")
 local _infoModelDesFrame = _infoFrame:WaitForChild("ModelDesFrame")
 local _infoModelDesLabel = _infoModelDesFrame:WaitForChild("DescriptionLabel")
-Interface.SetupHoverScale(_infoModelDesFrame)
 local _infoStarFrame = _infoFrame:WaitForChild("StarFrame")
 local _attributeChild = {}
 local _attributeFrame = _infoFrame:WaitForChild("AttributeFrame")
 for i = 1, 3 do
 	local frame = _attributeFrame:WaitForChild("Frame" .. i)
-	Interface.SetupHoverScale(frame)
 	local attributeNameLabel = frame:WaitForChild("NameLabel")
 	local attributeLockImage = frame:WaitForChild("LockImage")
 	table.insert(_attributeChild, {Frame = frame, NameLabel = attributeNameLabel, LockImage = attributeLockImage})
@@ -54,10 +56,11 @@ end
 local _levelUpButton = _frame:WaitForChild("LevelUpButton")
 _levelUpButton.MouseButton1Click:Connect(function()
 	if not _selectItem.Name then return end
-	Knit.GetService("JobService"):LevelUp(_selectItem.Name):andThen(function()
-
+	Knit.GetService("JobService"):LevelUp(_selectItem.Name):andThen(function(tip)
+		Knit.GetController("UIController").ShowTip:Fire({Type = 3, Text = tip})
 	end)
 end)
+TweenInterface.SetupHoverScale(_levelUpButton, _levelUpButton)
 local _levelUpGold = _levelUpButton:WaitForChild("TextLabel")
 _levelUpGold.Text = ""
 local _goldImage = _levelUpButton:WaitForChild("GoldImage")
@@ -69,11 +72,16 @@ local _unlockTextLabel = _frame:WaitForChild("UnlockTextLabel")
 _unlockTextLabel.Text = ""
 
 local _activeButton = _frame:WaitForChild("ActiveButton")
+_activeButton.Visible = false
 _activeButton.MouseButton1Click:Connect(function()
 	if not _selectItem.Name then return end
+	local jobData = _jobsData[_selectItem.Name]
+	if not jobData then return end
+	if jobData.Level <= 0 then return end
 	Knit.GetService("JobService"):ChangeJob(_selectItem.Name):andThen(function(isActive)
 	end)
 end)
+TweenInterface.SetupHoverScale(_activeButton, _activeButton)
 local _activeTextLabel = _activeButton:WaitForChild("TextLabel")
 _activeTextLabel.Text = ""
 
@@ -91,39 +99,16 @@ end
 -- @param model Model 需要播放动作的模型
 local function playPreviewAnimations(model)
 	local humanoid = model:FindFirstChildOfClass("Humanoid")
-	local animationController = model:FindFirstChildOfClass("AnimationController")
-	local animatorParent = humanoid or animationController
-	if not animatorParent then
-		return
-	end
-
-	local animator = animatorParent:FindFirstChildOfClass("Animator")
-	if not animator then
-		animator = Instance.new("Animator")
-		animator.Parent = animatorParent
-	end
-
-	local players = game:GetService("Players")
-	local localPlayer = players.LocalPlayer
-	if not localPlayer then
-		return
-	end
-
+	if not humanoid then return end
+	local animator = humanoid:FindFirstChildOfClass("Animator")
+	if not animator then return end
 	local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
 	local animateScript = character:FindFirstChild("Animate")
-	if not animateScript then
-		return
-	end
-
+	if not animateScript then return end
 	local idleFolder = animateScript:FindFirstChild("idle")
-	if not idleFolder then
-		return
-	end
-
+	if not idleFolder then return end
 	local sourceIdleAnimation = idleFolder:FindFirstChildOfClass("Animation")
-	if not sourceIdleAnimation or not sourceIdleAnimation.AnimationId or sourceIdleAnimation.AnimationId == "" then
-		return
-	end
+	if not sourceIdleAnimation or not sourceIdleAnimation.AnimationId or sourceIdleAnimation.AnimationId == "" then return end
 
 	local idleAnimation = Instance.new("Animation")
 	idleAnimation.AnimationId = sourceIdleAnimation.AnimationId
@@ -225,7 +210,7 @@ local function updateInfo(config)
 		end
 
 		local attributeFrame = _attributeChild[i]
-		attributeFrame.LockImage.Visible = jobData and jobData.Level <= i and not jobData.IsFinished
+		attributeFrame.LockImage.Visible = jobData and jobData.Level < i and not jobData.IsFinished
 		attributeFrame.NameLabel.Text = str
 		if attributeFrame.LockImage.Visible then
 			attributeFrame.Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -236,7 +221,12 @@ local function updateInfo(config)
 		end
 	end
 
-	local level = jobData.Level or 1
+	local level
+	if jobData.IsFinished then
+		level = GameConfig.MaxJobLevel
+	else
+		level = math.min(jobData.Level + 1, GameConfig.MaxJobLevel)
+	end
 	for j = 1, 6 do
 		local star = _infoStarFrame:FindFirstChild(tostring(j))
 		star.Visible = j <= config.Star[level]
@@ -297,7 +287,7 @@ end
 
 local function updateData(data)
 	_jobsData = data
-
+	_activeButton.Visible = false
 	local index = 1
 	if _selectItem then
 		index = _selectItem:GetAttribute("Index")
@@ -323,6 +313,8 @@ local function updateData(data)
 		updateInfo(config)
 		setActiveText(config.Id)
 		updateModel(config)
+		local jobData = _jobsData[tostring(config.Id)]
+		_activeButton.Visible = jobData and jobData.Level > 0
 	end
 
 	for i, config in ipairs(HeroConfig:GetAll()) do
@@ -342,15 +334,21 @@ local function updateData(data)
 		textButton.MouseButton1Click:Connect(function()
 			changeSelect(newFrame, config)
 		end)
-
-		Interface.SetupHoverScale(newFrame, textButton)
+		TweenInterface.SetupHoverScale(newFrame, textButton)
 
 		local starFrame = newFrame:FindFirstChild("StarFrame")
 		local jobData = _jobsData[tostring(config.Id)]
-		local level = jobData.Level or 1
-		for j = 1, 6 do
-			local star = starFrame:FindFirstChild(tostring(j))
-			star.Visible = j <= config.Star[level]
+		if jobData then
+			local level
+			if jobData.IsFinished then
+				level = GameConfig.MaxJobLevel
+			else
+				level = math.min(jobData.Level + 1, GameConfig.MaxJobLevel)
+			end
+			for j = 1, 6 do
+				local star = starFrame:FindFirstChild(tostring(j))
+				star.Visible = j <= config.Star[level]
+			end
 		end
 
 		if i == index then
@@ -373,7 +371,9 @@ Knit.OnStart():andThen(function()
 	end)
 
 	Knit.GetController("UIController").ShowJobUI:Connect(function(type)
+		if _screenGui.Enabled then return end
 		_screenGui.Enabled = true
+		_curJobId = _G.ClientData.CurJobId
 		_originalCameraType = _camera.CameraType
 		_originalCameraSubject = _camera.CameraSubject
 		_originalCameraCFrame = _camera.CFrame
@@ -388,5 +388,7 @@ Knit.OnStart():andThen(function()
 		local ui = game:GetService("SoundService"):WaitForChild("UI")
 		local sound = ui:WaitForChild("OpenUI")
 		sound:Play()
+		
+		_screenGui.Parent:FindFirstChild("MainUI").Enabled = false
 	end)
 end)

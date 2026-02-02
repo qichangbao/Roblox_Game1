@@ -45,13 +45,13 @@ ConstantConfig.Data = {
         Id = 4,
         Constant = "InitialMovementSpeed",
         Desc = "初始移动速度",
-        Effect1 = 6,
+        Effect1 = 12,
     },
     [5] = {
         Id = 5,
         Constant = "InitialSprintSpeed",
         Desc = "初始奔跑速度",
-        Effect1 = 16,
+        Effect1 = 24,
     },
     [6] = {
         Id = 6,

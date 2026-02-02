@@ -1,10 +1,13 @@
-local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Knit"))
 local ItemConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("ItemConfig"))
 local TalentTreeConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("TalentTreeConfig"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("ConfigFolder"):WaitForChild("GameConfig"))
 local Interface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("Interface"))
+local TweenInterface = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("TweenInterface"))
+local PlayerAttribute = require(ReplicatedStorage:WaitForChild("ToolFolder"):WaitForChild("PlayerAttribute"))
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
 
 local _talentData = nil
 local _selectItem = nil
@@ -12,7 +15,7 @@ local _inventoryData = {}
 local _curTalentInfo = nil
 local _curTalentData = nil
 
-local _screenGui = script.Parent
+local _screenGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("TalentUI")
 local _frame = _screenGui:WaitForChild("Frame")
 local _talentScrollingFrame = _frame:WaitForChild("ScrollingFrame")
 local _talentTemplateFrame = _talentScrollingFrame:WaitForChild("TemplateFrame")
@@ -41,18 +44,18 @@ local changeTalentId
 -- 方案：在运行时强制模板为“正方形”，让 Y.Scale 与 X.Scale 相同（或只驱动 X，再由约束推导 Y），并统一 DominantAxis=Width。
 -- 调用时机：脚本加载后立即执行一次；同时在克隆节点时也对每个克隆执行一次，保证所有节点一致。
 local function NormalizeTemplateFrameSize(frame)
-    if not frame or not frame:IsA("Frame") then return end
-    local sx = frame.Size.X
-    local desiredScale = sx.Scale
-    local desiredOffset = sx.Offset
-    -- 令高度与宽度保持一致（正方形）
-    frame.Size = UDim2.new(desiredScale, desiredOffset, desiredScale, desiredOffset)
-    -- 若存在宽高比约束，统一设为“宽度为主轴，正方形”
-    local aspect = frame:FindFirstChildOfClass("UIAspectRatioConstraint")
-    if aspect then
-        aspect.AspectRatio = 1
-        aspect.DominantAxis = Enum.DominantAxis.Width
-    end
+	if not frame or not frame:IsA("Frame") then return end
+	local sx = frame.Size.X
+	local desiredScale = sx.Scale
+	local desiredOffset = sx.Offset
+	-- 令高度与宽度保持一致（正方形）
+	frame.Size = UDim2.new(desiredScale, desiredOffset, desiredScale, desiredOffset)
+	-- 若存在宽高比约束，统一设为“宽度为主轴，正方形”
+	local aspect = frame:FindFirstChildOfClass("UIAspectRatioConstraint")
+	if aspect then
+		aspect.AspectRatio = 1
+		aspect.DominantAxis = Enum.DominantAxis.Width
+	end
 end
 
 -- 启动时先规范化一次模板尺寸
@@ -82,7 +85,7 @@ local function isPreComplated(talentId)
 			end
 		end
 	end
-	
+
 	for _, talentTreeId in ipairs(talents) do
 		local id = tostring(talentTreeId)
 		if not isSelfCompleted(id) then
@@ -109,87 +112,87 @@ local function updateTalentFrame(data)
 		end
 	end
 
-    -- 计算行内横向位置
-    local function computeRowPositions(count)
-        if count <= 1 then
-            return {0.5}
-        elseif count == 2 then
-            return {0.3, 0.7}
-        elseif count == 3 then
-            return {0.2, 0.5, 0.8}
-        else
-            -- 超过3个的情况，均匀分布
-            local positions = {}
-            local step = 1 / (count + 1)
-            for i = 1, count do
-                table.insert(positions, i * step)
-            end
-            return positions
-        end
-    end
-    -- 像素级画垂直线：传入绝对像素坐标（推荐）。
-    -- @param xAbs number 像素级 X 中心位置
-    -- @param yAbsStart number 像素级起始 Y（上或下）
-    -- @param yAbsEnd number 像素级结束 Y（上或下）
-    -- @param thickness number 线条粗细（像素）
-    local function drawVerticalLinePx(xAbs, yAbsStart, yAbsEnd, thickness)
-        local line = Instance.new("Frame")
-        line.Name = "Line"
-        line.BorderSizePixel = 0
-        line.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        line.AnchorPoint = Vector2.new(0.5, 0)
-        line.ZIndex = 10
-        local length = math.abs(yAbsEnd - yAbsStart)
-        line.Size = UDim2.new(0, thickness or 3, 0, length)
-        local relX = xAbs - _talentScrollingFrame.AbsolutePosition.X
-        local relY = math.min(yAbsStart, yAbsEnd) - _talentScrollingFrame.AbsolutePosition.Y
-        line.Position = UDim2.new(0, relX, 0, relY)
-        line.Parent = _talentScrollingFrame
-        return line
-    end
-    -- 像素级画水平线：传入绝对像素坐标（推荐）。
-    -- @param xAbsStart number 左端像素 X
-    -- @param xAbsEnd number 右端像素 X
-    -- @param yAbs number 像素级 Y（中心对齐）
-    -- @param thickness number 线条粗细（像素）
-    local function drawHorizontalLinePx(xAbsStart, xAbsEnd, yAbs, thickness)
-        local line = Instance.new("Frame")
-        line.Name = "Line"
-        line.BorderSizePixel = 0
-        line.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        line.AnchorPoint = Vector2.new(0, 0.5)
-        line.ZIndex = 10
-        local width = math.abs(xAbsEnd - xAbsStart)
-        line.Size = UDim2.new(0, width, 0, thickness or 3)
-        local relX = math.min(xAbsStart, xAbsEnd) - _talentScrollingFrame.AbsolutePosition.X
-        local relY = yAbs - _talentScrollingFrame.AbsolutePosition.Y
-        line.Position = UDim2.new(0, relX, 0, relY)
-        line.Parent = _talentScrollingFrame
-        return line
-    end
+	-- 计算行内横向位置
+	local function computeRowPositions(count)
+		if count <= 1 then
+			return {0.5}
+		elseif count == 2 then
+			return {0.3, 0.7}
+		elseif count == 3 then
+			return {0.2, 0.5, 0.8}
+		else
+			-- 超过3个的情况，均匀分布
+			local positions = {}
+			local step = 1 / (count + 1)
+			for i = 1, count do
+				table.insert(positions, i * step)
+			end
+			return positions
+		end
+	end
+	-- 像素级画垂直线：传入绝对像素坐标（推荐）。
+	-- @param xAbs number 像素级 X 中心位置
+	-- @param yAbsStart number 像素级起始 Y（上或下）
+	-- @param yAbsEnd number 像素级结束 Y（上或下）
+	-- @param thickness number 线条粗细（像素）
+	local function drawVerticalLinePx(xAbs, yAbsStart, yAbsEnd, thickness)
+		local line = Instance.new("Frame")
+		line.Name = "Line"
+		line.BorderSizePixel = 0
+		line.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		line.AnchorPoint = Vector2.new(0.5, 0)
+		line.ZIndex = 10
+		local length = math.abs(yAbsEnd - yAbsStart)
+		line.Size = UDim2.new(0, thickness or 3, 0, length)
+		local relX = xAbs - _talentScrollingFrame.AbsolutePosition.X
+		local relY = math.min(yAbsStart, yAbsEnd) - _talentScrollingFrame.AbsolutePosition.Y
+		line.Position = UDim2.new(0, relX, 0, relY)
+		line.Parent = _talentScrollingFrame
+		return line
+	end
+	-- 像素级画水平线：传入绝对像素坐标（推荐）。
+	-- @param xAbsStart number 左端像素 X
+	-- @param xAbsEnd number 右端像素 X
+	-- @param yAbs number 像素级 Y（中心对齐）
+	-- @param thickness number 线条粗细（像素）
+	local function drawHorizontalLinePx(xAbsStart, xAbsEnd, yAbs, thickness)
+		local line = Instance.new("Frame")
+		line.Name = "Line"
+		line.BorderSizePixel = 0
+		line.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		line.AnchorPoint = Vector2.new(0, 0.5)
+		line.ZIndex = 10
+		local width = math.abs(xAbsEnd - xAbsStart)
+		line.Size = UDim2.new(0, width, 0, thickness or 3)
+		local relX = math.min(xAbsStart, xAbsEnd) - _talentScrollingFrame.AbsolutePosition.X
+		local relY = yAbs - _talentScrollingFrame.AbsolutePosition.Y
+		line.Position = UDim2.new(0, relX, 0, relY)
+		line.Parent = _talentScrollingFrame
+		return line
+	end
 
-    -- 添加一个天赋节点到指定位置
-    -- @param talentInfo table 配置项
-    -- @param xScale number 节点的水平位置（0~1）
-    -- @param yOffset number 节点的垂直位置（像素）
-    -- @param talentData table 玩家此天赋的进度（用于显示等级与选中）
-    -- @return Frame 节点Frame，nil若失败
-    local function addTalentNode(talentInfo, xScale, yOffset, talentData)
-        if not talentInfo then return nil end
-        local frame = _talentTemplateFrame:Clone()
-        frame.Name = talentInfo.TalentTreeId
-        frame.Visible = true
-        frame.Parent = _talentScrollingFrame
-        frame.AnchorPoint = Vector2.new(0.5, 0)
-        frame.Position = UDim2.new(xScale, 0, 0, yOffset)
+	-- 添加一个天赋节点到指定位置
+	-- @param talentInfo table 配置项
+	-- @param xScale number 节点的水平位置（0~1）
+	-- @param yOffset number 节点的垂直位置（像素）
+	-- @param talentData table 玩家此天赋的进度（用于显示等级与选中）
+	-- @return Frame 节点Frame，nil若失败
+	local function addTalentNode(talentInfo, xScale, yOffset, talentData)
+		if not talentInfo then return nil end
+		local frame = _talentTemplateFrame:Clone()
+		frame.Name = talentInfo.TalentTreeId
+		frame.Visible = true
+		frame.Parent = _talentScrollingFrame
+		frame.AnchorPoint = Vector2.new(0.5, 0)
+		frame.Position = UDim2.new(xScale, 0, 0, yOffset)
 
-        -- 规范化克隆节点尺寸，防止约束导致意外压缩
-        NormalizeTemplateFrameSize(frame)
+		-- 规范化克隆节点尺寸，防止约束导致意外压缩
+		NormalizeTemplateFrameSize(frame)
 
-        -- 设置展示信息
+		-- 设置展示信息
 		local iconImage = frame:FindFirstChild("IconImage")
 		if talentInfo.Icon then
-        	iconImage.Image = talentInfo.Icon
+			iconImage.Image = talentInfo.Icon
 		end
 		local highFrame = frame:FindFirstChild("HighFrame")
 		highFrame.Visible = false
@@ -206,29 +209,30 @@ local function updateTalentFrame(data)
 			iconImage.ImageColor3 = Color3.fromRGB(70, 70, 70)
 		end
 
-        -- 交互
-        local textButton = frame:FindFirstChild("TextButton")
-        textButton.MouseButton1Down:Connect(function()
-            changeTalentId(frame, talentInfo, talentData)
-        end)
+		-- 交互
+		local textButton = frame:FindFirstChild("TextButton")
+		textButton.MouseButton1Down:Connect(function()
+			changeTalentId(frame, talentInfo, talentData)
+		end)
+		TweenInterface.SetupHoverScale(frame, textButton)
 
-        return frame
-    end
+		return frame
+	end
 
-    -- 递归布局
-    local visited = {}
-    local maxDepth = 0        -- 记录最大层级以计算滚动区域
-    -- 垂直布局改为“像素”驱动，避免受到 ScrollingFrame 高度变化影响导致节点互相覆盖。
-    -- 每层间距 = 模板高度 + 额外留白（40px），确保父节点底部与子节点顶部至少有 40px 的净距。
-    -- 模板高度优先取 AbsoluteSize（兼容 Scale 尺寸，如 {0.15,0}），否则回退 Offset/默认
-    local templateH = (_talentTemplateFrame.AbsoluteSize.Y > 0) and _talentTemplateFrame.AbsoluteSize.Y
-        or (_talentTemplateFrame.Size.Y.Offset > 0 and _talentTemplateFrame.Size.Y.Offset or 60)
-    local rowGapPx = templateH + 40
-    local rootYOffset = 20   -- 根节点的起始 Y（像素），稍微下移一点
+	-- 递归布局
+	local visited = {}
+	local maxDepth = 0        -- 记录最大层级以计算滚动区域
+	-- 垂直布局改为“像素”驱动，避免受到 ScrollingFrame 高度变化影响导致节点互相覆盖。
+	-- 每层间距 = 模板高度 + 额外留白（40px），确保父节点底部与子节点顶部至少有 40px 的净距。
+	-- 模板高度优先取 AbsoluteSize（兼容 Scale 尺寸，如 {0.15,0}），否则回退 Offset/默认
+	local templateH = (_talentTemplateFrame.AbsoluteSize.Y > 0) and _talentTemplateFrame.AbsoluteSize.Y
+		or (_talentTemplateFrame.Size.Y.Offset > 0 and _talentTemplateFrame.Size.Y.Offset or 60)
+	local rowGapPx = templateH + 40
+	local rootYOffset = 20   -- 根节点的起始 Y（像素），稍微下移一点
 
-    -- 获取根节点（第一个配置数据）
-    local rootInfo = TalentTreeConfig:GetByIndex(1)
-    if not rootInfo then return end
+	-- 获取根节点（第一个配置数据）
+	local rootInfo = TalentTreeConfig:GetByIndex(1)
+	if not rootInfo then return end
 
     --[[
     -- 函数：layout(talentInfo, xScale, depth, existingFrame)
@@ -243,125 +247,125 @@ local function updateTalentFrame(data)
     --   existingFrame Frame? 若节点已存在（例如其他父节点已创建该子节点），则复用该 Frame
     -- 返回：无（通过创建 UI 元素与连线来体现结果）
     --]]
-    -- 递归布局（优先创建子节点，再绘制连线，最后递归到子节点）
-    local function layout(talentInfo, xScale, depth, existingFrame)
-        if not talentInfo or visited[talentInfo.TalentTreeId] then return end
-        visited[talentInfo.TalentTreeId] = true
-        -- 当前节点的垂直位置（像素）
-        local yOffset = rootYOffset + depth * rowGapPx
-        if depth > maxDepth then
-            maxDepth = depth
-        end
-        local parentData = data and data[talentInfo.TalentTreeId] or nil
-        local parentFrame = existingFrame or addTalentNode(talentInfo, xScale, yOffset, parentData)
-        if not parentFrame then return end
+	-- 递归布局（优先创建子节点，再绘制连线，最后递归到子节点）
+	local function layout(talentInfo, xScale, depth, existingFrame)
+		if not talentInfo or visited[talentInfo.TalentTreeId] then return end
+		visited[talentInfo.TalentTreeId] = true
+		-- 当前节点的垂直位置（像素）
+		local yOffset = rootYOffset + depth * rowGapPx
+		if depth > maxDepth then
+			maxDepth = depth
+		end
+		local parentData = data and data[talentInfo.TalentTreeId] or nil
+		local parentFrame = existingFrame or addTalentNode(talentInfo, xScale, yOffset, parentData)
+		if not parentFrame then return end
 
-        -- 处理子节点
-        local nextField = talentInfo.NextTalent
-        local nextList = {}
-        if type(nextField) == "number" then
-            table.insert(nextList, nextField)
-        elseif type(nextField) == "table" then
-            nextList = nextField
-        else
-            nextList = {}
-        end
-        if #nextList == 0 then return end
+		-- 处理子节点
+		local nextField = talentInfo.NextTalent
+		local nextList = {}
+		if type(nextField) == "number" then
+			table.insert(nextList, nextField)
+		elseif type(nextField) == "table" then
+			nextList = nextField
+		else
+			nextList = {}
+		end
+		if #nextList == 0 then return end
 
-        local positions = computeRowPositions(#nextList)
-        local childFrames = {}
+		local positions = computeRowPositions(#nextList)
+		local childFrames = {}
 
-        -- 先创建/获取所有子节点，确保获取到准确的绝对坐标用于画线
-        for idx, childId in ipairs(nextList) do
-            local childInfo = TalentTreeConfig:GetByTalentTreeId(childId)
-            -- 单子节点时，沿用父节点的 X 轴位置，避免与其它父的单子节点发生重叠
-            local childXScale = (#nextList == 1) and xScale or positions[idx]
-            local childYOffset = yOffset + rowGapPx
-            local existing = _talentScrollingFrame:FindFirstChild(tostring(childId))
-            local childFrame
-            if existing and existing:IsA("Frame") then
-                -- 若节点已存在（可能由其他父节点创建），直接使用现有 Frame
-                childFrame = existing
-            else
-                childFrame = addTalentNode(childInfo, childXScale, childYOffset, data and data[childId] or nil)
-            end
-            if childFrame then
-                table.insert(childFrames, {info = childInfo, xScale = childXScale, frame = childFrame})
-            end
-        end
-        if #childFrames == 0 then return end
+		-- 先创建/获取所有子节点，确保获取到准确的绝对坐标用于画线
+		for idx, childId in ipairs(nextList) do
+			local childInfo = TalentTreeConfig:GetByTalentTreeId(childId)
+			-- 单子节点时，沿用父节点的 X 轴位置，避免与其它父的单子节点发生重叠
+			local childXScale = (#nextList == 1) and xScale or positions[idx]
+			local childYOffset = yOffset + rowGapPx
+			local existing = _talentScrollingFrame:FindFirstChild(tostring(childId))
+			local childFrame
+			if existing and existing:IsA("Frame") then
+				-- 若节点已存在（可能由其他父节点创建），直接使用现有 Frame
+				childFrame = existing
+			else
+				childFrame = addTalentNode(childInfo, childXScale, childYOffset, data and data[childId] or nil)
+			end
+			if childFrame then
+				table.insert(childFrames, {info = childInfo, xScale = childXScale, frame = childFrame})
+			end
+		end
+		if #childFrames == 0 then return end
 
-        -- 计算父节点底部中心（像素）
-        local parentCenterXAbs = parentFrame.AbsolutePosition.X + parentFrame.AbsoluteSize.X / 2
-        local parentBottomYAbs = parentFrame.AbsolutePosition.Y + parentFrame.AbsoluteSize.Y
+		-- 计算父节点底部中心（像素）
+		local parentCenterXAbs = parentFrame.AbsolutePosition.X + parentFrame.AbsoluteSize.X / 2
+		local parentBottomYAbs = parentFrame.AbsolutePosition.Y + parentFrame.AbsoluteSize.Y
 
-        -- 计算子节点顶端中心（像素），用于逐子节点绘制“下→横→上”
-        local childCenters = {}
-        for _, child in ipairs(childFrames) do
-            local frame = child.frame
-            local cx = frame.AbsolutePosition.X + frame.AbsoluteSize.X / 2
-            local ty = frame.AbsolutePosition.Y
-            table.insert(childCenters, {info = child.info, xScale = child.xScale, xAbs = cx, topYAbs = ty, frame = frame})
-        end
+		-- 计算子节点顶端中心（像素），用于逐子节点绘制“下→横→上”
+		local childCenters = {}
+		for _, child in ipairs(childFrames) do
+			local frame = child.frame
+			local cx = frame.AbsolutePosition.X + frame.AbsoluteSize.X / 2
+			local ty = frame.AbsolutePosition.Y
+			table.insert(childCenters, {info = child.info, xScale = child.xScale, xAbs = cx, topYAbs = ty, frame = frame})
+		end
 
-        -- 根据子节点数量采用不同策略：
-        -- 1) 单个子节点：若父子 X 对齐，只画竖线；若不对齐，走“下→横→上”。
-        -- 2) 多个子节点：竖线到“父底部与子顶部之间的垂直间距的中点”后画一条公共横线，再各自竖线到子节点顶部，保证分叉位于父子间距的正中而非靠近子节点底部。
-        if #childCenters == 1 then
-            local child = childCenters[1]
-            local childX = child.xAbs
-            local childTop = child.topYAbs
-            local xDelta = math.abs(childX - parentCenterXAbs)
-            if xDelta <= 1 then
-                drawVerticalLinePx(parentCenterXAbs, parentBottomYAbs, childTop, 3)
-            else
-                local stem = math.max(24, math.floor(parentFrame.AbsoluteSize.Y * 0.25) + 8)
-                local desiredY = parentBottomYAbs + stem
-                local lowerBound = parentBottomYAbs + 8
-                local upperBound = childTop - 1
-                local junctionYAbs = math.max(lowerBound, math.min(upperBound, desiredY))
-                if junctionYAbs >= childTop then
-                    junctionYAbs = childTop - 1
-                end
-                drawVerticalLinePx(parentCenterXAbs, parentBottomYAbs, junctionYAbs, 3)
-                drawHorizontalLinePx(parentCenterXAbs, childX, junctionYAbs, 3)
-                drawVerticalLinePx(childX, junctionYAbs, childTop, 3)
-            end
-            if not visited[child.info.TalentTreeId] then
-                layout(child.info, child.xScale, depth + 1, child.frame)
-            end
-        else
-            -- 多子节点：公共水平分叉线的 Y 取“父节点底部与子节点顶部之间垂直间距的中点”
-            -- 说明：若所有子节点处于同一行，其 topYAbs 应一致；为稳健，取最小 topYAbs 作为该行子节点的顶部参考。
-            local minChildTopYAbs = math.huge
-            local minX, maxX = math.huge, -math.huge
-            for _, c in ipairs(childCenters) do
-                if c.topYAbs < minChildTopYAbs then minChildTopYAbs = c.topYAbs end
-                if c.xAbs < minX then minX = c.xAbs end
-                if c.xAbs > maxX then maxX = c.xAbs end
-            end
-            -- 父子间距的中点（确保位于父底与子顶之间，不贴边）
-            local gapHalf = math.floor((minChildTopYAbs - parentBottomYAbs) / 2)
-            local junctionYAbs = parentBottomYAbs + gapHalf
-            if junctionYAbs <= parentBottomYAbs + 2 then junctionYAbs = parentBottomYAbs + 2 end
-            if junctionYAbs >= minChildTopYAbs - 1 then junctionYAbs = minChildTopYAbs - 1 end
-            drawVerticalLinePx(parentCenterXAbs, parentBottomYAbs, junctionYAbs, 3)
-            drawHorizontalLinePx(minX, maxX, junctionYAbs, 3)
-            for _, child in ipairs(childCenters) do
-                drawVerticalLinePx(child.xAbs, junctionYAbs, child.topYAbs, 3)
-                if not visited[child.info.TalentTreeId] then
-                    layout(child.info, child.xScale, depth + 1, child.frame)
-                end
-            end
-        end
-    end
+		-- 根据子节点数量采用不同策略：
+		-- 1) 单个子节点：若父子 X 对齐，只画竖线；若不对齐，走“下→横→上”。
+		-- 2) 多个子节点：竖线到“父底部与子顶部之间的垂直间距的中点”后画一条公共横线，再各自竖线到子节点顶部，保证分叉位于父子间距的正中而非靠近子节点底部。
+		if #childCenters == 1 then
+			local child = childCenters[1]
+			local childX = child.xAbs
+			local childTop = child.topYAbs
+			local xDelta = math.abs(childX - parentCenterXAbs)
+			if xDelta <= 1 then
+				drawVerticalLinePx(parentCenterXAbs, parentBottomYAbs, childTop, 3)
+			else
+				local stem = math.max(24, math.floor(parentFrame.AbsoluteSize.Y * 0.25) + 8)
+				local desiredY = parentBottomYAbs + stem
+				local lowerBound = parentBottomYAbs + 8
+				local upperBound = childTop - 1
+				local junctionYAbs = math.max(lowerBound, math.min(upperBound, desiredY))
+				if junctionYAbs >= childTop then
+					junctionYAbs = childTop - 1
+				end
+				drawVerticalLinePx(parentCenterXAbs, parentBottomYAbs, junctionYAbs, 3)
+				drawHorizontalLinePx(parentCenterXAbs, childX, junctionYAbs, 3)
+				drawVerticalLinePx(childX, junctionYAbs, childTop, 3)
+			end
+			if not visited[child.info.TalentTreeId] then
+				layout(child.info, child.xScale, depth + 1, child.frame)
+			end
+		else
+			-- 多子节点：公共水平分叉线的 Y 取“父节点底部与子节点顶部之间垂直间距的中点”
+			-- 说明：若所有子节点处于同一行，其 topYAbs 应一致；为稳健，取最小 topYAbs 作为该行子节点的顶部参考。
+			local minChildTopYAbs = math.huge
+			local minX, maxX = math.huge, -math.huge
+			for _, c in ipairs(childCenters) do
+				if c.topYAbs < minChildTopYAbs then minChildTopYAbs = c.topYAbs end
+				if c.xAbs < minX then minX = c.xAbs end
+				if c.xAbs > maxX then maxX = c.xAbs end
+			end
+			-- 父子间距的中点（确保位于父底与子顶之间，不贴边）
+			local gapHalf = math.floor((minChildTopYAbs - parentBottomYAbs) / 2)
+			local junctionYAbs = parentBottomYAbs + gapHalf
+			if junctionYAbs <= parentBottomYAbs + 2 then junctionYAbs = parentBottomYAbs + 2 end
+			if junctionYAbs >= minChildTopYAbs - 1 then junctionYAbs = minChildTopYAbs - 1 end
+			drawVerticalLinePx(parentCenterXAbs, parentBottomYAbs, junctionYAbs, 3)
+			drawHorizontalLinePx(minX, maxX, junctionYAbs, 3)
+			for _, child in ipairs(childCenters) do
+				drawVerticalLinePx(child.xAbs, junctionYAbs, child.topYAbs, 3)
+				if not visited[child.info.TalentTreeId] then
+					layout(child.info, child.xScale, depth + 1, child.frame)
+				end
+			end
+		end
+	end
 
-    layout(rootInfo, 0.5, 0, nil)
+	layout(rootInfo, 0.5, 0, nil)
 
-    -- 根据最大深度调整滚动区域（更精确的估算）
-    -- CanvasSize 按像素估算，包含最后一层节点的高度与一些缓冲
-    local needHeight = rootYOffset + (maxDepth + 1) * rowGapPx + templateH + 40
-    _talentScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, needHeight)
+	-- 根据最大深度调整滚动区域（更精确的估算）
+	-- CanvasSize 按像素估算，包含最后一层节点的高度与一些缓冲
+	local needHeight = rootYOffset + (maxDepth + 1) * rowGapPx + templateH + 40
+	_talentScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, needHeight)
 end
 
 local _textButton = _buttonFrame:WaitForChild("TextButton")
@@ -397,17 +401,20 @@ _textButton.MouseButton1Click:Connect(function()
 
 				if not itemFrame then continue end
 				local iconImage = itemFrame:WaitForChild("IconImage")
-				local backpackButton = game.Players.LocalPlayer.PlayerGui.MainUI.right.BackpackButton
+				local backpackButton = localPlayer.PlayerGui.MainUI.right.BackpackFrame.TextButton
 				Knit.GetController("UIController").ShowFlyItemUI:Fire(iconImage, backpackButton, itemFrame)
 			end
 		end
 	end)
 end)
+TweenInterface.SetupHoverScale(_textButton, _textButton)
+
 local _titleImage = _frame:WaitForChild("TitleImage")
 local _closeButton = _titleImage:WaitForChild("CloseButton")
 _closeButton.MouseButton1Click:Connect(function()
 	_screenGui.Enabled = false
 end)
+TweenInterface.SetupHoverScale(_closeButton, _closeButton)
 
 local function updateLevelFrame()
 	if not _curTalentInfo then return end
@@ -473,6 +480,7 @@ local function updateItemFrame()
 				textButton.MouseButton1Down:Connect(function()
 					Knit.GetController("UIController").ShowItemAttributeUI:Fire(itemId)
 				end)
+				TweenInterface.SetupHoverScale(frame, textButton)
 			end
 		elseif item.Gold then
 			frame.Name = "Gold"
@@ -530,9 +538,8 @@ end
 -- @param talentInfo table 当前天赋的配置数据
 -- @param talentData table 当前天赋的玩家数据（等级/已提交材料等）
 changeTalentId = function(frame, talentInfo, talentData)
-	local player = game.Players.LocalPlayer
-	if not player or not player.Character then return end
-	local humanoid = player.Character:FindFirstChild("Humanoid")
+	if not localPlayer.Character then return end
+	local humanoid = localPlayer.Character:FindFirstChild("Humanoid")
 	if not humanoid then return end
 
 	if _selectItem then
@@ -560,41 +567,41 @@ end
 -- 返回：无
 --]]
 local function updateData(data)
-    _inventoryData = {}
-    for _, itemData in pairs(_G.ClientData.Inventory) do
-        if not _inventoryData[itemData.ItemId] then
-            _inventoryData[itemData.ItemId] = 1
-        else
-            _inventoryData[itemData.ItemId] += 1
-        end
-    end
-    for _, itemData in pairs(_G.ClientData.ToolData) do
+	_inventoryData = {}
+	for _, itemData in pairs(_G.ClientData.Inventory) do
+		if not _inventoryData[itemData.ItemId] then
+			_inventoryData[itemData.ItemId] = 1
+		else
+			_inventoryData[itemData.ItemId] += 1
+		end
+	end
+	for _, itemData in pairs(_G.ClientData.ToolData) do
 		if itemData.ItemId == 0 then continue end
-        if not _inventoryData[itemData.ItemId] then
-            _inventoryData[itemData.ItemId] = 1
-        else
-            _inventoryData[itemData.ItemId] += 1
-        end
-    end
+		if not _inventoryData[itemData.ItemId] then
+			_inventoryData[itemData.ItemId] = 1
+		else
+			_inventoryData[itemData.ItemId] += 1
+		end
+	end
 
 	_talentData = data
-    -- 展示天赋树
-    updateTalentFrame(data)
+	-- 展示天赋树
+	updateTalentFrame(data)
 
-    -- 若 data 为 nil 或 {}，默认选中并高亮第一个（根）节点
-    local noData = (data == nil) or (type(data) == "table" and next(data) == nil)
-    if noData then
-        local firstInfo = TalentTreeConfig:GetByIndex(1)
-        if firstInfo then
-            local firstFrame = _talentScrollingFrame:FindFirstChild(tostring(firstInfo.TalentTreeId))
-            if firstFrame then
-                local td = nil
-                if type(data) == "table" then
-                    td = data[firstInfo.TalentTreeId]
-                end
-                changeTalentId(firstFrame, firstInfo, td)
-            end
-        end
+	-- 若 data 为 nil 或 {}，默认选中并高亮第一个（根）节点
+	local noData = (data == nil) or (type(data) == "table" and next(data) == nil)
+	if noData then
+		local firstInfo = TalentTreeConfig:GetByIndex(1)
+		if firstInfo then
+			local firstFrame = _talentScrollingFrame:FindFirstChild(tostring(firstInfo.TalentTreeId))
+			if firstFrame then
+				local td = nil
+				if type(data) == "table" then
+					td = data[firstInfo.TalentTreeId]
+				end
+				changeTalentId(firstFrame, firstInfo, td)
+			end
+		end
 	else
 		-- 根据“已学习的最深层”与父子关系选择下一个待学习节点
 		-- 1) 构建配置信息映射与父关系映射
@@ -735,15 +742,15 @@ local function updateData(data)
 				end
 			end
 		end
-    end
+	end
 
-	local humanoid = Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+	local humanoid = localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid")
 	_msText.Text = humanoid and humanoid.WalkSpeed or 0
 	_mhText.Text = humanoid and humanoid.MaxHealth or 0
 	_jpText.Text = humanoid and humanoid.JumpPower or 0
-	_ccText.Text = humanoid and humanoid:GetAttribute("Weight") or 0
-	_gtText.Text = humanoid and humanoid:GetAttribute("CollectSpeed") or 0
-	_lkText.Text = humanoid and humanoid:GetAttribute("Lucky") or 0
+	_ccText.Text = PlayerAttribute.GetWeight(localPlayer)
+	_gtText.Text = 0
+	_lkText.Text = PlayerAttribute.GetLucky(localPlayer)
 end
 
 Knit.OnStart():andThen(function()
@@ -756,7 +763,9 @@ Knit.OnStart():andThen(function()
 	end)
 
 	Knit.GetController("UIController").ShowTalentUI:Connect(function(data)
+		if _screenGui.Enabled then return end
 		_screenGui.Enabled = true
+		TweenInterface.AnimateUIShowScale(_frame)
 		_selectItem = nil
 
 		updateData(_G.ClientData.TalentData)
