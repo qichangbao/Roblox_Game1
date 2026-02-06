@@ -35,9 +35,12 @@ function InventoryService:PlayerAdded(player)
 	self.Inventory[player.UserId] = {}
 	for _, v in pairs(inventory) do
         local attribute = GameConfig.GetItemAttribute()
+		attribute.ItemId = v.ItemId
         attribute.UsedTime = v.UsedTime
         attribute.UsedNum = v.UsedNum
 		attribute.IsLocked = v.IsLocked or 0
+		attribute.Volume = v.Volume or 1
+		attribute.Gold = v.Gold or 0
         table.insert(self.Inventory[player.UserId], {
             ItemId = v.ItemId,
             Attribute = attribute,
@@ -49,8 +52,12 @@ function InventoryService:PlayerAdded(player)
         local data = tool[i]
         local attribute = GameConfig.GetItemAttribute()
         if data then
+			attribute.ItemId = data.ItemId
             attribute.UsedTime = data.UsedTime
             attribute.UsedNum = data.UsedNum
+			attribute.IsLocked = data.IsLocked or 0
+			attribute.Volume = data.Volume or 1
+			attribute.Gold = data.Gold or 0
             table.insert(self.ToolData[player.UserId], {
                 ItemId = data.ItemId,
                 Attribute = attribute
@@ -84,7 +91,9 @@ function InventoryService:InventoryToDB(player)
             ItemId = v.ItemId,
             UsedTime = v.Attribute.UsedTime,
             UsedNum = v.Attribute.UsedNum,
-			IsLocked = v.Attribute.IsLocked,
+			IsLocked = v.Attribute.IsLocked or 0,
+			Volume = v.Attribute.Volume or 1,
+			Gold = v.Attribute.Gold or 0,
         })
     end
 	DBService:Set(player.UserId, "PlayerInventory", data)
@@ -101,6 +110,9 @@ function InventoryService:ToolDataToDB(player)
             ItemId = v.ItemId,
             UsedTime = v.Attribute.UsedTime,
             UsedNum = v.Attribute.UsedNum,
+			IsLocked = v.Attribute.IsLocked or 0,
+			Volume = v.Attribute.Volume or 1,
+			Gold = v.Attribute.Gold or 0,
         })
     end
 	DBService:Set(player.UserId, "PlayerToolData", data)

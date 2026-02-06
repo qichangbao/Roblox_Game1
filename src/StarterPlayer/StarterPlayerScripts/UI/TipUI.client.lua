@@ -143,9 +143,9 @@ local function showTip2(message)
 		imageLabel.Image = itemInfo.Icon
 		imageLabel.Visible = true
 		local label = imageLabel:FindFirstChild("TextLabel")
-		if itemInfo.SellPrice > 0 then
+		if message.ItemAttribute.Gold > 0 then
 			label.Visible = true
-			label.Text = itemInfo.SellPrice
+			label.Text = message.ItemAttribute.Gold
 		else
 			label.Visible = false
 		end

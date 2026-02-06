@@ -10,7 +10,7 @@ DesignConfig.Data = {
         MusicId = 100,
         WeatherId = 0,
         DesignTarget = 40,
-        EvacuateTime = 3000,
+        EvacuateTime = 300,
         ResourceNum = {
             {
                 1,

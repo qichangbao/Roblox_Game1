@@ -30,7 +30,7 @@ local _dropFrame = _frame:WaitForChild("DropFrame")
 local _dropLabel = _dropFrame:WaitForChild("DropLabel")
 local _weightValueLabel =_nameFrame:WaitForChild("WeightValueLabel")
 
-local function updateItemAttribute(itemId)
+local function updateItemAttribute(itemId, attribute)
 	local itemInfo = ItemConfig:GetByItemId(itemId)
 	if not itemInfo then
 		return
@@ -51,8 +51,11 @@ local function updateItemAttribute(itemId)
 		_typeLabel.Text = "DirtPile"
 	elseif itemInfo.Type == GameConfig.ItemType.Buff then
 		_typeLabel.Text = "Buff"
+	elseif itemInfo.Type == GameConfig.ItemType.Treatment then
+		_typeLabel.Text = "Treatment"
 	end
-	_weightValueLabel.Text = itemInfo.Weight
+	local weightValue = (attribute and attribute.Volume and attribute.Volume * itemInfo.Weight) or itemInfo.Weight
+	_weightValueLabel.Text = Interface.formatValue(weightValue)
 	_iconImage.Image = itemInfo.Icon
 	_descriptionLabel.Text = itemInfo.Description or ""
 	_dropLabel.Text = itemInfo.DropSources or ""
@@ -64,7 +67,7 @@ local function updateItemAttribute(itemId)
 end
 
 Knit.OnStart():andThen(function()
-	Knit.GetController("UIController").ShowItemAttributeUI:Connect(function(itemId)
-		updateItemAttribute(itemId)
+	Knit.GetController("UIController").ShowItemAttributeUI:Connect(function(itemId, attribute)
+		updateItemAttribute(itemId, attribute)
 	end)
 end)

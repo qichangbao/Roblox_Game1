@@ -236,19 +236,27 @@ GameConfig.GetItemAttribute = function(item)
     if not item then
         return {
             CreateTime = tick(),        -- 创建时间
+            ItemId = 0,                 -- 物品ID
             IsEquipped = 0,             -- 是否装备
             CDElapsedTime = 0,          -- CD截止时间
             UsedTime = 0,               -- 已使用时间
             UsedNum = 0,                -- 已使用次数
+            Volume = 0,                 -- 物品体积
+            Gold = 0,                   -- 物品金币
+            DropGroup = 0,              -- 掉落组
             IsLocked = 0,               -- 是否锁定
         }
     end
     return {
         CreateTime = item:GetAttribute("CreateTime"),
+        ItemId = item:GetAttribute("ItemId"),
         IsEquipped = item:GetAttribute("IsEquipped"),
         CDElapsedTime = item:GetAttribute("CDElapsedTime"),
         UsedTime = item:GetAttribute("UsedTime"),
         UsedNum = item:GetAttribute("UsedNum"),
+        Volume = item:GetAttribute("Volume"),
+        Gold = item:GetAttribute("Gold"),
+        DropGroup = item:GetAttribute("DropGroup"),
         IsLocked = item:GetAttribute("IsLocked"),
     }
 end
@@ -258,10 +266,14 @@ GameConfig.SetItemAttribute = function(item, attribute)
         attribute = GameConfig.GetItemAttribute()
     end
     item:SetAttribute("CreateTime", attribute.CreateTime)
+    item:SetAttribute("ItemId", attribute.ItemId)
     item:SetAttribute("IsEquipped", attribute.IsEquipped)
     item:SetAttribute("CDElapsedTime", attribute.CDElapsedTime)
     item:SetAttribute("UsedTime", attribute.UsedTime)
     item:SetAttribute("UsedNum", attribute.UsedNum)
+    item:SetAttribute("Volume", attribute.Volume)
+    item:SetAttribute("Gold", attribute.Gold)
+    item:SetAttribute("DropGroup", attribute.DropGroup)
     item:SetAttribute("IsLocked", attribute.IsLocked)
 end
 

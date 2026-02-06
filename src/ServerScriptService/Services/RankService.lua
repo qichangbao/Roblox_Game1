@@ -310,7 +310,7 @@ end
 --[[
     更新玩家数据并同步到排行榜
     @param player Player 玩家对象
-    @param data table 包含玩家逃生数据的表，格式: { escapeActions = number }
+    @param data table 包含玩家逃生数据的表，格式: { TotalValue = number, TotalTime = number, IsSuccess = boolean }
 ]]
 function RankService:UpdatePlayerRank(player, data)
     if not player or not data then

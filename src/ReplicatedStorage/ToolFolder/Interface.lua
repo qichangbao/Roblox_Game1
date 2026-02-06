@@ -292,4 +292,21 @@ function Interface.GetJobEffect(player)
     return effects
 end
 
+-- 格式化重量显示，最多保留两位小数，去掉多余的零
+function Interface.formatValue(value)
+	if not value then
+		return ""
+	end
+
+	local roundedValue = math.floor(value * 100 + 0.5) / 100
+
+	if roundedValue % 1 == 0 then
+		return string.format("%d", roundedValue)
+	elseif (roundedValue * 10) % 1 == 0 then
+		return string.format("%.1f", roundedValue)
+	else
+		return string.format("%.2f", roundedValue)
+	end
+end
+
 return Interface

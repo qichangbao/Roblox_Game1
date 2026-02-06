@@ -44,12 +44,8 @@ function StoreService.Client:Sell(player, itemData)
     if not itemData or itemData.Attribute.IsLocked == 1 then
         return
     end
-    local itemInfo = ItemConfig:GetByItemId(itemData.ItemId)
-    if not itemInfo then
-        return
-    end
 
-    Knit.GetService("GoldService"):ChangeGold(player, itemInfo.SellPrice)
+    Knit.GetService("GoldService"):ChangeGold(player, itemData.Attribute.Gold)
     Knit.GetService("InventoryService"):RemoveItem(player, itemData)
     return itemData
 end
@@ -62,7 +58,7 @@ function StoreService.Client:SellAll(player)
         local itemInfo = ItemConfig:GetByItemId(itemData.ItemId)
         -- 收集类物品可以一键全部出售
         if itemInfo and itemInfo.Type == GameConfig.ItemType.Collect and itemData.Attribute.IsLocked == 0 then
-            gold += itemInfo.SellPrice
+            gold += itemData.Attribute.Gold
             table.insert(sellItems, itemData)
         end
     end

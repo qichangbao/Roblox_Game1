@@ -116,7 +116,6 @@ function PlayerService:GetInitData(player)
         if teleportData.IsSuccess then
             -- 成功撤离，更新排行榜数据
             Knit.GetService("RankService"):UpdatePlayerRank(player, {
-                EscapeActions = teleportData.EscapeActions,
                 TotalTime = teleportData.TotalTime,
                 TotalValue = teleportData.TotalValue,
                 IsSuccess = teleportData.IsSuccess,

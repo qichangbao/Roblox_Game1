@@ -65,7 +65,7 @@ local function createNormalFrame(index, itemData)
 	end
 
 	local priceFrame = frame:FindFirstChild("PriceFrame")
-	priceFrame:FindFirstChild("PriceLabel").Text = itemInfo.SellPrice
+	priceFrame:FindFirstChild("PriceLabel").Text = itemData.Attribute.Gold
 	local selectImage = frame:FindFirstChild("SelectImage")
 	selectImage.Visible = false
 	

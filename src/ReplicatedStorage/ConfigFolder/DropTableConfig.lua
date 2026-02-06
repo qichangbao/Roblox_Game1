@@ -34,7 +34,7 @@ DropTableConfig.Data = {
                 500
             }
         },
-        ["Unnamed: 5"] = "5~30",
+        SeeForYourself = "5~30",
     },
     [2] = {
         Id = 2,
@@ -68,7 +68,7 @@ DropTableConfig.Data = {
                 500
             }
         },
-        ["Unnamed: 5"] = "5~30",
+        SeeForYourself = "5~30",
     },
     [3] = {
         Id = 3,
@@ -102,7 +102,7 @@ DropTableConfig.Data = {
                 1850
             }
         },
-        ["Unnamed: 5"] = "5~30",
+        SeeForYourself = "5~30",
     },
     [4] = {
         Id = 4,
@@ -131,7 +131,7 @@ DropTableConfig.Data = {
                 1500
             }
         },
-        ["Unnamed: 5"] = "31~99",
+        SeeForYourself = "31~99",
     },
     [5] = {
         Id = 5,
@@ -170,7 +170,7 @@ DropTableConfig.Data = {
                 1100
             }
         },
-        ["Unnamed: 5"] = "100~300",
+        SeeForYourself = "100~300",
     },
     [6] = {
         Id = 6,
@@ -209,7 +209,7 @@ DropTableConfig.Data = {
                 1900
             }
         },
-        ["Unnamed: 5"] = "301~1000",
+        SeeForYourself = "301~1000",
     },
     [7] = {
         Id = 7,
@@ -221,7 +221,7 @@ DropTableConfig.Data = {
             1,
             500
         },
-        ["Unnamed: 5"] = "1001~2999",
+        SeeForYourself = "1001~2999",
     },
     [8] = {
         Id = 8,
@@ -233,7 +233,7 @@ DropTableConfig.Data = {
             1,
             200
         },
-        ["Unnamed: 5"] = "3000~4999",
+        SeeForYourself = "3000~4999",
     },
     [9] = {
         Id = 9,
@@ -245,7 +245,7 @@ DropTableConfig.Data = {
             1,
             100
         },
-        ["Unnamed: 5"] = "5000以上",
+        SeeForYourself = "5000以上",
     },
 }
 
@@ -293,6 +293,15 @@ end
 function DropTableConfig:GetByDropInfo(value)
     for i, item in pairs(self.Data) do
         if item.DropInfo == value then
+            return item
+        end
+    end
+    return nil
+end
+
+function DropTableConfig:GetBySeeForYourself(value)
+    for i, item in pairs(self.Data) do
+        if item.SeeForYourself == value then
             return item
         end
     end

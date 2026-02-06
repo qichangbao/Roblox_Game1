@@ -223,7 +223,6 @@ local function updateBackpack()
 		newFrame.Name = index
 		newFrame.Visible = true
 		newFrame.Parent = _scrollingFrame
-		newFrame:SetAttribute("ItemId", itemId)
 		GameConfig.SetItemAttribute(newFrame, itemData.Attribute)
 		itemData.Attribute = GameConfig.GetItemAttribute(newFrame)
 		newFrame:FindFirstChild("NameLabel").Text = itemInfo.DisplayName
@@ -276,7 +275,7 @@ local function updateBackpack()
 			if _isWaitingForDrag then
 				-- 如果在等待拖拽状态（0.5秒内松开），执行点击逻辑
 				_isWaitingForDrag = false
-				Knit.GetController("UIController").ShowItemAttributeUI:Fire(itemId)
+				Knit.GetController("UIController").ShowItemAttributeUI:Fire(itemId, itemData.Attribute)
 			end
 		end)
 		
