@@ -42,19 +42,19 @@ DesignConfig.Data = {
         ResourceNum = {
             {
                 1,
-                5
+                3
             },
             {
                 2,
-                5
+                3
             },
             {
                 3,
-                5
+                1
             },
             {
                 4,
-                5
+                1
             }
         },
     },
